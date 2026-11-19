@@ -1,6 +1,6 @@
 /* Hikmah 2.0 */
 "use strict";
-const VERSION="2.0.0";
+const VERSION="2.1.0";
 const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -272,10 +272,13 @@ function renderStash(id){
 /* ---------- YOU ---------- */
 function renderYou(){
   const st=streak(),best=bestStreak(),got=store.get("badges",{}),mins=Math.round(store.get("listened",0)/60),done=Object.keys(store.get("completed",{})).length;
-  const wk=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return d});
-  const names=["S","M","T","W","T","F","S"];
+  const now=new Date(),mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));
+  const wk=[...Array(7)].map((_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d});
+  const names=["M","T","W","T","F","S","S"],tk=today();
   $("#you").innerHTML=`<div class="topbar"><h1 style="font-size:28px;font-weight:800">You</h1><span class="streak ${st?"":"cold"}" style="margin-left:auto">${icon("flame",18)} ${st} day${st===1?"":"s"}</span></div>
-   <div class="week">${wk.map((d,i)=>`<div><i class="${DAYS[dayKey(d)]?"hit":""} ${i===6?"today":""}">${DAYS[dayKey(d)]?icon("flame",16):""}</i>${names[d.getDay()]}</div>`).join("")}</div>
+   <div class="week">${wk.map((d,i)=>{const k=dayKey(d),n=DAYS[k]||0;return `<div class="${k>tk?"future":""}"><i class="${n?"hit":""} ${k===tk?"today":""}">${n?icon("flame",16):""}</i>${names[i]}</div>`}).join("")}</div>
+   <div class="h-sec"><h2>Calendar</h2><span class="muted" style="font-weight:700;font-size:13.5px">Tap a day for details</span></div>
+   <div id="cal"></div>
    <div class="kpis">
     <div class="kpi"><span class="ic" style="background:#FF6A3D">${icon("flame",18)}</span><b>${best}</b><small>Best streak</small></div>
     <div class="kpi"><span class="ic" style="background:#6D4AFF">${icon("spark",18)}</span><b>${totalRead()}</b><small>Ideas read</small></div>
@@ -304,9 +307,49 @@ function renderYou(){
   $("#autonext").onchange=e=>store.set("autonext",e.target.checked);
   $("#edit-topics").onclick=()=>openOnboarding(1);
   $("#dl-all").onclick=downloadAll; $("#dl-clear").onclick=clearDownloads;
-  $("#reset-prog").onclick=()=>{openSheet(`<h3>Reset all progress?</h3><p class="muted">Your stashes stay. Reading history, streaks, badges and listening progress are cleared.</p><div class="cta"><button class="btn soft" id="rs-no">Cancel</button><button class="btn primary" id="rs-yes">Reset</button></div>`);$("#rs-no").onclick=closeSheet;$("#rs-yes").onclick=()=>{["read","days","badges","prog","done","pos","completed","listened","lastRead","last"].forEach(k=>store.set(k,k==="last"||k==="lastRead"?null:{}));store.set("listened",0);READ={};DAYS={};closeSheet();renderYou();toast("Progress reset")}};
+  $("#reset-prog").onclick=()=>{openSheet(`<h3>Reset all progress?</h3><p class="muted">Your stashes stay. Reading history, streaks, badges and listening progress are cleared.</p><div class="cta"><button class="btn soft" id="rs-no">Cancel</button><button class="btn primary" id="rs-yes">Reset</button></div>`);$("#rs-no").onclick=closeSheet;$("#rs-yes").onclick=()=>{["read","days","badges","prog","done","pos","completed","listened","lastRead","last","ldays"].forEach(k=>store.set(k,k==="last"||k==="lastRead"?null:{}));store.set("listened",0);READ={};DAYS={};closeSheet();renderYou();toast("Progress reset")}};
+  renderCal();
   refreshOffline();
 }
+/* ---------- CALENDAR ---------- */
+let CAL=null;
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const LDAYS=()=>store.get("ldays",{});
+function renderCal(){
+  const now=new Date(); if(!CAL)CAL={y:now.getFullYear(),m:now.getMonth()};
+  const {y,m}=CAL, first=new Date(y,m,1), daysIn=new Date(y,m+1,0).getDate(), lead=(first.getDay()+6)%7, tk=today(), g=goal(), LD=LDAYS();
+  let ideas=0,active=0,goalDays=0,secs=0,run=0,bestRun=0;
+  const cells=[];
+  for(let i=0;i<lead;i++)cells.push('<span class="cd blank"></span>');
+  for(let d=1;d<=daysIn;d++){
+    const k=dayKey(new Date(y,m,d)), n=DAYS[k]||0, l=LD[k]||0, fut=k>tk;
+    ideas+=n; secs+=l; if(n||l>=60)active++; if(n>=g)goalDays++;
+    if(n){run++;bestRun=Math.max(bestRun,run)}else if(!fut)run=0;
+    const lvl=n>=g?"l3":n>=Math.ceil(g/2)?"l2":n?"l1":l>=60?"l1":"";
+    cells.push(`<button class="cd ${lvl} ${k===tk?"today":""} ${fut?"future":""}" data-d="${k}" ${fut?"disabled":""} aria-label="${d} ${MONTHS[m]}: ${n} ideas">${d}${n>=g?`<em>${icon("flame",10)}</em>`:""}</button>`);
+  }
+  const canNext=new Date(y,m+1,1)<=now;
+  $("#cal").innerHTML=`<div class="cal">
+    <div class="cal-h"><button class="iconbtn" id="cal-prev" aria-label="Previous month">${icon("back",18)}</button><b>${MONTHS[m]} ${y}</b><button class="iconbtn" id="cal-next" aria-label="Next month" ${canNext?"":"disabled style='opacity:.35'"}>${icon("back",18,'style="transform:rotate(180deg)"')}</button></div>
+    <div class="cal-g">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(x=>`<span class="cdh">${x}</span>`).join("")}${cells.join("")}</div>
+    <div class="cal-legend"><span><i class="l0"></i>None</span><span><i class="l1"></i>Started</span><span><i class="l2"></i>Halfway</span><span><i class="l3"></i>Goal met</span></div>
+    <div class="cal-s"><div><b>${active}</b><small>active days</small></div><div><b>${goalDays}</b><small>goal days</small></div><div><b>${ideas}</b><small>ideas read</small></div><div><b>${Math.round(secs/60)}</b><small>min listened</small></div></div>
+    ${bestRun>1?`<p class="cal-note">${icon("flame",14)} Longest run this month: ${bestRun} days in a row</p>`:""}
+  </div>`;
+  $("#cal-prev").onclick=()=>{CAL.m--;if(CAL.m<0){CAL.m=11;CAL.y--}renderCal()};
+  $("#cal-next").onclick=()=>{if(!canNext)return;CAL.m++;if(CAL.m>11){CAL.m=0;CAL.y++}renderCal()};
+  $$("#cal .cd[data-d]").forEach(b=>b.onclick=()=>daySheet(b.dataset.d));
+}
+function daySheet(k){
+  const d=new Date(k+"T12:00:00"), n=DAYS[k]||0, l=Math.round((LDAYS()[k]||0)/60), g=goal();
+  const keys=Object.keys(READ).filter(x=>READ[x]===k).map(cardByKey).filter(Boolean);
+  const pk=[...new Set(keys.map(c=>c.pid))];
+  openSheet(`<h3>${d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</h3>
+    <div class="cal-s" style="margin:0 0 12px"><div><b>${n}</b><small>ideas read</small></div><div><b>${l}</b><small>min listened</small></div><div><b>${n>=g?"Yes":"No"}</b><small>goal met</small></div></div>
+    ${keys.length?`<p class="muted" style="margin:0 0 8px;font-weight:700">From ${pk.length} package${pk.length>1?"s":""}</p><div class="hits">${keys.map(c=>{const p=byId[c.pid];return `<button class="hit" data-k="${c.key}"><span class="sw" style="background:${topicOf(p.cat).c1}"></span><span><b>${c.type==="verse"?"Qur'an "+c.verses.map(v=>v.s+":"+v.v).join(", "):prov(plainProv(c.h))}</b><small>${esc(p.title)}</small></span></button>`}).join("")}</div>`:`<p class="muted">No ideas read on this day${l?", but you listened for "+l+" min":""}.</p>`}`);
+  $$("#sheet-in [data-k]").forEach(b=>b.onclick=()=>{closeSheet();const c=cardByKey(b.dataset.k);openReader(c.pid,c.i)});
+}
+
 function applyFs(){document.documentElement.style.setProperty("--fs",store.get("fs",1))}
 
 /* ---------- READER ---------- */
@@ -433,13 +476,14 @@ function setMeta(){if(!("mediaSession" in navigator)||!cur)return;const p=byId[c
 if("mediaSession" in navigator){const h=(a,f)=>{try{navigator.mediaSession.setActionHandler(a,f)}catch(e){}};
   h("play",()=>loadedId===cur?A.play():cur&&play(cur,true));h("pause",()=>A.pause());h("seekbackward",()=>{A.currentTime=Math.max(0,A.currentTime-15)});h("seekforward",()=>{A.currentTime+=30});
   h("seekto",d=>{if(d.seekTime!=null)A.currentTime=d.seekTime});h("previoustrack",()=>{if(A.currentTime>5)A.currentTime=0;else{const n=neighbour(-1);n&&play(n,false,0)}});h("nexttrack",()=>{const n=neighbour(1);n&&play(n,false,0)})}
-let lastSave=0,lastT=null;
+let lastSave=0,lastT=null,pendL=0;
+function flushListen(){if(pendL<=0)return;store.set("listened",store.get("listened",0)+pendL);const ld=store.get("ldays",{}),k=today();ld[k]=(ld[k]||0)+pendL;store.set("ldays",ld);pendL=0}
 A.addEventListener("timeupdate",()=>{if(loadedId!==cur)return;syncPlayer();checkSleep();
-  if(!A.paused){const now=A.currentTime;if(lastT!=null&&now>lastT&&now-lastT<3){store.set("listened",store.get("listened",0)+(now-lastT))}lastT=now}
-  if(Date.now()-lastSave>4000){lastSave=Date.now();const g=store.get("prog",{});g[cur]=A.currentTime;store.set("prog",g)}});
+  if(!A.paused){const now=A.currentTime;if(lastT!=null&&now>lastT&&now-lastT<3){pendL+=now-lastT}lastT=now}
+  if(Date.now()-lastSave>4000){lastSave=Date.now();const g=store.get("prog",{});g[cur]=A.currentTime;store.set("prog",g);flushListen()}});
 A.addEventListener("play",()=>{lastT=A.currentTime;syncPlayer()});
 ["pause","ratechange","loadedmetadata"].forEach(ev=>A.addEventListener(ev,syncPlayer));
-A.addEventListener("pause",()=>{lastT=null;if(cur&&loadedId===cur){const g=store.get("prog",{});g[cur]=A.currentTime;store.set("prog",g)}});
+A.addEventListener("pause",()=>{lastT=null;flushListen();if(cur&&loadedId===cur){const g=store.get("prog",{});g[cur]=A.currentTime;store.set("prog",g)}});
 A.addEventListener("ended",()=>{if(loadedId!==cur)return;const d=store.get("done",{});d[cur]=1;store.set("done",d);const g=store.get("prog",{});g[cur]=0;store.set("prog",g);
   if(sleepEnd==="end"){sleepEnd=null;updSleep();syncPlayer();return}
   const n=store.get("autonext",true)?neighbour(1,true):null;n?play(n,false,0):syncPlayer()});

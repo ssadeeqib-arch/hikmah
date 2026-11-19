@@ -241,6 +241,31 @@ h1,h2,h3,h4{margin:0;letter-spacing:-.01em}
 .week i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--bg);margin-bottom:6px;font-style:normal;color:#fff}
 .week i.hit{background:linear-gradient(135deg,var(--brand),var(--brand-2))}
 .week i.today{outline:2.5px solid var(--violet)}
+.week .future{opacity:.4}
+.cal{background:var(--surface);border-radius:22px;padding:14px;box-shadow:var(--shadow)}
+.cal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-h b{font-size:17px;font-weight:800}
+.cal-h .iconbtn{box-shadow:none;background:var(--bg);width:36px;height:36px}
+.cal-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.cdh{text-align:center;font-size:11.5px;font-weight:800;color:var(--muted);padding-bottom:2px}
+.cd{height:44px;border-radius:12px;background:var(--bg);display:grid;place-items:center;font-weight:700;font-size:14px;color:var(--ink);position:relative}
+.cd.blank{background:none}
+.cd.future{opacity:.35}
+.cd.l1{background:#FFE3D6;color:#9A3412}
+.cd.l2{background:#FFB993;color:#7C2D12}
+.cd.l3{background:linear-gradient(135deg,#FF6A3D,#FFB23F);color:#fff}
+.cd.today{outline:2.5px solid var(--violet);outline-offset:1px}
+.cd em{position:absolute;right:3px;top:3px;line-height:0}
+.cd em .icon{width:10px;height:10px}
+.cal-legend{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:12px 0 4px;font-size:12px;font-weight:700;color:var(--muted)}
+.cal-legend span{display:flex;align-items:center;gap:5px}
+.cal-legend i{width:12px;height:12px;border-radius:4px;background:var(--bg)}
+.cal-legend i.l1{background:#FFE3D6}.cal-legend i.l2{background:#FFB993}.cal-legend i.l3{background:linear-gradient(135deg,#FF6A3D,#FFB23F)}
+.cal-s{display:flex;gap:8px;margin-top:12px}
+.cal-s div{flex:1;text-align:center;background:var(--bg);border-radius:14px;padding:9px 4px}
+.cal-s b{display:block;font-size:18px;font-weight:800}
+.cal-s small{font-size:11.5px;font-weight:700;color:var(--muted)}
+.cal-note{text-align:center;font-size:13px;font-weight:700;color:#C2410C;margin:10px 0 0;display:flex;align-items:center;justify-content:center;gap:5px}
 .badges{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .badge{text-align:center;font-size:11.5px;font-weight:700;color:var(--muted)}
 .badge i{display:grid;place-items:center;width:56px;height:56px;margin:0 auto 6px;border-radius:18px;background:#ECE9F5;color:#B9B4CC;font-style:normal;font-size:22px;font-weight:800}
