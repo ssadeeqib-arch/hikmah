@@ -1,0 +1,25 @@
+{
+  "name": "Hikmah: Wisdom Library",
+  "short_name": "Hikmah",
+  "description": "Wisdom packages from the Qur'an, classical scholars and the great thinkers, narrated with recitation.",
+  "id": "./",
+  "start_url": "./#library",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c1614",
+  "theme_color": "#0c1614",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "books", "lifestyle"],
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "Continue listening", "url": "./#library", "icons": [{"src": "icons/icon-96.png", "sizes": "96x96"}]},
+    {"name": "Great Thinkers", "url": "./#library", "icons": [{"src": "icons/icon-96.png", "sizes": "96x96"}]},
+    {"name": "Ask Hikmah", "url": "./#ask", "icons": [{"src": "icons/icon-96.png", "sizes": "96x96"}]}
+  ]
+}
