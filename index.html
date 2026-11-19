@@ -4,629 +4,88 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Hikmah</title>
-<meta name="description" content="Wisdom packages from the Qur'an, classical scholars and the great thinkers, narrated with recitation.">
-<meta name="theme-color" content="#0c1614">
-<meta name="color-scheme" content="dark">
+<meta name="description" content="Bite-sized wisdom from the Qur'an, classical scholars, great thinkers and great books, with narration.">
+<meta name="theme-color" content="#F6F4FB">
+<meta name="color-scheme" content="light">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Hikmah">
 <meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-<link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="fonts.css">
-<style>
-/* Hikmah: a night library. Deep green-black ground, lamp-gold accent, parchment text.
-   Layout: one-screen app, scrolling main pane, fixed mini-player + tab bar at the bottom. */
-:root{
-  --ink:#0c1614;          /* ground */
-  --panel:#13211e;        /* raised surfaces */
-  --line:#24352f;         /* hairlines */
-  --text:#ece4d2;         /* parchment */
-  --muted:#a5ad9f;        /* secondary text */
-  --gold:#d2ad62;         /* lamp gold accent */
-  --gold-dim:#8e7442;
-  --teal:#5fae98;         /* "new" and success state */
-  --display:"Cormorant Garamond", "Iowan Old Style", Georgia, serif;
-  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
-  --arabic:"Amiri Quran", "Amiri", "Scheherazade New", "Traditional Arabic", serif;
-  --tabs:64px; --player:0px;
-  color-scheme:dark;
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;overscroll-behavior:none}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{background:var(--ink);color:var(--text);font:400 17px/1.6 var(--body);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;overflow:hidden}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-user-select:none;user-select:none;touch-action:manipulation}
-button:active{transform:scale(.97)}
-button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
-a{color:var(--gold)}
-.app{height:100%;display:flex;flex-direction:column}
-main{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top) + 4px) 0 calc(var(--tabs) + var(--player) + env(safe-area-inset-bottom) + 12px)}
-.wrap{max-width:720px;margin:0 auto;padding:0 18px}
-.view{display:none}.view.on{display:block}
-
-/* header */
-.brand{display:flex;align-items:center;justify-content:space-between;padding:18px 0 8px}
-.brand h1{font:700 30px/1 var(--display);letter-spacing:.02em;margin:0}
-.brand h1 span{color:var(--gold)}
-.brand .ar{font:400 28px/1 var(--arabic);color:var(--gold)}
-.lede{color:var(--muted);margin:2px 0 14px;font-size:15.5px;max-width:52ch}
-
-/* search + chips */
-.search{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
-.search input{flex:1;background:none;border:0;color:var(--text);font:inherit;outline:none;min-width:0}
-.search svg{flex:none;opacity:.6}
-.stats{color:var(--gold);font-size:13.5px;font-weight:600;margin:12px 0 0;font-variant-numeric:tabular-nums}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 6px;scrollbar-width:none}
-.chips::-webkit-scrollbar{display:none}
-.chip{flex:none;padding:6px 13px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:14.5px;font-weight:600}
-.chip[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:#1c1608}
-
-/* continue + list */
-.continue{margin:10px 0 4px;padding:14px 16px;border-radius:14px;background:linear-gradient(120deg,#1d2b22,#16221f);border:1px solid var(--gold-dim);display:none;align-items:center;gap:14px}
-.continue.on{display:flex}
-.continue small{display:block;color:var(--gold);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:12px}
-.continue b{font:600 20px/1.2 var(--display)}
-.group-h{font:600 13px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:22px 0 4px;display:flex;justify-content:space-between}
-.group-h em{font-style:normal;color:var(--muted);letter-spacing:.02em;text-transform:none;font-weight:500}
-.card{display:grid;grid-template-columns:1fr auto;gap:4px 14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);text-align:left;width:100%}
-.card h3{font:600 22px/1.15 var(--display);margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.card .sub{color:var(--muted);font-size:14.5px}
-.card .tag{grid-column:1;font-size:15px;color:#cfc8b5;margin-top:2px}
-.card .meta{grid-column:1;display:flex;gap:12px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;align-items:center}
-.card .side{grid-row:1/span 4;grid-column:2;display:flex;flex-direction:column;align-items:center;gap:6px}
-.card .side .ar{font:400 21px/1.3 var(--arabic);color:var(--gold);max-width:9ch;text-align:center}
-.pill{font:700 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:5px;background:rgba(95,174,152,.16);color:var(--teal)}
-.done{color:var(--teal)}
-.progress-mini{width:46px;height:3px;border-radius:2px;background:var(--line);overflow:hidden}
-.progress-mini i{display:block;height:100%;background:var(--gold)}
-.empty{color:var(--muted);padding:30px 0;text-align:center}
-
-/* package view */
-.back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);padding:16px 0 4px;font-size:15px}
-.hero{padding:10px 0 18px;border-bottom:1px solid var(--line)}
-.hero .ar{font:400 38px/1.5 var(--arabic);color:var(--gold);margin:0}
-.hero .cat{color:var(--gold);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase}
-.hero h2{font:700 40px/1.05 var(--display);margin:6px 0 4px;text-wrap:balance}
-.hero .sub{color:var(--muted);font-size:16px}
-.hero .tag{font:500 italic 21px/1.35 var(--display);margin:12px 0 16px;color:#e3d6b5;text-wrap:balance}
-.bigplay{display:flex;align-items:center;gap:14px;width:100%;padding:12px 16px;border-radius:14px;background:var(--gold);color:#1c1608;font-weight:700}
-.bigplay .ic{width:40px;height:40px;border-radius:50%;background:#1c1608;color:var(--gold);display:grid;place-items:center;flex:none}
-.bigplay small{display:block;font-weight:500;opacity:.8}
-.sec{padding:20px 0 6px;scroll-margin-top:12px}
-.sec-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px}
-.sec-h h4{font:600 13px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0}
-.jump{font-size:13px;color:var(--muted);display:inline-flex;gap:5px;align-items:center;padding:4px 8px;border-radius:6px;border:1px solid var(--line)}
-.sec.live .sec-h h4::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gold);margin-right:8px;vertical-align:1px;box-shadow:0 0 0 4px rgba(210,173,98,.18)}
-.sec p{margin:0 0 10px;max-width:65ch}
-.verse{margin:8px 0 14px;padding:14px 16px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
-.verse .a{font:400 25px/2 var(--arabic);direction:rtl;text-align:right;margin:0 0 8px}
-.verse .e{margin:0;color:#ddd5c2}
-.verse .r{display:block;margin-top:6px;font-size:13px;color:var(--gold)}
-.hadith{border-left:3px solid var(--gold-dim);padding:2px 0 2px 14px;margin:6px 0 14px}
-.hadith p{font:500 italic 20px/1.4 var(--display);margin:0 0 4px;color:#e9dfc6}
-.hadith cite{font-style:normal;font-size:13px;color:var(--muted)}
-.prov{font-family:var(--display);font-style:italic;font-size:1.12em;color:var(--gold)}
-.practices{list-style:none;padding:0;margin:0;display:grid;gap:8px}
-.practices label{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);cursor:pointer}
-.practices input{appearance:none;flex:none;width:22px;height:22px;border-radius:6px;border:2px solid var(--gold-dim);margin-top:2px;display:grid;place-items:center}
-.practices input:checked{background:var(--teal);border-color:var(--teal)}
-.practices input:checked::after{content:"";width:6px;height:11px;border:solid #0c1614;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
-.practices input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--gold-dim)}
-.reflect{padding-left:20px;margin:0}.reflect li{margin-bottom:6px}
-.askthis{margin:20px 0 10px;width:100%;padding:13px;border-radius:12px;border:1px solid var(--gold-dim);color:var(--gold);font-weight:600}
-.keyread{font-size:14.5px;color:#cfc8b5;margin:16px 0 0;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel)}
-.keyread b{display:block;color:var(--gold);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
-.sources{font-size:13.5px;color:var(--muted);margin:18px 0 8px;border-top:1px solid var(--line);padding-top:12px}
-
-/* chat */
-.chat-head{padding:18px 0 6px}
-.chat-head h2{font:700 30px/1.1 var(--display);margin:0}
-.chat-head p{color:var(--muted);margin:4px 0 0;font-size:15px}
-.thread{display:flex;flex-direction:column;gap:14px;padding:14px 0 10px}
-.msg{max-width:100%}
-.msg.u{align-self:flex-end;background:#22342e;border:1px solid var(--line);padding:10px 14px;border-radius:16px 16px 4px 16px;max-width:88%}
-.msg.a .body{line-height:1.62}
-.msg.a .body p{margin:0 0 10px}
-.msg.a .body ul,.msg.a .body ol{margin:0 0 10px;padding-left:22px}
-.msg.a .body h5{font:600 19px/1.2 var(--display);color:var(--gold);margin:14px 0 6px}
-.msg.a .body .arq{font:400 23px/1.9 var(--arabic);direction:rtl;text-align:right;display:block;margin:4px 0}
-.msg.a .tools{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
-.msg.a .tools button,.pkglink{font-size:13px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
-.pkglink{color:var(--gold);border-color:var(--gold-dim);display:inline-block;margin:2px 4px 2px 0;text-decoration:none}
-.who{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:4px}
-.thinking{color:var(--muted);font-style:italic}
-.suggest{display:grid;gap:8px;margin:10px 0}
-.suggest button{text-align:left;padding:12px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:15.5px}
-.suggest button b{display:block;color:var(--gold);font:600 18px/1.2 var(--display)}
-.composer{position:sticky;bottom:0;padding:8px 0 4px;background:linear-gradient(transparent,var(--ink) 30%)}
-.composer form{display:flex;gap:8px;align-items:flex-end;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:8px 8px 8px 14px}
-.composer textarea{flex:1;resize:none;background:none;border:0;color:var(--text);font:inherit;max-height:140px;outline:none;padding:6px 0}
-.send{width:40px;height:40px;border-radius:50%;background:var(--gold);color:#1c1608;display:grid;place-items:center;flex:none}
-.send[disabled]{opacity:.4}
-.note{font-size:12.5px;color:var(--muted);text-align:center;margin:6px 0 0}
-.unavail{padding:16px;border-radius:12px;border:1px dashed var(--gold-dim);color:var(--muted);margin:12px 0;display:none}
-
-/* mini player + tabs */
-.player{position:fixed;left:0;right:0;bottom:calc(var(--tabs) + env(safe-area-inset-bottom));background:#17261f;border-top:1px solid var(--gold-dim);display:none;z-index:5}
-.player.on{display:block}
-.player .in{max-width:720px;margin:0 auto;padding:8px 14px 10px;display:grid;grid-template-columns:auto 1fr auto auto;gap:4px 12px;align-items:center}
-.player .t{min-width:0;cursor:pointer}
-.player .t b{display:block;font:600 17px/1.2 var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.player .t small{color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
-.pbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center}
-.pbtn.main{background:var(--gold);color:#1c1608}
-.rate{font-size:13px;font-weight:700;color:var(--gold);border:1px solid var(--gold-dim);border-radius:6px;padding:3px 6px;font-variant-numeric:tabular-nums}
-.seek{grid-column:1/-1;width:100%;accent-color:var(--gold);height:18px;margin:0}
-.tabs{position:fixed;left:0;right:0;bottom:0;height:calc(var(--tabs) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:#0f1b18;border-top:1px solid var(--line);display:flex;justify-content:center;z-index:6}
-.tabs a{flex:1;max-width:200px;text-align:center;line-height:1.15;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);text-decoration:none;font-size:12.5px;font-weight:600}
-.tabs a[aria-current="page"]{color:var(--gold)}
-/* app additions */
-.sec p,.verse .e,.practices span,.reflect li,.keyread{font-size:calc(17px * var(--fs,1))}
-.hadith p{font-size:calc(20px * var(--fs,1))}
-.verse .a{font-size:calc(25px * var(--fs,1))}
-.offbtn{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;font-weight:600;color:var(--muted);padding:9px 12px;border-radius:10px;border:1px solid var(--line);width:100%}
-.offbtn.on{color:var(--teal);border-color:rgba(95,174,152,.45)}
-.offdot{width:9px;height:9px;border-radius:50%;background:currentColor;flex:none}
-.banner{display:none;margin:12px 0 2px;padding:12px 14px;border-radius:14px;border:1px solid var(--gold-dim);background:#18271f;font-size:15px;gap:12px;align-items:center}
-.banner.on{display:flex}
-.banner b{color:var(--gold)}
-.banner .x{margin-left:auto;color:var(--muted);font-size:20px;line-height:1;padding:4px}
-.btn{padding:11px 16px;border-radius:12px;background:var(--gold);color:#1c1608;font-weight:700;text-align:center;text-decoration:none;display:inline-block}
-.btn.ghost{background:none;border:1px solid var(--gold-dim);color:var(--gold)}
-.netpill{position:fixed;top:calc(env(safe-area-inset-top) + 8px);left:50%;transform:translateX(-50%);background:#2a2214;color:var(--gold);border:1px solid var(--gold-dim);font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:999px;z-index:9;display:none}
-.netpill.on{display:block}
-/* more / settings */
-.pane-h{padding:18px 0 4px}
-.pane-h h2{font:700 30px/1.1 var(--display);margin:0}
-.pane-h p{color:var(--muted);margin:4px 0 0;font-size:15px}
-.group{margin:18px 0 0;border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden}
-.row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-top:1px solid var(--line);width:100%;text-align:left}
-.row:first-child{border-top:0}
-.row .l{flex:1;min-width:0}
-.row .l b{display:block;font-weight:600}
-.row .l small{color:var(--muted);font-size:13.5px;display:block}
-.row .v{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums;font-size:14px}
-.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:8px}
-.bar i{display:block;height:100%;width:0;background:var(--teal);transition:width .3s}
-.switch{appearance:none;width:46px;height:28px;border-radius:14px;background:var(--line);position:relative;flex:none;transition:background .2s;cursor:pointer}
-.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--text);transition:transform .2s}
-.switch:checked{background:var(--teal)}.switch:checked::after{transform:translateX(18px)}
-.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;flex:none}
-.seg button{padding:7px 11px;font-weight:700;font-size:14px;color:var(--muted)}
-.seg button[aria-pressed="true"]{background:var(--gold);color:#1c1608}
-.fine{color:var(--muted);font-size:13.5px;margin:14px 2px}
-/* now playing sheet */
-.sheet{position:fixed;inset:0;z-index:20;background:linear-gradient(180deg,#183026 0%,#0c1614 60%);display:none;flex-direction:column;padding:calc(env(safe-area-inset-top) + 10px) 22px calc(env(safe-area-inset-bottom) + 18px)}
-.sheet.on{display:flex}
-.sheet .grab{display:flex;justify-content:space-between;align-items:center}
-.sheet .grab button{color:var(--muted);font-weight:600;padding:8px 4px;font-size:15px}
-.np-art{width:min(62vw,280px);aspect-ratio:1;border-radius:28px;margin:18px auto 14px;background:url(icons/icon-512.png) center/cover;box-shadow:0 20px 50px rgba(0,0,0,.5)}
-.np-t{text-align:center}
-.np-t small{color:var(--gold);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:12px}
-.np-t h3{font:700 30px/1.1 var(--display);margin:6px 0 2px;text-wrap:balance}
-.np-t p{color:var(--muted);margin:0;font-size:15px}
-.np-sec{text-align:center;color:var(--gold);font-weight:600;margin:10px 0 0;min-height:1.4em}
-.np-seek{width:100%;accent-color:var(--gold);margin:14px 0 2px;height:22px}
-.np-times{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
-.np-ctl{display:flex;justify-content:space-between;align-items:center;margin:14px 6px 8px}
-.np-ctl .big{width:76px;height:76px;border-radius:50%;background:var(--gold);color:#1c1608;display:grid;place-items:center}
-.np-ctl .sm{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;color:var(--text)}
-.np-opts{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:6px}
-.np-opts button{padding:8px 14px;border-radius:999px;border:1px solid var(--line);font-weight:700;font-size:14px;color:var(--text)}
-.np-opts button.act{border-color:var(--gold);color:var(--gold)}
-.np-chap{margin-top:14px;overflow-y:auto;flex:1;min-height:0;border-top:1px solid var(--line)}
-.np-chap button{display:flex;justify-content:space-between;width:100%;padding:11px 2px;border-bottom:1px solid var(--line);font-size:15px;color:#d6cfbd}
-.np-chap button.cur{color:var(--gold);font-weight:700}
-.np-chap span{color:var(--muted);font-variant-numeric:tabular-nums}
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-@media (min-width:760px){.hero h2{font-size:48px}}
-</style>
+<link rel="stylesheet" href="app.css">
 </head>
 <body>
 <div class="app">
 <main id="main">
-  <!-- LIBRARY -->
-  <section class="view on" id="v-library" aria-label="Library">
-    <div class="wrap">
-      <div class="brand"><h1>Hik<span>mah</span></h1><span class="ar" lang="ar">حِكْمَة</span></div>
-      <p class="lede">Qur'an and tafsir, classical scholars, and the great thinkers of Harvard and beyond, joined with Nigerian wisdom. Every package is narrated, with Mishary Alafasy reciting the verses.</p>
-      <label class="search" for="q">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input id="q" type="search" placeholder="Search patience, Ibn Kathir, al-Kahf…" autocomplete="off">
-      </label>
-      <div class="banner" id="install"></div>
-      <p class="stats" id="stats"></p>
-      <div class="chips" id="chips" role="toolbar" aria-label="Filter by category"></div>
-      <button class="continue" id="continue"></button>
-      <div id="list"></div>
-    </div>
-  </section>
-
-  <!-- PACKAGE -->
+  <section class="view" id="v-home" aria-label="Home"><div class="wrap" id="home"></div></section>
+  <section class="view" id="v-explore" aria-label="Explore"><div class="wrap" id="explore"></div></section>
+  <section class="view" id="v-stashes" aria-label="Stashes"><div class="wrap" id="stashes"></div></section>
+  <section class="view" id="v-you" aria-label="You"><div class="wrap" id="you"></div></section>
   <section class="view" id="v-pkg" aria-label="Package"><div class="wrap" id="pkg"></div></section>
-
-  <!-- ASK -->
-  <section class="view" id="v-ask" aria-label="Ask Hikmah">
-    <div class="wrap">
-      <div class="pane-h"><h2>Ask Hikmah</h2><p>Ask anything about faith, character, work, leadership or family. The conversation runs on Claude, using all 51 packages as its library.</p></div>
-      <div class="group">
-        <div class="row"><div class="l"><b>How it works</b><small>Tap a question below, or open Ask Hikmah and type your own. A suggested question is copied, so you can paste it straight into the chat box. Needs an internet connection and your Claude sign-in.</small></div></div>
-      </div>
-      <p style="margin:16px 0"><a class="btn" id="open-ask" href="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask" target="_blank" rel="noopener" style="width:100%">Open Ask Hikmah in Claude</a></p>
-      <div class="suggest" id="suggest"></div>
-      <p class="fine" id="copied" role="status"></p>
-    </div>
-  </section>
-
-  <!-- MORE -->
-  <section class="view" id="v-more" aria-label="Offline and settings">
-    <div class="wrap">
-      <div class="pane-h"><h2>Offline & settings</h2><p>Download packages to listen without data, on the road or on a flight.</p></div>
-      <div class="group">
-        <div class="row" style="display:block">
-          <div style="display:flex;gap:12px;align-items:center"><div class="l"><b>Download the whole library</b><small id="dl-info">All 51 packages, about 100 MB</small></div><button class="btn" id="dl-all">Download</button></div>
-          <div class="bar"><i id="dl-bar"></i></div>
-        </div>
-        <div class="row"><div class="l"><b>Downloaded</b><small id="dl-count">Checking…</small></div><button class="btn ghost" id="dl-clear" style="padding:8px 12px">Remove all</button></div>
-      </div>
-      <div class="group">
-        <div class="row"><div class="l"><b>Text size</b><small>For reading the packages</small></div>
-          <div class="seg" id="fs-seg"><button data-v="0.92">A−</button><button data-v="1">A</button><button data-v="1.12">A+</button><button data-v="1.25">A++</button></div></div>
-        <div class="row"><div class="l"><b>Play the next package automatically</b><small>Continues through the same category</small></div><input type="checkbox" class="switch" id="autonext" aria-label="Autoplay next package"></div>
-        <div class="row"><div class="l"><b>Reset listening progress</b><small>Clears "listened" marks and resume points</small></div><button class="btn ghost" id="reset-prog" style="padding:8px 12px">Reset</button></div>
-      </div>
-      <div class="group" id="install-help">
-        <div class="row" style="display:block"><b>Add Hikmah to your home screen</b>
-          <small style="display:block;color:var(--muted);margin-top:6px;line-height:1.5"><b style="display:inline;color:var(--gold)">iPhone:</b> open this page in Safari, tap the Share button, then <i>Add to Home Screen</i>.<br><b style="display:inline;color:var(--gold)">Android:</b> open it in Chrome, tap the ⋮ menu, then <i>Install app</i> or <i>Add to Home screen</i>.</small></div>
-      </div>
-      <p class="fine">Arabic text: Tanzil Uthmani. Translation: Saheeh International. Recitation: Mishary Rashid Alafasy. Hadith numbering follows sunnah.com. Narration is a synthetic voice. Version <span id="ver"></span>.</p>
-    </div>
-  </section>
+  <section class="view" id="v-stash" aria-label="Stash"><div class="wrap" id="stash"></div></section>
 </main>
 
 <div class="player" id="player">
   <div class="in">
-    <button class="pbtn" id="p-back" aria-label="Back 15 seconds"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><text x="12" y="15.5" font-size="7" text-anchor="middle" fill="currentColor" stroke="none" font-family="sans-serif">15</text></svg></button>
-    <div class="t" id="p-title" role="button" tabindex="0" aria-label="Open player"><b></b><small></small></div>
-    <button class="pbtn main" id="p-play" aria-label="Play"></button>
-    <button class="pbtn" id="p-next" aria-label="Next package"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M5 5v14l10-7zM17 5h2.5v14H17z"/></svg></button>
-    <input class="seek" id="p-seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
+    <div class="art" id="pl-art"></div>
+    <div class="t" id="pl-t" role="button" tabindex="0" aria-label="Open player"><b></b><small></small></div>
+    <button class="pbtn" id="pl-b15" aria-label="Back 15 seconds"></button>
+    <button class="pbtn main" id="pl-play" aria-label="Play"></button>
+    <div class="pg" id="pl-pg"></div>
   </div>
 </div>
-<div class="sheet" id="np" role="dialog" aria-label="Now playing">
-  <div class="grab"><button id="np-close">⌄ Close</button><button id="np-open">Read package</button></div>
-  <div class="np-art"></div>
+
+<nav class="tabs" aria-label="Main">
+  <a href="#home" id="t-home"><span class="ti" data-i="home"></span>Home</a>
+  <a href="#explore" id="t-explore"><span class="ti" data-i="explore"></span>Explore</a>
+  <a href="#stashes" id="t-stashes"><span class="ti" data-i="bookmark"></span>Stashes</a>
+  <a href="#you" id="t-you"><span class="ti" data-i="user"></span>You</a>
+</nav>
+
+<div class="reader" id="reader" role="dialog" aria-label="Idea cards">
+  <div class="rd-top"><div class="bars" id="rd-bars"></div>
+    <div class="rd-head"><span class="t" id="rd-title"></span><button id="rd-follow" aria-label="Follow the narration"></button><button id="rd-close" aria-label="Close"></button></div></div>
+  <div class="rd-stage" id="rd-stage"></div>
+  <button class="tapzone l" id="tz-l" aria-label="Previous card"></button><button class="tapzone r" id="tz-r" aria-label="Next card"></button>
+  <div class="rd-actions" id="rd-actions">
+    <button id="ra-like" aria-label="Like"></button>
+    <button id="ra-save" aria-label="Save to stash"></button>
+    <button id="ra-listen" aria-label="Listen"></button>
+    <button id="ra-copy" aria-label="Copy idea"></button>
+  </div>
+</div>
+
+<div class="np" id="np" role="dialog" aria-label="Now playing">
+  <div class="npbg" id="np-bg"></div>
+  <div class="top"><button id="np-close">Close</button><button id="np-read">Read along</button></div>
+  <div class="np-art" id="np-art"></div>
   <div class="np-t"><small id="np-cat"></small><h3 id="np-title"></h3><p id="np-sub"></p></div>
   <p class="np-sec" id="np-sec"></p>
-  <input class="np-seek" id="np-seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
+  <input type="range" id="np-seek" min="0" max="1000" value="0" aria-label="Seek">
   <div class="np-times"><span id="np-cur">0:00</span><span id="np-dur">0:00</span></div>
   <div class="np-ctl">
-    <button class="sm" id="np-prev" aria-label="Previous package"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5v14L9 12zM4.5 5H7v14H4.5z"/></svg></button>
-    <button class="sm" id="np-b15" aria-label="Back 15 seconds"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><text x="12" y="15.5" font-size="7" text-anchor="middle" fill="currentColor" stroke="none" font-family="sans-serif">15</text></svg></button>
+    <button class="sm" id="np-prev" aria-label="Previous package"></button>
+    <button class="sm" id="np-b15" aria-label="Back 15 seconds"></button>
     <button class="big" id="np-play" aria-label="Play"></button>
-    <button class="sm" id="np-f30" aria-label="Forward 30 seconds"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/><text x="12" y="15.5" font-size="7" text-anchor="middle" fill="currentColor" stroke="none" font-family="sans-serif">30</text></svg></button>
-    <button class="sm" id="np-next" aria-label="Next package"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M5 5v14l10-7zM17 5h2.5v14H17z"/></svg></button>
+    <button class="sm" id="np-f30" aria-label="Forward 30 seconds"></button>
+    <button class="sm" id="np-next" aria-label="Next package"></button>
   </div>
-  <div class="np-opts"><button id="np-rate" aria-label="Playback speed">1× speed</button><button id="np-sleep" aria-label="Sleep timer">Sleep timer: off</button></div>
-  <div class="np-chap" id="np-chap" aria-label="Sections"></div>
+  <div class="np-opts"><button id="np-rate">1× speed</button><button id="np-sleep">Sleep timer: off</button></div>
+  <div class="np-chap" id="np-chap"></div>
 </div>
-<nav class="tabs" aria-label="Sections">
-  <a href="#library" id="t-library" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Z"/><path d="M8 7h7M8 11h5"/></svg>Library</a>
-  <a href="#ask" id="t-ask"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/><path d="M9 10h6M9 13.5h4"/></svg>Ask</a>
-  <a href="#more" id="t-more"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Offline & settings</a>
-</nav>
-<div class="netpill" id="netpill">Offline · downloaded packages still play</div>
+
+<div class="sheet-bg" id="sheet-bg"></div>
+<div class="sheet" id="sheet" role="dialog" aria-label="Options"><div class="grab"></div><div id="sheet-in"></div></div>
+<div class="onb" id="onb" role="dialog" aria-label="Welcome"></div>
+<div class="toast" id="toast" role="status"></div>
+<div class="netpill" id="netpill">Offline · saved packages still play</div>
 <audio id="audio" preload="none"></audio>
 </div>
-
-<script>
-const ICON_PLAY='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>';
-const ICON_PAUSE='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>';
-const SEC_LABEL={idea:"The big idea",mechanics:"Going deeper",practice:"In the real world",faith:"What the verses teach",intro:"Introduction",opening:"Opening",verses:"The verses",verse:"Understanding the verses",hadith:"From the Sunnah",scholars:"Classical scholars",modern:"Modern thought",nigerian:"Nigerian wisdom",practices:"Practices for this week",reflect:"Reflect",closing:"Closing"};
-const CATS=["All","Great Thinkers","Tafsir","Character","Work & Leadership","Family","Heart","Leading People","Thinking & Decisions","Strategy & Execution","Influence & Negotiation","The Good Life"];
-const THINK_LABEL={verses:"Through the lens of faith",nigerian:"In the Nigerian context"};
-const lab=(m,p)=>(p&&p.kind==="thinker"&&THINK_LABEL[m])||SEC_LABEL[m];
-let PK=[],TM={},byId={},cat="All",cur=null;
-const $=s=>document.querySelector(s), esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const store={get(k,d){try{const v=localStorage.getItem("hikmah:"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("hikmah:"+k,JSON.stringify(v))}catch(e){}}};
-const fmt=s=>{s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
-const prov=t=>esc(t).replace(/«([^»]*)»/g,'<span class="prov">$1</span>');
-
-/* ---------- library ---------- */
-function renderChips(){
-  $("#chips").innerHTML=CATS.map(c=>`<button class="chip" aria-pressed="${c===cat}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
-}
-$("#chips").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;cat=b.dataset.c;renderChips();renderList()});
-$("#q").addEventListener("input",renderList);
-function hay(p){return [p.title,p.sub,p.tag,p.cat,p.ref,p.opening,p.verse||"",p.scholars||"",p.modern||"",p.idea||"",p.mechanics||"",p.practice||"",p.faith||"",p.source||"",p.nigerian,p.practices.join(" "),p.hadith.map(h=>h.join(" ")).join(" ")].join(" ").toLowerCase()}
-function renderList(){
-  const q=$("#q").value.trim().toLowerCase(), prog=store.get("prog",{}), done=store.get("done",{});
-  let items=PK.filter(p=>(cat==="All"||(cat==="Great Thinkers"?p.kind==="thinker":p.cat===cat))&&(!q||q.split(/\s+/).every(w=>p._hay.includes(w))));
-  const groups=cat==="All"&&!q?CATS.slice(2):cat==="Great Thinkers"&&!q?CATS.slice(7):[null];
-  let html="";
-  for(const g of groups){
-    const arr=g?items.filter(p=>p.cat===g):items; if(!arr.length)continue;
-    if(g){const mins=Math.round(arr.reduce((a,p)=>a+(TM[p.id]?.dur||0),0)/60);html+=`<h2 class="group-h">${esc(g)}<em>${arr.length} package${arr.length>1?"s":""}${mins?` · ${mins} min`:""}</em></h2>`}
-    html+=arr.map(p=>{const d=TM[p.id]?.dur, pr=d&&prog[p.id]?Math.min(1,prog[p.id]/d):0;
-      return `<button class="card" data-id="${p.id}">
-        <h3>${esc(p.title)}${p.new?'<span class="pill">New</span>':""}</h3>
-        <span class="sub">${esc(p.sub)}</span>
-        <span class="tag">${esc(p.tag)}</span>
-        <span class="meta">${d?`<span>${Math.round(d/60)} min listen</span>`:""}<span>${esc(p.kind==="thinker"?"With "+p.ref.split(";")[0]:p.ref.split(";")[0])}</span>${OFF.has(p.id)?'<span class="done" title="Saved offline">● Offline</span>':""}${done[p.id]?'<span class="done">✓ Listened</span>':pr>0.02?`<span class="progress-mini"><i style="width:${pr*100}%"></i></span>`:""}</span>
-        <span class="side"><span class="ar" lang="ar">${esc(p.ar)}</span></span>
-      </button>`}).join("");
-  }
-  $("#list").innerHTML=html||`<p class="empty">No package matches “${esc(q)}”. Try the Ask tab instead.</p>`;
-  const last=store.get("last",null), lp=last&&byId[last];
-  const c=$("#continue");
-  if(lp&&!q&&cat==="All"){c.classList.add("on");c.innerHTML=`<span style="flex:1"><small>Continue listening</small><b>${esc(lp.title)}</b> <span style="color:var(--muted);font-size:14px">· ${fmt(store.get("prog",{})[last])} of ${fmt(TM[last]?.dur)}</span></span><span class="pbtn main">${ICON_PLAY}</span>`;c.onclick=()=>{play(last,true);openNP()}}
-  else c.classList.remove("on");
-}
-$("#list").addEventListener("click",e=>{const b=e.target.closest(".card");if(b)location.hash=b.dataset.id});
-
-/* ---------- package ---------- */
-function jumpBtn(id,mark){return TM[id]?.marks?.some(m=>m[0]===mark)?`<button class="jump" data-mark="${mark}" aria-label="Play from ${lab(mark,byId[id])}">${ICON_PLAY.replace(/18/g,12)} Listen</button>`:""}
-function sec(id,mark,inner){return `<div class="sec" id="s-${mark}" data-mark="${mark}"><div class="sec-h"><h4>${lab(mark,byId[id])}</h4>${jumpBtn(id,mark)}</div>${inner}</div>`}
-function versesHTML(p){return p.verses.map(v=>`<div class="verse"><p class="a" lang="ar">${esc(v.ar)} ﴿${v.v.toLocaleString("ar-EG")}﴾</p><p class="e">${esc(v.en)}</p><span class="r">Qur'an ${v.s}:${v.v} · Saheeh International</span></div>`).join("")}
-function renderPkg(id){
-  const p=byId[id]; if(!p){location.hash="library";return}
-  const d=TM[id]?.dur, checks=store.get("chk:"+id,{});
-  $("#pkg").innerHTML=`
-    <a class="back" href="#library">‹ Library</a>
-    <div class="hero">
-      <p class="ar" lang="ar" dir="rtl">${esc(p.ar)}</p>
-      <div class="cat">${esc(p.cat)}${p.new?' · New':''}</div>
-      <h2>${esc(p.title)}</h2>
-      <div class="sub">${esc(p.sub)}${p.kind==="thinker"?"":" · "+esc(p.ref)}</div>
-      <p class="tag">${esc(p.tag)}</p>
-      <button class="bigplay" id="bigplay"><span class="ic">${ICON_PLAY}</span><span><span id="bp-l">Listen to this package</span><small>${d?Math.round(d/60)+" min · narration with recitation":"Narration"}</small></span></button>
-      ${d?'<button class="offbtn" id="offbtn"></button>':""}
-    </div>
-    ${p.kind==="thinker"?`<p class="keyread"><b>Key reading</b> ${esc(p.source)}</p>`:""}
-    ${sec(id,"opening",`<p>${prov(p.opening)}</p>`)}
-    ${p.kind==="thinker"?sec(id,"idea",`<p>${prov(p.idea)}</p>`)+sec(id,"mechanics",`<p>${prov(p.mechanics)}</p>`)+sec(id,"practice",`<p>${prov(p.practice)}</p>`):""}
-    ${sec(id,"verses",versesHTML(p))}
-    ${p.kind==="thinker"?sec(id,"faith",`<p>${prov(p.faith)}</p>`):sec(id,"verse",`<p>${prov(p.verse)}</p>`)}
-    ${p.hadith.length?sec(id,"hadith",p.hadith.map(h=>`<div class="hadith"><p>“${esc(h[0])}”</p><cite>${esc(h[1])}</cite></div>`).join("")):""}
-    ${p.kind==="thinker"?"":sec(id,"scholars",`<p>${prov(p.scholars)}</p>`)+sec(id,"modern",`<p>${prov(p.modern)}</p>`)}
-    ${sec(id,"nigerian",`<p>${prov(p.nigerian)}</p>`)}
-    ${sec(id,"practices",`<ul class="practices">${p.practices.map((x,i)=>`<li><label for="c-${id}-${i}"><input type="checkbox" id="c-${id}-${i}" data-i="${i}" ${checks[i]?"checked":""}><span>${prov(x)}</span></label></li>`).join("")}</ul>`)}
-    ${sec(id,"reflect",`<ol class="reflect">${p.reflect.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`)}
-    ${sec(id,"closing",`<p>${prov(p.closing)}</p>`)}
-    <button class="askthis" id="askthis">Ask Hikmah about “${esc(p.title)}”</button>
-    <p class="sources">Arabic text: Tanzil Uthmani script. Translation: Saheeh International. Recitation: Mishary Rashid Alafasy. Hadith numbering follows the standard collections on sunnah.com.</p>`;
-  if(!TM[id]){const bp=$("#bigplay");bp.disabled=true;bp.style.opacity=.55;$("#bp-l").textContent="Narration is being recorded";bp.querySelector("small").textContent="Read the full text below meanwhile"}
-  else $("#bigplay").onclick=()=>{ if(cur===id&&!A.paused){A.pause()} else play(id)};
-  $("#pkg").querySelectorAll(".jump").forEach(b=>b.onclick=()=>{const m=TM[id].marks.find(m=>m[0]===b.dataset.mark);play(id,false,m[1])});
-  $("#pkg").querySelectorAll(".practices input").forEach(c=>c.onchange=()=>{const k=store.get("chk:"+id,{});k[c.dataset.i]=c.checked;store.set("chk:"+id,k)});
-  $("#askthis").onclick=async()=>{try{await navigator.clipboard.writeText(`About the package “${p.title}” (${p.sub}): `)}catch(e){}window.open(ASK_URL,"_blank","noopener")};
-  const ob=$("#offbtn");if(ob){paintOff(id,ob);ob.onclick=()=>toggleOffline(id,ob)}
-  syncPkgUI();
-}
-
-/* ---------- audio ---------- */
-const A=$("#audio"); let seeking=false, npSeeking=false;
-const ORDER=()=>PK.slice().sort((a,b)=>CATS.indexOf(a.cat)-CATS.indexOf(b.cat)).filter(p=>TM[p.id]);
-function neighbour(dir,sameCat){const o=ORDER().filter(p=>!sameCat||p.cat===byId[cur].cat);const i=o.findIndex(p=>p.id===cur);return o[i+dir]?.id}
-/* Audio is fetched whole (2-3 MB) and played from memory, so a weak network can never break playback mid-package. */
-const SILENT="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//OEwAAAAAAAAAAAAEluZm8AAAAPAAAACQAABCAARUVFRUVFRUVFRUVdXV1dXV1dXV1dXXR0dHR0dHR0dHR0i4uLi4uLi4uLi4uioqKioqKioqKiorq6urq6urq6urq60dHR0dHR0dHR0dHo6Ojo6Ojo6Ojo6P//////////////AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQD8AAAAAAAAAQgDeb0IwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//NExAAAAANIAAAAAExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExFMAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKYAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NExKwAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NExKwAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
-let unlocked=false, blobURL=null, loadSeq=0, loadedId=null;
-function unlock(){if(unlocked)return;unlocked=true;try{A.src=SILENT;const p=A.play();if(p)p.then(()=>{if(A.src===SILENT)A.pause()}).catch(()=>{})}catch(e){}}
-async function audioBlob(id,onProg){
-  try{const c=await caches.open(AUDIO_CACHE);const hit=await c.match(audioURL(id));if(hit)return await hit.blob()}catch(e){}
-  const r=await fetch("audio/"+id+".mp3",{cache:"no-store"}); if(!r.ok)throw new Error("HTTP "+r.status);
-  const total=+r.headers.get("content-length")||0; let blob;
-  if(r.body&&r.body.getReader&&total){const rd=r.body.getReader(),parts=[];let got=0;
-    for(;;){const {done,value}=await rd.read();if(done)break;parts.push(value);got+=value.length;onProg&&onProg(got/total)}
-    blob=new Blob(parts,{type:"audio/mpeg"})}
-  else blob=new Blob([await r.arrayBuffer()],{type:"audio/mpeg"});
-  try{const c=await caches.open(AUDIO_CACHE);await c.put(audioURL(id),new Response(blob,{headers:{"Content-Type":"audio/mpeg","Content-Length":String(blob.size)}}));OFF.add(id)}catch(e){}
-  return blob;
-}
-async function play(id,resume,at){
-  if(!TM[id])return;
-  unlock();
-  $("#player").classList.add("on");document.documentElement.style.setProperty("--player","78px");
-  store.set("last",id);
-  if(loadedId===id){ if(at!=null)A.currentTime=at; A.play().catch(()=>{}); setMeta(); syncPlayer(); return }
-  const seq=++loadSeq; cur=id; renderChapters(); setMeta();
-  const pr=store.get("prog",{})[id]||0, start=at!=null?at:(pr<(TM[id]?.dur||1e9)-5?pr:0);
-  const msg=t=>{if(seq===loadSeq){$("#p-title b").textContent=byId[id].title;$("#p-title small").textContent=t;if($("#np").classList.contains("on"))$("#np-sec").textContent=t}};
-  msg(OFF.has(id)?"Opening…":"Preparing audio…");
-  let blob;
-  try{blob=await audioBlob(id,f=>msg("Preparing audio "+Math.round(f*100)+"%"))}
-  catch(e){if(seq===loadSeq)msg(navigator.onLine?"Couldn't load the audio. Tap play to try again.":"You're offline and this package isn't saved yet.");loadedId=null;return}
-  if(seq!==loadSeq)return;
-  if(blobURL)URL.revokeObjectURL(blobURL); blobURL=URL.createObjectURL(blob);
-  A.src=blobURL; loadedId=id; A.playbackRate=store.get("rate",1);
-  const seekTo=()=>{try{if(start>0&&Math.abs(A.currentTime-start)>1)A.currentTime=start}catch(e){}};
-  A.addEventListener("loadedmetadata",seekTo,{once:true});
-  A.play().catch(()=>{msg("Tap play to start")});
-  syncPlayer(); refreshOfflineQuiet();
-  setTimeout(()=>{if(cur!==id||!store.get("autonext",true))return;const n=neighbour(1,true);if(n&&!OFF.has(n)&&navigator.onLine)saveOne(n).catch(()=>{})},8000);
-}
-function refreshOfflineQuiet(){try{renderList()}catch(e){}}
-function setMeta(){
-  if(!("mediaSession" in navigator)||!cur)return;
-  const p=byId[cur];
-  navigator.mediaSession.metadata=new MediaMetadata({title:p.title,artist:p.sub,album:"Hikmah · "+p.cat,
-    artwork:[{src:"icons/icon-96.png",sizes:"96x96",type:"image/png"},{src:"icons/icon-192.png",sizes:"192x192",type:"image/png"},{src:"icons/icon-512.png",sizes:"512x512",type:"image/png"}]});
-}
-if("mediaSession" in navigator){
-  const ms=navigator.mediaSession, h=(a,f)=>{try{ms.setActionHandler(a,f)}catch(e){}};
-  h("play",()=>A.play());h("pause",()=>A.pause());
-  h("seekbackward",()=>{A.currentTime=Math.max(0,A.currentTime-15)});h("seekforward",()=>{A.currentTime+=30});
-  h("seekto",d=>{if(d.seekTime!=null)A.currentTime=d.seekTime});
-  h("previoustrack",()=>{if(A.currentTime>5)A.currentTime=0;else{const n=neighbour(-1);if(n)play(n,false,0)}});
-  h("nexttrack",()=>{const n=neighbour(1);if(n)play(n,false,0)});
-}
-function syncPlayer(){
-  if(!cur||loadedId!==cur){if(cur){for(const b of [$("#p-play"),$("#np-play")]){b.innerHTML=ICON_PLAY}}return} const p=byId[cur], d=A.duration||TM[cur]?.dur||0, m=currentMark();
-  $("#p-title b").textContent=p.title;
-  $("#p-title small").textContent=`${fmt(A.currentTime)} / ${fmt(d)}${m?" · "+lab(m,p):""}${sleepEnd?" · ☾":""}`;
-  for(const b of [$("#p-play"),$("#np-play")]){b.innerHTML=A.paused?ICON_PLAY:ICON_PAUSE;b.setAttribute("aria-label",A.paused?"Play":"Pause")}
-  $("#np-play").innerHTML=(A.paused?ICON_PLAY:ICON_PAUSE).replace(/18/g,30);
-  if(!seeking&&d)$("#p-seek").value=Math.round(A.currentTime/d*1000);
-  if($("#np").classList.contains("on")){
-    if(!npSeeking&&d)$("#np-seek").value=Math.round(A.currentTime/d*1000);
-    $("#np-cur").textContent=fmt(A.currentTime);$("#np-dur").textContent="-"+fmt(d-A.currentTime);
-    $("#np-sec").textContent=m?lab(m,p):"";
-    $("#np-rate").textContent=A.playbackRate+"× speed";
-    document.querySelectorAll("#np-chap button").forEach(b=>b.classList.toggle("cur",b.dataset.mark===m));
-  }
-  if("mediaSession" in navigator&&d&&navigator.mediaSession.setPositionState){try{navigator.mediaSession.setPositionState({duration:d,playbackRate:A.playbackRate,position:Math.min(A.currentTime,d)})}catch(e){}}
-  syncPkgUI();
-}
-function currentMark(){const ms=TM[cur]?.marks||[];let m=null;for(const x of ms)if(A.currentTime>=x[1]-.2)m=x[0];return m}
-function syncPkgUI(){
-  const pid=location.hash.slice(1), bp=$("#bigplay"); if(!bp||bp.disabled)return;
-  const playing=cur===pid&&!A.paused;
-  bp.querySelector(".ic").innerHTML=playing?ICON_PAUSE:ICON_PLAY;
-  $("#bp-l").textContent=playing?"Pause":(cur===pid&&A.currentTime>3?"Resume from "+fmt(A.currentTime):"Listen to this package");
-  const m=cur===pid?currentMark():null;
-  document.querySelectorAll("#pkg .sec").forEach(s=>s.classList.toggle("live",!A.paused&&s.dataset.mark===m));
-}
-let lastSave=0;
-A.addEventListener("timeupdate",()=>{if(loadedId!==cur)return;syncPlayer();checkSleep();if(Date.now()-lastSave>4000){lastSave=Date.now();const g=store.get("prog",{});g[cur]=A.currentTime;store.set("prog",g)}});
-["play","pause","ratechange","loadedmetadata"].forEach(ev=>A.addEventListener(ev,syncPlayer));
-A.addEventListener("pause",()=>{const g=store.get("prog",{});if(cur&&loadedId===cur){g[cur]=A.currentTime;store.set("prog",g)}});
-A.addEventListener("ended",()=>{
-  if(loadedId!==cur)return;
-  const d=store.get("done",{});d[cur]=1;store.set("done",d);const g=store.get("prog",{});g[cur]=0;store.set("prog",g);
-  if(sleepEnd==="end"){sleepEnd=null;updSleep();syncPlayer();renderList();return}
-  const n=store.get("autonext",true)?neighbour(1,true):null;
-  if(n)play(n,false,0); else {syncPlayer();renderList()}
-});
-A.addEventListener("error",()=>{if(!cur||!loadedId||A.src===SILENT)return;loadedId=null;$("#p-title small").textContent="Audio could not play. Tap play to try again."});
-$("#p-play").onclick=$("#np-play").onclick=()=>{if(!cur)return;if(loadedId!==cur){play(cur,true);return}A.paused?A.play().catch(()=>{}):A.pause()};
-$("#p-back").onclick=$("#np-b15").onclick=()=>{A.currentTime=Math.max(0,A.currentTime-15)};
-$("#np-f30").onclick=()=>{A.currentTime=Math.min((A.duration||1e9)-1,A.currentTime+30)};
-$("#p-next").onclick=$("#np-next").onclick=()=>{const n=neighbour(1);if(n)play(n,false,0)};
-$("#np-prev").onclick=()=>{if(A.currentTime>5)A.currentTime=0;else{const n=neighbour(-1);if(n)play(n,false,0)}};
-const RATES=[0.9,1,1.15,1.3,1.5];
-$("#np-rate").onclick=()=>{const r=RATES[(RATES.indexOf(A.playbackRate)+1)%RATES.length]||1;A.playbackRate=r;store.set("rate",r);syncPlayer()};
-for(const [sel,flag] of [["#p-seek","s"],["#np-seek","n"]]){
-  $(sel).addEventListener("input",()=>{flag==="s"?seeking=true:npSeeking=true;if(flag==="n"){const d=A.duration||TM[cur]?.dur;$("#np-cur").textContent=fmt($(sel).value/1000*d)}});
-  $(sel).addEventListener("change",()=>{const d=A.duration||TM[cur]?.dur;if(d)A.currentTime=$(sel).value/1000*d;seeking=npSeeking=false});
-}
-/* now playing sheet */
-function openNP(){if(!cur)return;$("#np").classList.add("on");const p=byId[cur];$("#np-cat").textContent=p.cat;$("#np-title").textContent=p.title;$("#np-sub").textContent=p.sub;renderChapters();syncPlayer();history.pushState({np:1},"")}
-function closeNP(){$("#np").classList.remove("on")}
-$("#p-title").onclick=openNP; $("#p-title").onkeydown=e=>{if(e.key==="Enter")openNP()};
-$("#np-close").onclick=()=>{closeNP();if(history.state&&history.state.np)history.back()};
-$("#np-open").onclick=()=>{closeNP();location.hash=cur};
-window.addEventListener("popstate",()=>{if($("#np").classList.contains("on"))closeNP()});
-function renderChapters(){if(!cur)return;const p=byId[cur];$("#np-chap").innerHTML=(TM[cur]?.marks||[]).map(m=>`<button data-mark="${m[0]}" data-t="${m[1]}">${esc(lab(m[0],p)||"")}<span>${fmt(m[1])}</span></button>`).join("");
-  $("#np-chap").querySelectorAll("button").forEach(b=>b.onclick=()=>{A.currentTime=+b.dataset.t;A.play().catch(()=>{})})}
-/* sleep timer */
-let sleepEnd=null; const SLEEPS=[null,15,30,45,60,"end"];
-function updSleep(){const b=$("#np-sleep");b.classList.toggle("act",!!sleepEnd);b.textContent=!sleepEnd?"Sleep timer: off":sleepEnd==="end"?"Sleep: end of package":"Sleep: "+Math.max(1,Math.ceil((sleepEnd-Date.now())/60000))+" min"}
-$("#np-sleep").onclick=()=>{const curIdx=sleepEnd==="end"?5:sleepEnd?SLEEPS.indexOf(sleepMin):0;const nx=SLEEPS[(curIdx+1)%SLEEPS.length];sleepMin=nx;sleepEnd=nx==="end"?"end":nx?Date.now()+nx*60000:null;updSleep();syncPlayer()};
-let sleepMin=null;
-function checkSleep(){if(sleepEnd&&sleepEnd!=="end"){if(Date.now()>=sleepEnd){A.pause();sleepEnd=null;sleepMin=null}updSleep()}}
-
-/* ---------- offline downloads ---------- */
-const AUDIO_CACHE="hikmah-audio-v1"; let OFF=new Set();
-const audioURL=id=>new URL("audio/"+id+".mp3",location.href).href;
-async function refreshOffline(){
-  if(!("caches" in window))return;
-  try{const c=await caches.open(AUDIO_CACHE);const keys=await c.keys();OFF=new Set(keys.map(r=>(r.url.match(/audio\/([a-z]+)\.mp3/)||[])[1]).filter(Boolean))}catch(e){}
-  const n=OFF.size,tot=Object.keys(TM).length;
-  $("#dl-count").textContent=`${n} of ${tot} packages saved on this phone`;
-  if(navigator.storage&&navigator.storage.estimate){try{const e=await navigator.storage.estimate();$("#dl-count").textContent+=` · ${Math.round((e.usage||0)/1048576)} MB used`}catch(e){}}
-  $("#dl-bar").style.width=(tot?n/tot*100:0)+"%";
-  $("#dl-all").textContent=n>=tot&&tot?"All saved":"Download";
-}
-async function saveOne(id){
-  const c=await caches.open(AUDIO_CACHE);
-  if(await c.match(audioURL(id))){OFF.add(id);return}
-  const r=await fetch("audio/"+id+".mp3",{cache:"no-store"});
-  if(!r.ok)throw new Error("fetch "+r.status);
-  await c.put(audioURL(id),r); OFF.add(id);
-}
-let dlBusy=false;
-$("#dl-all").onclick=async()=>{
-  if(dlBusy)return; if(!navigator.onLine){$("#dl-info").textContent="Connect to the internet to download.";return}
-  dlBusy=true;
-  if(navigator.storage&&navigator.storage.persist){try{await navigator.storage.persist()}catch(e){}}
-  const ids=ORDER().map(p=>p.id).filter(id=>!OFF.has(id));let i=0,fail=0;
-  for(const id of ids){i++;$("#dl-info").textContent=`Downloading ${i} of ${ids.length}: ${byId[id].title}`;$("#dl-all").textContent=Math.round(i/ids.length*100)+"%";
-    try{await saveOne(id)}catch(e){fail++}
-    $("#dl-bar").style.width=(OFF.size/Object.keys(TM).length*100)+"%";}
-  dlBusy=false;$("#dl-info").textContent=fail?`${fail} packages failed. Tap Download again to retry.`:"Done. The whole library now plays offline.";
-  refreshOffline();renderList();
-};
-$("#dl-clear").onclick=async()=>{if(dlBusy)return;try{await caches.delete(AUDIO_CACHE)}catch(e){}OFF=new Set();refreshOffline();renderList();$("#dl-info").textContent="Downloads removed. Packages will download again as you play them."};
-async function toggleOffline(id,btn){
-  if(OFF.has(id)){const c=await caches.open(AUDIO_CACHE);await c.delete(audioURL(id));OFF.delete(id)}
-  else{if(!navigator.onLine)return;btn.textContent="Downloading…";try{await saveOne(id)}catch(e){btn.textContent="Download failed. Tap to retry.";return}}
-  paintOff(id,btn);refreshOffline();
-}
-function paintOff(id,btn){btn.classList.toggle("on",OFF.has(id));btn.innerHTML=`<span class="offdot"></span>${OFF.has(id)?"Saved for offline listening · tap to remove":"Save for offline listening"}`}
-
-/* ---------- settings ---------- */
-function applyFs(v){document.documentElement.style.setProperty("--fs",v);document.querySelectorAll("#fs-seg button").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.v===+v)))}
-$("#fs-seg").onclick=e=>{const b=e.target.closest("button");if(!b)return;store.set("fs",+b.dataset.v);applyFs(+b.dataset.v)};
-$("#autonext").checked=store.get("autonext",true);$("#autonext").onchange=e=>store.set("autonext",e.target.checked);
-$("#reset-prog").onclick=()=>{store.set("prog",{});store.set("done",{});store.set("last",null);$("#reset-prog").textContent="Done";renderList()};
-
-/* ---------- ask ---------- */
-const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
-const SUGGEST=[
-  ["Patience at work","My manager rejected a proposal I worked hard on. How should I respond, from the Qur'an and the scholars?"],
-  ["Explain a verse","Explain Surah al-'Asr verse 3 as Ibn Kathir and Ibn al-Qayyim understood it."],
-  ["Family","How do I honour my mother while keeping peace in my own home?"],
-  ["Great thinkers","Apply Heifetz's adaptive leadership and Edmondson's psychological safety to building a compliance culture in a Nigerian fund manager."],
-  ["Decisions","Compare Kahneman's System 1 and System 2 with the Qur'an's command to verify news in al-Hujurat 49:6."],
-  ["Draft a new package","Draft a new package on humility (tawadu') in the same format as the library."]];
-$("#suggest").innerHTML=SUGGEST.map((s,i)=>`<button data-s="${i}"><b>${esc(s[0])}</b>${esc(s[1])}</button>`).join("");
-$("#suggest").addEventListener("click",async e=>{const b=e.target.closest("button");if(!b)return;const q=SUGGEST[b.dataset.s][1];
-  try{await navigator.clipboard.writeText(q);$("#copied").textContent="Question copied. Paste it into Ask Hikmah."}catch(err){$("#copied").textContent="Opening Ask Hikmah…"}
-  window.open(ASK_URL,"_blank","noopener")});
-
-/* ---------- routing ---------- */
-function route(){
-  const h=location.hash.slice(1)||"library";
-  const view=["ask","more","library"].includes(h)?h:"pkg";
-  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+view));
-  const tab=view==="pkg"?"library":view;
-  ["library","ask","more"].forEach(t=>{const a=$("#t-"+t);t===tab?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current")});
-  if(view==="pkg")renderPkg(h); if(view==="library")renderList(); if(view==="more")refreshOffline();
-  $("#main").scrollTop=view==="library"?(store.get("libScroll",0)):0;
-}
-window.addEventListener("hashchange",()=>{route()});
-$("#main").addEventListener("scroll",()=>{if((location.hash||"#library")==="#library")store.set("libScroll",$("#main").scrollTop)},{passive:true});
-
-/* ---------- install + network ---------- */
-const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
-let deferredPrompt=null;
-function showInstall(html){if(standalone||store.get("noInstall",false))return;const b=$("#install");b.innerHTML=html+'<button class="x" aria-label="Dismiss">×</button>';b.classList.add("on");b.querySelector(".x").onclick=()=>{b.classList.remove("on");store.set("noInstall",true)}}
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;
-  showInstall('<span style="flex:1"><b>Install Hikmah</b><br>Add the app to your home screen.</span><button class="btn" id="do-install" style="padding:8px 14px">Install</button>');
-  $("#do-install").onclick=async()=>{deferredPrompt.prompt();try{await deferredPrompt.userChoice}catch(e){}deferredPrompt=null;$("#install").classList.remove("on")}});
-const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
-if(isIOS&&!standalone)setTimeout(()=>showInstall('<span><b>Install Hikmah:</b> tap the Share button <svg width="14" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><path d="M12 3v13M7 8l5-5 5 5"/><path d="M5 12v8h14v-8"/></svg>, then <b>Add to Home Screen</b>.</span>'),800);
-if(standalone)$("#install-help").style.display="none";
-function net(){$("#netpill").classList.toggle("on",!navigator.onLine)}
-addEventListener("online",net);addEventListener("offline",net);net();
-
-/* ---------- boot ---------- */
-const VERSION="1.1.0"; $("#ver").textContent=VERSION;
-applyFs(store.get("fs",1));
-Promise.all([fetch("data/packages.json").then(r=>r.json()),fetch("data/timings.json").then(r=>r.json()).catch(()=>({}))]).then(async([p,t])=>{
-  PK=p;TM=t;PK.forEach(x=>{byId[x.id]=x;x._hay=hay(x)});
-  const hrs=Object.values(TM).reduce((a,t)=>a+(t.dur||0),0)/3600;
-  $("#stats").textContent=`${PK.length} packages · ${PK.filter(p=>p.kind==="thinker").length} from the great thinkers · ${hrs.toFixed(1)} hours of narration`;
-  renderChips();route();
-  await refreshOffline();renderList();
-  const last=store.get("last",null);
-  if(last&&byId[last]&&TM[last]){cur=last;const pr=store.get("prog",{})[last]||0;$("#player").classList.add("on");document.documentElement.style.setProperty("--player","78px");setMeta();syncPlayer();$("#p-title b").textContent=byId[last].title;$("#p-title small").textContent=`Paused at ${fmt(pr)} · tap ▶ to resume`}
-}).catch(()=>{$("#list").innerHTML='<p class="empty">The library could not load. Check your connection, then reopen the app.</p>'});
-if("serviceWorker" in navigator){const reg=()=>navigator.serviceWorker.register("sw.js").catch(()=>{});document.readyState==="complete"?reg():addEventListener("load",reg)}
-</script>
+<script src="art.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
