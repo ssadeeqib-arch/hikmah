@@ -1,6 +1,7 @@
 /* Hikmah 2.0 */
 "use strict";
-const VERSION="2.1.0";
+const VERSION="2.2.0";
+const SITE="https://ssadeeqib-arch.github.io/hikmah/";
 const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -40,7 +41,8 @@ const IC={
  follow:'<path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l4 3-4 3z" fill="currentColor"/>',
  trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H4a3 3 0 0 0 4 4M16 6h4a3 3 0 0 1-4 4M12 13v4M8 21h8M9 17h6"/>',
  book:'<path d="M4 5c3-1 6-1 8 1v14c-2-2-5-2-8-1zM20 5c-3-1-6-1-8 1v14c2-2 5-2 8-1z"/>',
- clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ more:'<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>'
 };
 const icon=(n,s=22,extra="")=>`<svg class="icon" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ${extra} aria-hidden="true">${IC[n]||""}</svg>`;
 $$(".ti").forEach(e=>e.innerHTML=icon(e.dataset.i,20));
@@ -61,7 +63,7 @@ function buildCards(p){
   const verseCard=(mark,eb)=>add({type:"verse",eb,verses:p.verses,mark});
   const sec=(mark,text,eb)=>{if(!text)return;const [h,b]=splitHead(text);add({type:"idea",eb:eb||LABEL[mark],h:h||(eb||LABEL[mark]),body:h?b:text,mark})};
   if(p.kind==="book"){
-    p.ideas.forEach(([t,b],i)=>add({type:"idea",eb:`Idea ${i+1}`,h:t,body:b,mark:"idea"+i,prov:t.startsWith("«")}));
+    p.ideas.forEach(([t,b],i)=>add({type:"idea",eb:`Idea ${i+1}`,h:t,body:b,deep:(p.deep||[])[i],mark:"idea"+i,prov:t.startsWith("«")}));
     verseCard("verses","From the Qur'an");
     sec("faith",p.faith,"In the light of the Qur'an");
     p.hadith.forEach(h=>add({type:"hadith",eb:"From the Sunnah",h:"“"+h[0]+"”",cite:h[1],mark:"hadith"}));
@@ -85,6 +87,99 @@ function buildCards(p){
 const ideaCount=p=>CARDS[p.id].filter(c=>c.type!=="intro"&&c.type!=="final").length;
 const readMins=p=>Math.max(2,Math.round(CARDS[p.id].reduce((a,c)=>a+String(c.body||c.h||"").split(/\s+/).length,0)/200));
 const listenMins=p=>TM[p.id]?Math.round(TM[p.id].dur/60):null;
+
+/* ---------- PEOPLE & REFERENCES ---------- */
+let PEOPLE=[],PBY={},PMATCH=[];
+const SKIP_ALIAS=new Set(["Clear","Brooks"]);
+function buildPeople(list){PEOPLE=list;PBY={};PMATCH=[];
+  for(const x of list){PBY[x.id]=x;for(const a of x.aliases||[x.name]){if(SKIP_ALIAS.has(a))continue;
+    const re=new RegExp("(^|[^A-Za-z'’])"+a.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?![A-Za-z])");PMATCH.push([x.id,a,re])}}}
+function peopleIn(text){const t=String(text||""),out=new Set();for(const [id,a,re] of PMATCH){const m=t.match(re);if(m){const i=m.index+m[1].length;if(a.startsWith("'")&&/Ibn\s$/.test(t.slice(Math.max(0,i-4),i)))continue;out.add(id)}}return [...out]}
+function pkgText(p){return [p.title,p.sub,p.author,p.source,p.tag,p.opening,p.verse,p.scholars,p.modern,p.idea,p.mechanics,p.practice,p.faith,p.nigerian,p.closing,(p.ideas||[]).flat().join(" "),(p.deep||[]).join(" ")].filter(Boolean).join(" \n ")}
+const pkgPeople=p=>p._people||(p._people=peopleIn(pkgText(p)));
+const cardText=c=>[c.h,c.body,c.deep].filter(Boolean).join(" ");
+function worksIn(text){const out=[];for(const x of PEOPLE){for(const [w] of x.works||[]){const core=w.split(" (")[0].replace(/^'|'$/g,"");if(core.length<6||/^(Sayings|Reports|Accounts|Her narrations|Interpretations|Public service|Collected|Tafsir Mujahid)/.test(core))continue;const v=[core];if(/^Al-/.test(core))v.push("al-"+core.slice(3));if(/^Ihya/.test(core))v.push("the Ihya");if(/^Al-Jami' al-Sahih \(Sahih/.test(w))continue;if(v.some(t=>text.includes(t)))out.push([x.id,w])}}return out}
+const HCOL=[["Sahih al-Bukhari","bukhari"],["Sahih Muslim","muslim"],["Jami' al-Tirmidhi","tirmidhi"],["Sunan Abi Dawud","abudawud"],["Sunan Ibn Majah","ibnmajah"]];
+function hadithLinks(ref){const out=[];for(const part of String(ref).split(/,\s*/)){for(const [n,slug] of HCOL){const m=part.match(new RegExp(n.replace(/'/g,"'")+"\\s+(\\d+)"));if(m)out.push({label:`${n} ${m[1]}`,url:`https://sunnah.com/${slug}:${m[1]}`})}}return out}
+function verseGroups(p){const g=[];for(const v of p.verses){const last=g[g.length-1];if(last&&last.s===v.s&&last.b===v.v-1)last.b=v.v;else g.push({s:v.s,a:v.v,b:v.v})}return g}
+const quranURL=g=>`https://quran.com/${g.s}/${g.a}${g.b>g.a?"-"+g.b:""}`;
+const vlabel=g=>`Qur'an ${g.s}:${g.a}${g.b>g.a?"–"+g.b:""}`;
+function primarySource(p){
+  if(p.kind==="book"){const [who,yr]=String(p.author).split(" · ");return {text:`${who}${yr?` (${yr})`:""}. ${p.title}.`,who,yr}}
+  if(p.kind==="thinker")return {text:p.source};
+  return null;
+}
+function pkgRefs(p){
+  const R=[];const ps=primarySource(p);if(ps)R.push({t:ps.text+(p.kind==="book"?" Summarised in Hikmah in our own words.":"")});
+  for(const g of verseGroups(p))R.push({t:`${vlabel(g)}. Arabic text: Tanzil (Uthmani). English: Saheeh International.`,url:quranURL(g)});
+  for(const h of p.hadith)for(const l of hadithLinks(h[1]))R.push({t:`${l.label}. “${h[0].slice(0,80)}${h[0].length>80?"…":""}”`,url:l.url});
+  const seen=new Set();for(const [pid,w] of worksIn(pkgText(p))){const k=pid+w;if(seen.has(k))continue;seen.add(k);const x=PBY[pid];R.push({t:`${x.name}${x.years?` (${x.years})`:""}, ${w.split(" (")[0]}.`,person:pid})}
+  return R;
+}
+function cardRefs(c){
+  const p=byId[c.pid],R=[];
+  if(c.type==="verse")for(const g of verseGroups(p))R.push({t:`${vlabel(g)} (Saheeh International)`,url:quranURL(g)});
+  if(c.type==="hadith")for(const l of hadithLinks(c.cite))R.push({t:l.label,url:l.url});
+  const txt=cardText(c);
+  for(const [pid,w] of worksIn(txt)){const x=PBY[pid];R.push({t:`${x.name}, ${w.split(" (")[0]}`,person:pid})}
+  const ps=primarySource(p);if(ps)R.push({t:ps.text});
+  return R;
+}
+function citeCard(c){
+  const p=byId[c.pid],ps=primarySource(p),d=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  const title=c.type==="verse"?verseGroups(p).map(vlabel).join("; "):plainProv(c.h).replace(/^“|”$/g,"");
+  const srcs=cardRefs(c).filter(r=>r.url).map(r=>r.t).join("; ");
+  return `“${title}.” In Hikmah wisdom library, “${p.title}”${ps&&p.kind==="book"?`, summarising ${ps.who}${ps.yr?` (${ps.yr})`:""}, ${p.title}`:ps?`, drawing on ${ps.text}`:""}. ${SITE}#p-${p.id} (accessed ${d}).${srcs?` Primary sources: ${srcs}.`:""}`;
+}
+function personChips(ids){return ids.map(id=>{const x=PBY[id];return x?`<button class="pchip" data-person="${id}"><span class="pav">${initials(x.name)}</span>${esc(x.name)}</button>`:""}).join("")}
+function initials(n){const w=n.replace(/^Imam\s+/,"").replace(/['’]/g,"").split(/\s+|&/).map(x=>x.replace(/^(al|Al)-/,"")).filter(x=>/^[A-Z]/.test(x));return w.length>1?w[0][0]+w[w.length-1][0]:w.length?w[0][0]:"?"}
+function ideasAbout(pid){const x=PBY[pid];return ALLIDEAS.filter(c=>peopleIn(cardText(c)).includes(pid))}
+function pkgsAbout(pid){return PK.filter(p=>pkgPeople(p).includes(pid))}
+
+/* ---------- CLAUDE CONSULTATIONS ---------- */
+const CL_CONTEXT="I'm using Hikmah, my personal wisdom library of ideas from the Qur'an, classical Islamic scholars, great thinkers and books. I'm a Muslim professional in Nigeria with leadership, compliance and strategy responsibilities.";
+const CL_RULES="Where relevant, keep the Qur'an, authentic Sunnah and classical scholars (such as Ibn Kathir, Ibn al-Qayyim, Ibn Taymiyyah and al-Ghazali) central, and weave in modern thinkers and Nigerian perspectives. Cite verses as surah:ayah and hadith by collection and number. Paraphrase scholars rather than inventing quotations, and say clearly when you are unsure of a source.";
+const MODES={
+ deepen:["Deepen my understanding","Explain this in more depth: the original reasoning and evidence behind it, how scholars and thinkers have developed it, and any nuances or common misunderstandings."],
+ critique:["Critique it","Critique this rigorously: the strongest objections, the evidence for and against, where it may not apply (including in an Islamic or Nigerian context), and how a thoughtful Muslim professional should weigh it."],
+ apply:["Apply it to my situation","Help me apply this to my own work and life. Before advising, ask me two or three short questions about my situation, then suggest concrete steps."],
+ connect:["Connect the ideas","Find the common threads, tensions and gaps between these ideas, and turn them into a short set of principles I can live by."],
+ teach:["Teach it to others","Help me teach this to my team or family: a five-minute explanation, one memorable example, and two discussion questions."],
+};
+function itemText(c,i){const p=byId[c.pid];const head=c.type==="verse"?verseGroups(p).map(vlabel).join("; ")+": "+c.verses.map(v=>v.en).join(" "):plainProv(c.h)+(c.body?"\n"+plainProv(c.body):"")+(c.deep?"\n"+c.deep:"");
+  const ps=primarySource(p);return `${i!=null?(i+1)+". ":""}${head}\n(From “${p.title}”${ps&&p.kind==="book"?` — ${ps.who}`:""}${c.cite?`; ${c.cite}`:""})`}
+function buildPrompt(mode,cards,label){
+  const [,ask]=MODES[mode]||["",""];
+  const body=cards.length===1?itemText(cards[0]):cards.map((c,i)=>itemText(c,i)).join("\n\n");
+  return `${CL_CONTEXT}\n\n${cards.length===1?"Here is an idea":`Here are ${cards.length} ideas from my stash “${label}”`}:\n\n${body}\n\n${mode==="custom"?"My question: ":ask}\n\n${CL_RULES}`;
+}
+async function openClaude(prompt){
+  let copied=false;try{await navigator.clipboard.writeText(prompt);copied=true}catch(e){}
+  const enc=encodeURIComponent(prompt);
+  const url="https://claude.ai/new"+(enc.length<12000?"?q="+enc:"");
+  window.open(url,"_blank","noopener");
+  toast(copied?"Opening Claude. The prompt is also copied, so paste it if the box is empty.":"Opening Claude…");
+}
+function claudeSheet(cards,label){
+  const many=cards.length>1;
+  const modes=many?["connect","deepen","critique","apply","teach"]:["deepen","critique","apply","teach"];
+  openSheet(`<h3>${icon("spark",20,'style="color:#6D4AFF;vertical-align:-3px"')} Discuss with Claude</h3>
+   <p class="muted" style="margin:-6px 0 12px;font-size:14px">${many?`${cards.length} ideas from “${esc(label)}”`:esc(plainProv(cards[0].h||"This verse"))} will be sent as context. Claude opens in a new chat.</p>
+   <div class="modes">${modes.map(m=>`<button data-m="${m}"><b>${MODES[m][0]}</b><small>${MODES[m][1].split(":")[0].split(".")[0]}</small></button>`).join("")}
+   <button data-m="custom"><b>Ask my own question</b><small>Claude opens with the context; you type the question</small></button></div>`);
+  $$("#sheet-in .modes button").forEach(b=>b.onclick=()=>{closeSheet();openClaude(buildPrompt(b.dataset.m,cards,label))});
+}
+function moreSheet(c){
+  const refs=cardRefs(c),ppl=peopleIn(cardText(c));
+  openSheet(`<h3>Sources & sharing</h3>
+   ${refs.length?`<ol class="refs">${refs.map(r=>`<li>${r.url?`<a href="${r.url}" target="_blank" rel="noopener">${esc(r.t)}</a>`:r.person?`<button class="lnk" data-person="${r.person}">${esc(r.t)}</button>`:esc(r.t)}</li>`).join("")}</ol>`:`<p class="muted">This card draws on the package's sources listed on its page.</p>`}
+   ${ppl.length?`<div class="pchips">${personChips(ppl)}</div>`:""}
+   <div class="cta"><button class="btn soft" id="ms-copy">${icon("copy",18)} Copy idea</button><button class="btn primary" id="ms-cite">${icon("book",18)} Cite this idea</button></div>`);
+  $("#ms-copy").onclick=async()=>{const p=byId[c.pid];const txt=c.type==="verse"?c.verses.map(v=>`${v.ar}\n${v.en} (Qur'an ${v.s}:${v.v})`).join("\n\n"):`${plainProv(c.h)}\n\n${plainProv(c.body||"")}${c.deep?"\n\n"+c.deep:""}`;try{await navigator.clipboard.writeText(`${txt}\n\n— ${p.title}, from Hikmah`);toast("Copied")}catch(e){toast("Copy is not allowed here")}};
+  $("#ms-cite").onclick=async()=>{try{await navigator.clipboard.writeText(citeCard(c));toast("Citation copied")}catch(e){openSheet(`<h3>Citation</h3><p style="user-select:text">${esc(citeCard(c))}</p>`)}};
+  bindPeople($("#sheet-in"));
+}
+function bindPeople(root){root.querySelectorAll("[data-person]").forEach(b=>b.onclick=e=>{e.stopPropagation();closeSheet();if($("#reader").classList.contains("on")){history.back();setTimeout(()=>location.hash="person-"+b.dataset.person,60)}else location.hash="person-"+b.dataset.person})}
 
 /* ---------- progress, streaks, likes, stashes ---------- */
 let READ=store.get("read",{}), DAYS=store.get("days",{}), LIKES=store.get("likes",{});
@@ -186,14 +281,16 @@ function renderHome(){
 }
 
 /* ---------- EXPLORE ---------- */
-let exploreCat="All", exploreQ="";
+let exploreCat="All", exploreQ="", exploreTab="pk";
 function renderExplore(){
   const cats=["All","Books","Thinkers",...CAT_ORDER.filter(c=>PK.some(p=>p.cat===c))];
   $("#explore").innerHTML=`<div class="topbar"><h1 style="font-size:28px;font-weight:800">Explore</h1></div>
    <label class="search">${icon("search",20)}<input id="q" type="search" placeholder="Search ideas, books, scholars…" value="${esc(exploreQ)}" autocomplete="off"></label>
-   <div class="chips" id="xchips">${cats.map(c=>`<button class="chip" aria-pressed="${c===exploreCat}" data-c="${esc(c)}">${c==="All"||c==="Books"||c==="Thinkers"?"":`<span class="dot" style="background:${topicOf(c).c1}"></span>`}${esc(c)}</button>`).join("")}</div>
+   <div class="seg2" id="xtab"><button data-t="pk" aria-pressed="${exploreTab==="pk"}">Packages & ideas</button><button data-t="pp" aria-pressed="${exploreTab==="pp"}">Scholars & thinkers</button></div>
+   <div class="chips" id="xchips" ${exploreTab==="pp"?'style="display:none"':""}>${cats.map(c=>`<button class="chip" aria-pressed="${c===exploreCat}" data-c="${esc(c)}">${c==="All"||c==="Books"||c==="Thinkers"?"":`<span class="dot" style="background:${topicOf(c).c1}"></span>`}${esc(c)}</button>`).join("")}</div>
    <div id="xres"></div>`;
   $("#q").oninput=e=>{exploreQ=e.target.value;results()};
+  $$("#xtab button").forEach(b=>b.onclick=()=>{exploreTab=b.dataset.t;renderExplore()});
   $$("#xchips .chip").forEach(b=>b.onclick=()=>{exploreCat=b.dataset.c;$$("#xchips .chip").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));results()});
   results();
   const act=$("#xchips [aria-pressed=true]");act&&act.scrollIntoView({inline:"center",block:"nearest"});
@@ -201,13 +298,41 @@ function renderExplore(){
 function inCat(p){return exploreCat==="All"||(exploreCat==="Books"?p.kind==="book":exploreCat==="Thinkers"?p.kind==="thinker":p.cat===exploreCat)}
 function results(){
   const q=exploreQ.trim().toLowerCase(), words=q.split(/\s+/).filter(Boolean);
+  if(exploreTab==="pp"){renderPeopleList(words);return}
   const pk=PK.filter(p=>inCat(p)&&(!words.length||words.every(w=>p._hay.includes(w)))).sort((a,b)=>CAT_ORDER.indexOf(a.cat)-CAT_ORDER.indexOf(b.cat));
   let hits=[];
-  if(words.length){hits=ALLIDEAS.filter(c=>inCat(byId[c.pid])&&words.every(w=>(c.h+" "+(c.body||"")).toLowerCase().includes(w))).slice(0,25)}
-  $("#xres").innerHTML=(pk.length?`<div class="h-sec"><h2>${words.length?"Packages":esc(exploreCat==="All"?"All packages":exploreCat)}</h2><span class="muted" style="font-weight:700;font-size:14px">${pk.length}</span></div><div class="grid">${pk.map(covHTML).join("")}</div>`:"")+
+  let phits=[];
+  if(words.length){hits=ALLIDEAS.filter(c=>inCat(byId[c.pid])&&words.every(w=>(c.h+" "+(c.body||"")+" "+(c.deep||"")).toLowerCase().includes(w))).slice(0,25);phits=PEOPLE.filter(x=>words.every(w=>(x.name+" "+x.role).toLowerCase().includes(w))).slice(0,8)}
+  $("#xres").innerHTML=(phits.length?`<div class="h-sec"><h2>People</h2></div><div class="plist">${phits.map(x=>`<button class="prow" data-person="${x.id}">${personAvatar(x,46)}<span><b>${esc(x.name)}</b><small>${esc(x.role)}</small></span></button>`).join("")}</div>`:"")+(pk.length?`<div class="h-sec"><h2>${words.length?"Packages":esc(exploreCat==="All"?"All packages":exploreCat)}</h2><span class="muted" style="font-weight:700;font-size:14px">${pk.length}</span></div><div class="grid">${pk.map(covHTML).join("")}</div>`:"")+
    (hits.length?`<div class="h-sec"><h2>Ideas</h2><span class="muted" style="font-weight:700;font-size:14px">${hits.length}</span></div><div class="hits">${hits.map(c=>`<button class="hit" data-k="${c.key}"><span class="sw" style="background:${topicOf(byId[c.pid].cat).c1}"></span><span><b>${prov(plainProv(c.h))}</b><small>${esc(byId[c.pid].title)}</small></span></button>`).join("")}</div>`:"")+
    (!pk.length&&!hits.length?`<div class="empty">${cover("empty","Mind & Meaning",{motif:"eye",ratio:"wide",small:true})}<p>Nothing matches “${esc(q)}”. Try another word, or ask Hikmah.</p></div>`:"");
   bindCommon($("#xres"));
+}
+
+const PGROUPS=["Companions & early generations","Hadith masters","Classical scholars","African voices","Modern thinkers","Ancient philosophers"];
+function personAvatar(x,size){return `<span class="avatar2" style="width:${size}px;height:${size}px">${cover(x.id,x.group==="Modern thinkers"?"Thinking & Decisions":x.group==="African voices"?"African Wisdom":x.group==="Ancient philosophers"?"Mind & Meaning":x.group==="Hadith masters"?"Islamic Classics":"Tafsir",{ratio:"square",small:true,motif:x.group==="Modern thinkers"?"bulb":x.group==="African voices"?"baobab":x.group==="Ancient philosophers"?"eye":x.group==="Hadith masters"?"quill":"book"})}<b>${initials(x.name)}</b></span>`}
+function renderPeopleList(words){
+  const L=PEOPLE.filter(x=>!words.length||words.every(w=>(x.name+" "+x.role+" "+x.bio+" "+(x.works||[]).flat().join(" ")).toLowerCase().includes(w)));
+  $("#xres").innerHTML=PGROUPS.map(g=>{const xs=L.filter(x=>x.group===g);return xs.length?`<div class="h-sec"><h2>${esc(g)}</h2><span class="muted" style="font-weight:700;font-size:14px">${xs.length}</span></div><div class="plist">${xs.map(x=>`<button class="prow" data-person="${x.id}">${personAvatar(x,52)}<span><b>${esc(x.name)}</b><small>${esc(x.role)}${x.years?" · "+esc(x.years):""}</small></span></button>`).join("")}</div>`:""}).join("")||`<div class="empty"><p>No one matches “${esc(words.join(" "))}”.</p></div>`;
+  bindPeople($("#xres"));
+}
+function renderPerson(id){
+  const x=PBY[id];if(!x){location.hash="explore";return}
+  const ideas=ideasAbout(id),pks=pkgsAbout(id);
+  $("#person").innerHTML=`<div class="topbar"><button class="iconbtn" id="pp-back" aria-label="Back">${icon("back",20)}</button></div>
+   <div class="phead">${personAvatar(x,96)}<div><span class="pgroup">${esc(x.group)}</span><h1>${esc(x.name)}</h1>${x.ar?`<div class="par" lang="ar">${esc(x.ar)}</div>`:""}<div class="by">${esc(x.role)}</div><div class="muted" style="font-weight:700;font-size:14px">${[x.years,x.place].filter(Boolean).map(esc).join(" · ")}</div></div></div>
+   <p class="pbio">${esc(x.bio)}</p>
+   <div class="h-sec"><h2>Achievements</h2></div>
+   <ul class="ach">${x.achievements.map(a=>`<li>${icon("trophy",18)}<span>${esc(a)}</span></li>`).join("")}</ul>
+   <div class="h-sec"><h2>Key works</h2></div>
+   <ul class="works">${(x.works||[]).map(([w,y])=>`<li><b>${esc(w)}</b>${y?`<small>${esc(y)}</small>`:""}</li>`).join("")}</ul>
+   <button class="claudebar" id="pp-claude">${icon("spark",20)}<span><b>Ask Claude about ${esc(x.name)}</b><small>Life, thought, key works and how to read them</small></span></button>
+   ${pks.length?`<div class="h-sec"><h2>In Hikmah</h2><span class="muted" style="font-weight:700;font-size:14px">${pks.length} package${pks.length>1?"s":""}</span></div><div class="rail">${pks.map(covHTML).join("")}</div>`:""}
+   ${ideas.length?`<div class="h-sec"><h2>Ideas that cite them</h2></div><div class="hits">${ideas.slice(0,20).map(c=>`<button class="hit" data-k="${c.key}"><span class="sw" style="background:${topicOf(byId[c.pid].cat).c1}"></span><span><b>${prov(plainProv(c.h))}</b><small>${esc(byId[c.pid].title)}</small></span></button>`).join("")}</div>`:""}
+   <p class="srcnote">Profile written for quick reference. Dates follow standard biographical sources; verify details in a full biography before citing.</p>`;
+  bindCommon($("#person"));
+  $("#pp-back").onclick=()=>history.length>1?history.back():location.hash="explore";
+  $("#pp-claude").onclick=()=>openClaude(`${CL_CONTEXT}\n\nTell me about ${x.name}${x.years?` (${x.years})`:""}, ${x.role.toLowerCase()}. Cover: their life and context; their most important ideas; their key works and which to read first (with reliable editions or translations if you know them); how their ideas have been received and criticised; and what a Muslim professional today can learn from them.\n\n${CL_RULES}`);
 }
 
 /* ---------- PACKAGE ---------- */
@@ -224,13 +349,17 @@ function renderPkg(id){
     <div class="stats3"><div><b>${ideaCount(p)}</b><small>ideas</small></div><div><b>${readMins(p)}</b><small>min read</small></div><div><b>${d?Math.round(d/60):"–"}</b><small>min listen</small></div></div>
     <div class="cta"><button class="btn color" id="pk-read" style="background:linear-gradient(135deg,${T.c1},${T.c2})">${icon("book",20)} ${pos!=null&&pos>0&&pos<C.length-1?"Continue reading":"Read ideas"}</button>
       <button class="btn primary" id="pk-listen" ${d?"":"disabled"}>${icon("head",20)} ${d?"Listen":"Recording…"}</button></div>
-    <div class="small-row"><button id="pk-off" ${d?"":"disabled"}></button><button id="pk-ask">${icon("ask",18)} Ask about it</button></div>
+    <div class="small-row"><button id="pk-off" ${d?"":"disabled"}></button><button id="pk-ask">${icon("spark",18)} Discuss with Claude</button></div>
     <div class="h-sec"><h2>What you'll learn</h2></div>
     <div class="learn">${C.filter(c=>c.type!=="intro"&&c.type!=="final").map((c,n)=>`<button data-k="${c.key}"><span class="n" style="background:${T.c1}">${n+1}</span><b>${c.type==="verse"?esc(c.eb)+" · "+c.verses.map(v=>v.s+":"+v.v).join(", "):prov(plainProv(c.h))}</b>${READ[c.key]?'<span class="seen">✓</span>':""}</button>`).join("")}</div>
     <div class="h-sec"><h2>Practices for this week</h2></div>
     <div class="checks">${p.practices.map((x,i)=>`<label for="c-${id}-${i}"><input type="checkbox" id="c-${id}-${i}" data-i="${i}" ${checks[i]?"checked":""}><span>${prov(x)}</span></label>`).join("")}</div>
     <div class="h-sec"><h2>Reflect</h2></div>
     <ol class="reflect">${p.reflect.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
+    ${pkgPeople(p).length?`<div class="h-sec"><h2>Scholars & thinkers</h2></div><div class="pchips">${personChips(pkgPeople(p))}</div>`:""}
+    <details class="refbox"><summary>${icon("book",18)} References <span class="muted">(${pkgRefs(p).length})</span></summary>
+      <ol class="refs">${pkgRefs(p).map(r=>`<li>${r.url?`<a href="${r.url}" target="_blank" rel="noopener">${esc(r.t)}</a>`:r.person?`<button class="lnk" data-person="${r.person}">${esc(r.t)}</button>`:esc(r.t)}</li>`).join("")}</ol>
+      <button class="pill soft" id="pk-copyrefs">${icon("copy",16)} Copy references</button></details>
     ${related.length?`<div class="h-sec"><h2>More in ${esc(p.cat)}</h2></div><div class="rail">${related.map(covHTML).join("")}</div>`:""}
     <p class="srcnote">${p.kind==="book"?"A summary in our own words, linked to Islamic sources. ":""}Arabic: Tanzil Uthmani · Translation: Saheeh International · Recitation: Mishary Rashid Alafasy · Narration: synthetic voice.</p>
    </div>`;
@@ -239,7 +368,9 @@ function renderPkg(id){
   $("#pk-read").onclick=()=>openReader(id,pos!=null&&pos<C.length-1?pos:0);
   $("#pk-listen").onclick=()=>{play(id);openNP()};
   const ob=$("#pk-off");paintOff(id,ob);ob.onclick=()=>toggleOffline(id,ob);
-  $("#pk-ask").onclick=async()=>{try{await navigator.clipboard.writeText(`About the package “${p.title}” (${byline(p)}): `)}catch(e){}window.open(ASK_URL,"_blank","noopener")};
+  $("#pk-ask").onclick=()=>claudeSheet(C.filter(c=>c.type==="idea"||c.type==="verse"||c.type==="hadith").slice(0,9),p.title);
+  bindPeople($("#pkg"));
+  $("#pk-copyrefs").onclick=async()=>{const t=pkgRefs(p).map((r,i)=>`${i+1}. ${r.t}${r.url?" "+r.url:""}`).join("\n");try{await navigator.clipboard.writeText(`References for “${p.title}” (Hikmah, ${SITE}#p-${p.id}):\n${t}`);toast("References copied")}catch(e){toast("Copy is not allowed here")}};
   $$("#pkg .checks input").forEach(c=>c.onchange=()=>{const k=store.get("chk:"+id,{});k[c.dataset.i]=c.checked;store.set("chk:"+id,k)});
 }
 
@@ -261,10 +392,12 @@ function renderStash(id){
   const items=s.items.map(cardByKey).filter(Boolean);
   $("#stash").innerHTML=`<div class="topbar"><button class="iconbtn" id="st-back" aria-label="Back">${icon("back",20)}</button><h1 style="font-size:24px;font-weight:800;flex:1">${esc(s.name)}</h1>${id!=="saved"&&id!=="__liked"?`<button class="pill soft" id="st-del">Delete</button>`:""}</div>
    <p class="muted" style="margin:6px 0 0">${items.length} idea${items.length===1?"":"s"}</p>
+   ${items.length?`<button class="claudebar" id="st-claude">${icon("spark",20)}<span><b>Discuss this stash with Claude</b><small>Connect, deepen, critique or apply these ideas</small></span></button>`:""}
    <div class="saved">${items.map(c=>{const p=byId[c.pid];return `<div class="it"><span class="sw" style="background:${topicOf(p.cat).c1}"></span><button class="main" data-k="${c.key}"><b>${c.type==="verse"?"Qur'an "+c.verses.map(v=>v.s+":"+v.v).join(", "):prov(plainProv(c.h))}</b>${c.body?`<p>${esc(plainProv(c.body))}</p>`:""}<small>${esc(p.title)}</small></button><button class="rm" data-rm="${c.key}" aria-label="Remove">×</button></div>`}).join("")}</div>
    ${!items.length?`<div class="empty"><p>No ideas here yet. Save ideas from any card.</p></div>`:""}`;
   bindCommon($("#stash"));
   $("#st-back").onclick=()=>location.hash="stashes";
+  $("#st-claude")&&($("#st-claude").onclick=()=>claudeSheet(items.slice(0,25),s.name));
   $$("#stash [data-rm]").forEach(b=>b.onclick=()=>{const k=b.dataset.rm;if(id==="__liked"){delete LIKES[k];store.set("likes",LIKES)}else{s.items=s.items.filter(x=>x!==k);saveStashes()}renderStash(id)});
   $("#st-del")&&($("#st-del").onclick=()=>{openSheet(`<h3>Delete “${esc(s.name)}”?</h3><p class="muted">The ideas stay in the library; only this stash is removed.</p><div class="cta"><button class="btn soft" id="dl-no">Keep</button><button class="btn primary" id="dl-yes">Delete</button></div>`);$("#dl-no").onclick=closeSheet;$("#dl-yes").onclick=()=>{STASHES=STASHES.filter(x=>x.id!==id);saveStashes();closeSheet();location.hash="stashes"}});
 }
@@ -367,13 +500,13 @@ function openReader(pid,i=0){
 function closeReader(){$("#reader").classList.remove("on");document.body.classList.remove("reader-open");route(true)}
 function cardHTML(c){
   const p=byId[c.pid], bg=`<div class="cbg">${cover(c.type==="intro"?p.id:c.key,p.cat,{ratio:"tall",small:c.type!=="intro"})}</div>`;
-  if(c.type==="intro") return `<div class="card intro">${bg}<div class="cin"><div class="eb">${esc(p.cat)} · ${ideaCount(p)} ideas</div><h2>${esc(p.title)}</h2><div class="by">${esc(c.by)}</div><p>${esc(c.body)}</p><p style="font-size:14px;opacity:.85;font-weight:700">Swipe or tap the right side to begin →</p></div></div>`;
+  if(c.type==="intro") return `<div class="card intro">${bg}<div class="cin"><div class="eb">${esc(p.cat)} · ${ideaCount(p)} ideas</div><h2>${esc(p.title)}</h2><div class="by">${esc(c.by)}</div><p>${esc(c.body)}</p>${pkgPeople(p).length?`<div class="pchips dark">${personChips(pkgPeople(p).slice(0,6))}</div>`:""}<p style="font-size:14px;opacity:.85;font-weight:700">Swipe or tap the right side to begin →</p></div></div>`;
   if(c.type==="verse") return `<div class="card vcard">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div>${c.verses.map(v=>`<p class="arq" lang="ar">${esc(v.ar)} ﴿${v.v.toLocaleString("ar-EG")}﴾</p><p style="margin-top:4px">${esc(v.en)}</p><div class="vref">Qur'an ${v.s}:${v.v}</div>`).join("")}</div></div>`;
   if(c.type==="hadith") return `<div class="card">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div><h2>${esc(c.h)}</h2><div class="cite">${esc(c.cite)}</div></div></div>`;
   if(c.type==="final"){const checks=store.get("chk:"+p.id,{});const nx=nextPkg(p.id);
     return `<div class="card final"><div class="cin"><div class="eb">${icon("trophy",16)} Package complete</div><h2>${esc(c.h)}</h2><p>Put it into practice this week:</p><div class="checks" style="margin-top:12px">${p.practices.map((x,i)=>`<label><input type="checkbox" data-i="${i}" ${checks[i]?"checked":""}><span>${prov(x)}</span></label>`).join("")}</div>
       <div class="final-btns">${TM[p.id]?`<button id="fn-listen">${icon("head",18,'style="vertical-align:-4px"')} Listen to the narration</button>`:""}${nx?`<button class="ghost" id="fn-next">Next: ${esc(byId[nx].title)} →</button>`:""}<button class="ghost" id="fn-close">Back to the package</button></div></div></div>`}
-  return `<div class="card">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div><h2>${c.prov?prov(c.h):esc(c.h)}</h2>${c.body?`<p>${prov(c.body)}</p>`:""}</div></div>`;
+  return `<div class="card">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div><h2>${c.prov?prov(c.h):esc(c.h)}</h2>${c.body?`<p>${prov(c.body)}</p>`:""}${c.deep?`<div class="deep"><span>${icon("spark",14)} Go deeper</span><p>${prov(c.deep)}</p></div>`:""}</div></div>`;
 }
 function showCard(i,dir){
   const C=CARDS[RD.pid]; i=Math.max(0,Math.min(i,C.length-1));
@@ -392,6 +525,7 @@ function showCard(i,dir){
     const N=el.querySelector("#fn-next");N&&(N.onclick=()=>{const nx=nextPkg(RD.pid);openReaderReplace(nx)});
     el.querySelector("#fn-close").onclick=()=>{history.back()};
   }
+  bindPeople(el);
   paintReaderActions();
 }
 function openReaderReplace(pid){RD.pid=pid;RD.i=0;$("#rd-title").textContent=byId[pid].title;$("#rd-bars").innerHTML=CARDS[pid].map(()=>"<i></i>").join("");store.set("lastRead",pid);showCard(0,1)}
@@ -403,13 +537,14 @@ function paintReaderActions(){
   $("#ra-like").innerHTML=icon(LIKES[k]?"heartf":"heart",22);$("#ra-like").classList.toggle("liked",!!LIKES[k]);$("#ra-like").style.display=show?"":"none";
   $("#ra-save").innerHTML=icon(isSaved(k)?"bookmarkf":"bookmark",22)+(isSaved(k)?" Saved":" Save");$("#ra-save").classList.toggle("on",isSaved(k));$("#ra-save").style.display=show?"":"none";
   const playingHere=cur===RD.pid&&loadedId===RD.pid&&!A.paused;
-  $("#ra-listen").innerHTML=icon(playingHere?"pause":"head",22)+(playingHere?" Pause":" Listen");$("#ra-listen").style.display=TM[RD.pid]?"":"none";
-  $("#ra-copy").innerHTML=icon("copy",22);$("#ra-copy").style.display=show?"":"none";
+  $("#ra-listen").innerHTML=icon(playingHere?"pause":"head",22);$("#ra-listen").style.display=TM[RD.pid]?"":"none";
+  $("#ra-copy").innerHTML=icon("more",22);$("#ra-copy").setAttribute("aria-label","Sources and sharing");$("#ra-copy").style.display=show?"":"none";$("#ra-ask").innerHTML=icon("spark",20)+" Claude";$("#ra-ask").style.display=show?"":"none";
   $("#rd-follow").innerHTML=icon("follow",20);$("#rd-follow").classList.toggle("on",RD.follow);$("#rd-follow").style.display=cur===RD.pid&&loadedId===RD.pid?"":"none";
 }
 $("#ra-like").onclick=()=>{const k=CARDS[RD.pid][RD.i].key;if(LIKES[k])delete LIKES[k];else{LIKES[k]=today();toast("Liked")}store.set("likes",LIKES);paintReaderActions()};
 $("#ra-save").onclick=()=>stashSheet(CARDS[RD.pid][RD.i].key);
-$("#ra-copy").onclick=async()=>{const c=CARDS[RD.pid][RD.i],p=byId[RD.pid];const txt=c.type==="verse"?c.verses.map(v=>`${v.ar}\n${v.en} (Qur'an ${v.s}:${v.v})`).join("\n\n"):`${plainProv(c.h)}\n\n${plainProv(c.body||"")}`;try{await navigator.clipboard.writeText(`${txt}\n\n— ${p.title}, from Hikmah`);toast("Copied. Paste it anywhere to share.")}catch(e){toast("Copy is not allowed here")}};
+$("#ra-copy").onclick=()=>moreSheet(CARDS[RD.pid][RD.i]);
+$("#ra-ask").onclick=()=>claudeSheet([CARDS[RD.pid][RD.i]],byId[RD.pid].title);
 $("#ra-listen").onclick=()=>{const c=CARDS[RD.pid][RD.i];if(cur===RD.pid&&loadedId===RD.pid&&!A.paused){A.pause();return}const m=TM[RD.pid]?.marks?.find(x=>x[0]===c.mark);RD.follow=true;play(RD.pid,false,c.type==="intro"?0:(m?m[1]:undefined))};
 $("#rd-follow").onclick=()=>{RD.follow=!RD.follow;paintReaderActions();toast(RD.follow?"Cards will follow the narration":"Follow off")};
 $("#rd-close").innerHTML=icon("x",20);$("#rd-close").onclick=()=>history.back();
@@ -562,11 +697,11 @@ function route(keepScroll){
   if($("#np").classList.contains("on")&&!(history.state&&history.state.np))$("#np").classList.remove("on");
   const h=location.hash.slice(1)||"home";
   let view=h, arg=null;
-  if(h.startsWith("p-")){view="pkg";arg=h.slice(2)} else if(h.startsWith("stash-")){view="stash";arg=h.slice(6)} else if(!["home","explore","stashes","you"].includes(h))view="home";
+  if(h.startsWith("p-")){view="pkg";arg=h.slice(2)} else if(h.startsWith("person-")){view="person";arg=h.slice(7)} else if(h.startsWith("stash-")){view="stash";arg=h.slice(6)} else if(!["home","explore","stashes","you"].includes(h))view="home";
   $$(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+view));
-  const tab={pkg:"home",stash:"stashes"}[view]||view;
+  const tab={pkg:"home",stash:"stashes",person:"explore"}[view]||view;
   ["home","explore","stashes","you"].forEach(t=>{const a=$("#t-"+t);t===tab?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current")});
-  if(view==="home")renderHome(); if(view==="explore")renderExplore(); if(view==="pkg")renderPkg(arg); if(view==="stashes")renderStashes(); if(view==="stash")renderStash(arg); if(view==="you")renderYou();
+  if(view==="person")renderPerson(arg); if(view==="home")renderHome(); if(view==="explore")renderExplore(); if(view==="pkg")renderPkg(arg); if(view==="stashes")renderStashes(); if(view==="stash")renderStash(arg); if(view==="you")renderYou();
   if(!keepScroll)$("#main").scrollTop=0;
 }
 addEventListener("hashchange",()=>route());
@@ -574,9 +709,10 @@ addEventListener("popstate",()=>{if($("#reader").classList.contains("on")&&!(his
 
 /* ---------- BOOT ---------- */
 applyFs();
-Promise.all([fetch("data/packages.json").then(r=>r.json()),fetch("data/timings.json").then(r=>r.json()).catch(()=>({}))]).then(async([p,t])=>{
+Promise.all([fetch("data/packages.json").then(r=>r.json()),fetch("data/timings.json").then(r=>r.json()).catch(()=>({})),fetch("data/people.json").then(r=>r.json()).catch(()=>[])]).then(async([p,t,pp])=>{
+  buildPeople(pp);
   PK=p.sort((a,b)=>CAT_ORDER.indexOf(a.cat)-CAT_ORDER.indexOf(b.cat));TM=t;
-  PK.forEach(x=>{byId[x.id]=x;CARDS[x.id]=buildCards(x);x._hay=[x.title,x.sub,x.author,x.tag,x.cat,x.ref,x.opening,x.verse,x.scholars,x.modern,x.idea,x.mechanics,x.practice,x.faith,x.nigerian,(x.ideas||[]).flat().join(" "),x.practices.join(" ")].filter(Boolean).join(" ").toLowerCase()});
+  PK.forEach(x=>{byId[x.id]=x;CARDS[x.id]=buildCards(x);x._hay=[x.title,x.sub,x.author,x.tag,x.cat,x.ref,x.opening,x.verse,x.scholars,x.modern,x.idea,x.mechanics,x.practice,x.faith,x.nigerian,(x.ideas||[]).flat().join(" "),(x.deep||[]).join(" "),x.practices.join(" ")].filter(Boolean).join(" ").toLowerCase()});
   ALLIDEAS=PK.flatMap(x=>CARDS[x.id].filter(c=>c.type==="idea"||c.type==="hadith"));
   await refreshOffline();
   if(!store.get("onb",false))openOnboarding(0);
