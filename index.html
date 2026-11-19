@@ -412,20 +412,44 @@ function renderPkg(id){
 const A=$("#audio"); let seeking=false, npSeeking=false;
 const ORDER=()=>PK.slice().sort((a,b)=>CATS.indexOf(a.cat)-CATS.indexOf(b.cat)).filter(p=>TM[p.id]);
 function neighbour(dir,sameCat){const o=ORDER().filter(p=>!sameCat||p.cat===byId[cur].cat);const i=o.findIndex(p=>p.id===cur);return o[i+dir]?.id}
-function play(id,resume,at){
-  if(!TM[id])return;
-  if(cur!==id){cur=id;A.src="audio/"+id+".mp3";A.playbackRate=store.get("rate",1);
-    const pr=store.get("prog",{})[id]||0;
-    const start=at!=null?at:(pr<(TM[id]?.dur||1e9)-5?pr:0);
-    const seekTo=()=>{try{if(Math.abs(A.currentTime-start)>1)A.currentTime=start}catch(e){}};
-    A.addEventListener("loadedmetadata",seekTo,{once:true});A.addEventListener("canplay",seekTo,{once:true});
-    renderChapters();
-  } else if(at!=null) A.currentTime=at;
-  store.set("last",id);
-  A.play().catch(()=>{});
-  $("#player").classList.add("on");document.documentElement.style.setProperty("--player","78px");
-  setMeta(); syncPlayer();
+/* Audio is fetched whole (2-3 MB) and played from memory, so a weak network can never break playback mid-package. */
+const SILENT="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//OEwAAAAAAAAAAAAEluZm8AAAAPAAAACQAABCAARUVFRUVFRUVFRUVdXV1dXV1dXV1dXXR0dHR0dHR0dHR0i4uLi4uLi4uLi4uioqKioqKioqKiorq6urq6urq6urq60dHR0dHR0dHR0dHo6Ojo6Ojo6Ojo6P//////////////AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQD8AAAAAAAAAQgDeb0IwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//NExAAAAANIAAAAAExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExFMAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKYAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NExKwAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NExKwAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
+let unlocked=false, blobURL=null, loadSeq=0, loadedId=null;
+function unlock(){if(unlocked)return;unlocked=true;try{A.src=SILENT;const p=A.play();if(p)p.then(()=>{if(A.src===SILENT)A.pause()}).catch(()=>{})}catch(e){}}
+async function audioBlob(id,onProg){
+  try{const c=await caches.open(AUDIO_CACHE);const hit=await c.match(audioURL(id));if(hit)return await hit.blob()}catch(e){}
+  const r=await fetch("audio/"+id+".mp3",{cache:"no-store"}); if(!r.ok)throw new Error("HTTP "+r.status);
+  const total=+r.headers.get("content-length")||0; let blob;
+  if(r.body&&r.body.getReader&&total){const rd=r.body.getReader(),parts=[];let got=0;
+    for(;;){const {done,value}=await rd.read();if(done)break;parts.push(value);got+=value.length;onProg&&onProg(got/total)}
+    blob=new Blob(parts,{type:"audio/mpeg"})}
+  else blob=new Blob([await r.arrayBuffer()],{type:"audio/mpeg"});
+  try{const c=await caches.open(AUDIO_CACHE);await c.put(audioURL(id),new Response(blob,{headers:{"Content-Type":"audio/mpeg","Content-Length":String(blob.size)}}));OFF.add(id)}catch(e){}
+  return blob;
 }
+async function play(id,resume,at){
+  if(!TM[id])return;
+  unlock();
+  $("#player").classList.add("on");document.documentElement.style.setProperty("--player","78px");
+  store.set("last",id);
+  if(loadedId===id){ if(at!=null)A.currentTime=at; A.play().catch(()=>{}); setMeta(); syncPlayer(); return }
+  const seq=++loadSeq; cur=id; renderChapters(); setMeta();
+  const pr=store.get("prog",{})[id]||0, start=at!=null?at:(pr<(TM[id]?.dur||1e9)-5?pr:0);
+  const msg=t=>{if(seq===loadSeq){$("#p-title b").textContent=byId[id].title;$("#p-title small").textContent=t;if($("#np").classList.contains("on"))$("#np-sec").textContent=t}};
+  msg(OFF.has(id)?"Opening…":"Preparing audio…");
+  let blob;
+  try{blob=await audioBlob(id,f=>msg("Preparing audio "+Math.round(f*100)+"%"))}
+  catch(e){if(seq===loadSeq)msg(navigator.onLine?"Couldn't load the audio. Tap play to try again.":"You're offline and this package isn't saved yet.");loadedId=null;return}
+  if(seq!==loadSeq)return;
+  if(blobURL)URL.revokeObjectURL(blobURL); blobURL=URL.createObjectURL(blob);
+  A.src=blobURL; loadedId=id; A.playbackRate=store.get("rate",1);
+  const seekTo=()=>{try{if(start>0&&Math.abs(A.currentTime-start)>1)A.currentTime=start}catch(e){}};
+  A.addEventListener("loadedmetadata",seekTo,{once:true});
+  A.play().catch(()=>{msg("Tap play to start")});
+  syncPlayer(); refreshOfflineQuiet();
+  setTimeout(()=>{if(cur!==id||!store.get("autonext",true))return;const n=neighbour(1,true);if(n&&!OFF.has(n)&&navigator.onLine)saveOne(n).catch(()=>{})},8000);
+}
+function refreshOfflineQuiet(){try{renderList()}catch(e){}}
 function setMeta(){
   if(!("mediaSession" in navigator)||!cur)return;
   const p=byId[cur];
@@ -441,7 +465,7 @@ if("mediaSession" in navigator){
   h("nexttrack",()=>{const n=neighbour(1);if(n)play(n,false,0)});
 }
 function syncPlayer(){
-  if(!cur)return; const p=byId[cur], d=A.duration||TM[cur]?.dur||0, m=currentMark();
+  if(!cur||loadedId!==cur){if(cur){for(const b of [$("#p-play"),$("#np-play")]){b.innerHTML=ICON_PLAY}}return} const p=byId[cur], d=A.duration||TM[cur]?.dur||0, m=currentMark();
   $("#p-title b").textContent=p.title;
   $("#p-title small").textContent=`${fmt(A.currentTime)} / ${fmt(d)}${m?" · "+lab(m,p):""}${sleepEnd?" · ☾":""}`;
   for(const b of [$("#p-play"),$("#np-play")]){b.innerHTML=A.paused?ICON_PLAY:ICON_PAUSE;b.setAttribute("aria-label",A.paused?"Play":"Pause")}
@@ -467,17 +491,18 @@ function syncPkgUI(){
   document.querySelectorAll("#pkg .sec").forEach(s=>s.classList.toggle("live",!A.paused&&s.dataset.mark===m));
 }
 let lastSave=0;
-A.addEventListener("timeupdate",()=>{syncPlayer();checkSleep();if(Date.now()-lastSave>4000){lastSave=Date.now();const g=store.get("prog",{});g[cur]=A.currentTime;store.set("prog",g)}});
+A.addEventListener("timeupdate",()=>{if(loadedId!==cur)return;syncPlayer();checkSleep();if(Date.now()-lastSave>4000){lastSave=Date.now();const g=store.get("prog",{});g[cur]=A.currentTime;store.set("prog",g)}});
 ["play","pause","ratechange","loadedmetadata"].forEach(ev=>A.addEventListener(ev,syncPlayer));
-A.addEventListener("pause",()=>{const g=store.get("prog",{});if(cur){g[cur]=A.currentTime;store.set("prog",g)}});
+A.addEventListener("pause",()=>{const g=store.get("prog",{});if(cur&&loadedId===cur){g[cur]=A.currentTime;store.set("prog",g)}});
 A.addEventListener("ended",()=>{
+  if(loadedId!==cur)return;
   const d=store.get("done",{});d[cur]=1;store.set("done",d);const g=store.get("prog",{});g[cur]=0;store.set("prog",g);
   if(sleepEnd==="end"){sleepEnd=null;updSleep();syncPlayer();renderList();return}
   const n=store.get("autonext",true)?neighbour(1,true):null;
   if(n)play(n,false,0); else {syncPlayer();renderList()}
 });
-A.addEventListener("error",()=>{if(!cur)return;$("#p-title small").textContent=navigator.onLine?"Audio could not load. Tap play to try again.":"You're offline and this package isn't downloaded."});
-$("#p-play").onclick=$("#np-play").onclick=()=>A.paused?A.play().catch(()=>{}):A.pause();
+A.addEventListener("error",()=>{if(!cur||!loadedId||A.src===SILENT)return;loadedId=null;$("#p-title small").textContent="Audio could not play. Tap play to try again."});
+$("#p-play").onclick=$("#np-play").onclick=()=>{if(!cur)return;if(loadedId!==cur){play(cur,true);return}A.paused?A.play().catch(()=>{}):A.pause()};
 $("#p-back").onclick=$("#np-b15").onclick=()=>{A.currentTime=Math.max(0,A.currentTime-15)};
 $("#np-f30").onclick=()=>{A.currentTime=Math.min((A.duration||1e9)-1,A.currentTime+30)};
 $("#p-next").onclick=$("#np-next").onclick=()=>{const n=neighbour(1);if(n)play(n,false,0)};
@@ -518,6 +543,7 @@ async function refreshOffline(){
 }
 async function saveOne(id){
   const c=await caches.open(AUDIO_CACHE);
+  if(await c.match(audioURL(id))){OFF.add(id);return}
   const r=await fetch("audio/"+id+".mp3",{cache:"no-store"});
   if(!r.ok)throw new Error("fetch "+r.status);
   await c.put(audioURL(id),r); OFF.add(id);
@@ -534,7 +560,7 @@ $("#dl-all").onclick=async()=>{
   dlBusy=false;$("#dl-info").textContent=fail?`${fail} packages failed. Tap Download again to retry.`:"Done. The whole library now plays offline.";
   refreshOffline();renderList();
 };
-$("#dl-clear").onclick=async()=>{if(dlBusy)return;try{await caches.delete(AUDIO_CACHE)}catch(e){}OFF=new Set();refreshOffline();renderList();$("#dl-info").textContent="Downloads removed. Packages will stream when online."};
+$("#dl-clear").onclick=async()=>{if(dlBusy)return;try{await caches.delete(AUDIO_CACHE)}catch(e){}OFF=new Set();refreshOffline();renderList();$("#dl-info").textContent="Downloads removed. Packages will download again as you play them."};
 async function toggleOffline(id,btn){
   if(OFF.has(id)){const c=await caches.open(AUDIO_CACHE);await c.delete(audioURL(id));OFF.delete(id)}
   else{if(!navigator.onLine)return;btn.textContent="Downloading…";try{await saveOne(id)}catch(e){btn.textContent="Download failed. Tap to retry.";return}}
@@ -589,7 +615,7 @@ function net(){$("#netpill").classList.toggle("on",!navigator.onLine)}
 addEventListener("online",net);addEventListener("offline",net);net();
 
 /* ---------- boot ---------- */
-const VERSION="1.0.0"; $("#ver").textContent=VERSION;
+const VERSION="1.1.0"; $("#ver").textContent=VERSION;
 applyFs(store.get("fs",1));
 Promise.all([fetch("data/packages.json").then(r=>r.json()),fetch("data/timings.json").then(r=>r.json()).catch(()=>({}))]).then(async([p,t])=>{
   PK=p;TM=t;PK.forEach(x=>{byId[x.id]=x;x._hay=hay(x)});
@@ -598,7 +624,7 @@ Promise.all([fetch("data/packages.json").then(r=>r.json()),fetch("data/timings.j
   renderChips();route();
   await refreshOffline();renderList();
   const last=store.get("last",null);
-  if(last&&byId[last]&&TM[last]){cur=last;A.src="audio/"+last+".mp3";A.preload="none";const pr=store.get("prog",{})[last]||0;A.addEventListener("loadedmetadata",()=>{try{A.currentTime=pr}catch(e){}},{once:true});$("#player").classList.add("on");document.documentElement.style.setProperty("--player","78px");setMeta();syncPlayer();$("#p-title small").textContent=`Paused at ${fmt(pr)} · tap to open`}
+  if(last&&byId[last]&&TM[last]){cur=last;const pr=store.get("prog",{})[last]||0;$("#player").classList.add("on");document.documentElement.style.setProperty("--player","78px");setMeta();syncPlayer();$("#p-title b").textContent=byId[last].title;$("#p-title small").textContent=`Paused at ${fmt(pr)} · tap ▶ to resume`}
 }).catch(()=>{$("#list").innerHTML='<p class="empty">The library could not load. Check your connection, then reopen the app.</p>'});
 if("serviceWorker" in navigator){const reg=()=>navigator.serviceWorker.register("sw.js").catch(()=>{});document.readyState==="complete"?reg():addEventListener("load",reg)}
 </script>
