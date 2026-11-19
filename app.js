@@ -1,6 +1,6 @@
 /* Hikmah 2.0 */
 "use strict";
-const VERSION="2.2.0";
+const VERSION="2.2.1";
 const SITE="https://ssadeeqib-arch.github.io/hikmah/";
 const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -508,13 +508,17 @@ function cardHTML(c){
       <div class="final-btns">${TM[p.id]?`<button id="fn-listen">${icon("head",18,'style="vertical-align:-4px"')} Listen to the narration</button>`:""}${nx?`<button class="ghost" id="fn-next">Next: ${esc(byId[nx].title)} →</button>`:""}<button class="ghost" id="fn-close">Back to the package</button></div></div></div>`}
   return `<div class="card">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div><h2>${c.prov?prov(c.h):esc(c.h)}</h2>${c.body?`<p>${prov(c.body)}</p>`:""}${c.deep?`<div class="deep"><span>${icon("spark",14)} Go deeper</span><p>${prov(c.deep)}</p></div>`:""}</div></div>`;
 }
+let lastShow=0;
 function showCard(i,dir){
   const C=CARDS[RD.pid]; i=Math.max(0,Math.min(i,C.length-1));
-  const stage=$("#rd-stage"), old=stage.querySelector(".card");
+  const stage=$("#rd-stage");
+  stage.querySelectorAll(".card.leaving").forEach(e=>e.remove());
+  const olds=[...stage.querySelectorAll(".card")];
   const tmp=document.createElement("div");tmp.innerHTML=cardHTML(C[i]);const el=tmp.firstElementChild;
-  if(dir){el.style.transform=`translateX(${dir>0?100:-100}%)`;el.style.opacity=".6"}
+  if(dir)el.classList.add(dir>0?"in-r":"in-l");
   stage.appendChild(el);
-  requestAnimationFrame(()=>{el.style.transform="";el.style.opacity="";if(old){old.style.transform=`translateX(${dir>0?-30:30}%)`;old.style.opacity="0";setTimeout(()=>old.remove(),330)}});
+  olds.forEach(o=>{o.classList.add("leaving",dir<0?"out-r":"out-l");setTimeout(()=>o.remove(),380)});
+  lastShow=Date.now();
   RD.i=i;
   $$("#rd-bars i").forEach((b,k)=>{b.className=k<i?"done":k===i?"cur":""});
   const pos=store.get("pos",{});pos[RD.pid]=i;store.set("pos",pos);
@@ -604,7 +608,7 @@ function syncPlayer(){
   $("#pl-pg").style.width=(d?A.currentTime/d*100:0)+"%";
   if($("#np").classList.contains("on")){if(!seeking&&d)$("#np-seek").value=Math.round(A.currentTime/d*1000);$("#np-cur").textContent=fmt(A.currentTime);$("#np-dur").textContent="-"+fmt(d-A.currentTime);$("#np-sec").textContent=markLabel(m);$("#np-rate").textContent=A.playbackRate+"× speed";$$("#np-chap button").forEach(b=>b.classList.toggle("cur",b.dataset.mark===m))}
   if("mediaSession" in navigator&&d&&navigator.mediaSession.setPositionState){try{navigator.mediaSession.setPositionState({duration:d,playbackRate:A.playbackRate,position:Math.min(A.currentTime,d)})}catch(e){}}
-  if(RD.follow&&RD.pid===cur&&$("#reader").classList.contains("on")&&m){const idx=CARDS[cur].findIndex(c=>c.mark===m);if(idx>=0&&idx!==RD.i&&!(CARDS[cur][RD.i].mark===m))showCard(idx,idx>RD.i?1:-1)}
+  if(RD.follow&&RD.pid===cur&&$("#reader").classList.contains("on")&&m&&Date.now()-lastShow>800){const idx=CARDS[cur].findIndex(c=>c.mark===m);if(idx>=0&&idx!==RD.i&&!(CARDS[cur][RD.i].mark===m))showCard(idx,idx>RD.i?1:-1)}
   if($("#reader").classList.contains("on"))paintReaderActions();
 }
 function setMeta(){if(!("mediaSession" in navigator)||!cur)return;const p=byId[cur];navigator.mediaSession.metadata=new MediaMetadata({title:p.title,artist:byline(p),album:"Hikmah · "+p.cat,artwork:[96,192,512].map(s=>({src:`icons/icon-${s}.png`,sizes:`${s}x${s}`,type:"image/png"}))})}
