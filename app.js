@@ -1,6 +1,6 @@
 /* Hikmah 2.0 */
 "use strict";
-const VERSION="2.2.1";
+const VERSION="2.3.0";
 const SITE="https://ssadeeqib-arch.github.io/hikmah/";
 const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -434,7 +434,7 @@ function renderYou(){
     <a class="row" href="${ASK_URL}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><div class="l"><b>Ask Hikmah</b><small>Chat about any idea, verse or decision (opens in Claude)</small></div>${icon("ask",20)}</a>
     <button class="row" id="reset-prog"><div class="l"><b>Reset progress</b><small>Clears reading, streaks and listening history</small></div><span class="pill soft">Reset</span></button>
    </div>
-   <p class="srcnote">Hikmah ${VERSION} · ${PK.length} packages · ${ALLIDEAS.length} ideas. Arabic text: Tanzil Uthmani. Translation: Saheeh International. Recitation: Mishary Rashid Alafasy. Book summaries are written in our own words. Narration is a synthetic voice.</p>`;
+   <p class="srcnote">Hikmah ${VERSION} · ${PK.length} packages · ${ALLIDEAS.length} ideas. Arabic text: Tanzil Uthmani. Translation: Saheeh International. Recitation: Mishary Rashid Alafasy. Book summaries are written in our own words. Narration is a synthetic female voice.</p>`;
   $$("#goal-seg button").forEach(b=>b.onclick=()=>{store.set("goal",+b.dataset.v);renderYou()});
   $$("#fs-seg button").forEach(b=>b.onclick=()=>{store.set("fs",+b.dataset.v);applyFs();renderYou()});
   $("#autonext").onchange=e=>store.set("autonext",e.target.checked);
@@ -566,7 +566,8 @@ addEventListener("keydown",e=>{if(!$("#reader").classList.contains("on"))return;
 const A=$("#audio"); let cur=null, loadedId=null, blobURL=null, loadSeq=0, unlocked=false, seeking=false;
 const SILENT="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//OEwAAAAAAAAAAAAEluZm8AAAAPAAAACQAABCAARUVFRUVFRUVFRUVdXV1dXV1dXV1dXXR0dHR0dHR0dHR0i4uLi4uLi4uLi4uioqKioqKioqKiorq6urq6urq6urq60dHR0dHR0dHR0dHo6Ojo6Ojo6Ojo6P//////////////AAAAAExhdmM2MC4zMQAAAAAAAAAAAAAAACQD8AAAAAAAAAQgDeb0IwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//NExAAAAANIAAAAAExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExFMAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKYAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NExKwAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NExKwAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
 function unlock(){if(unlocked)return;unlocked=true;try{A.src=SILENT;const p=A.play();p&&p.then(()=>{if(A.src===SILENT)A.pause()}).catch(()=>{})}catch(e){}}
-const AUDIO_CACHE="hikmah-audio-v1"; let OFF=new Set();
+const AUDIO_CACHE="hikmah-audio-v2"; let OFF=new Set();
+if("caches" in window){try{caches.delete("hikmah-audio-v1")}catch(e){}}
 const audioURL=id=>new URL("audio/"+id+".mp3",location.href).href;
 async function audioBlob(id,onProg){
   try{const c=await caches.open(AUDIO_CACHE);const hit=await c.match(audioURL(id));if(hit)return await hit.blob()}catch(e){}
