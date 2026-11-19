@@ -600,7 +600,7 @@ Promise.all([fetch("data/packages.json").then(r=>r.json()),fetch("data/timings.j
   const last=store.get("last",null);
   if(last&&byId[last]&&TM[last]){cur=last;A.src="audio/"+last+".mp3";A.preload="none";const pr=store.get("prog",{})[last]||0;A.addEventListener("loadedmetadata",()=>{try{A.currentTime=pr}catch(e){}},{once:true});$("#player").classList.add("on");document.documentElement.style.setProperty("--player","78px");setMeta();syncPlayer();$("#p-title small").textContent=`Paused at ${fmt(pr)} · tap to open`}
 }).catch(()=>{$("#list").innerHTML='<p class="empty">The library could not load. Check your connection, then reopen the app.</p>'});
-if("serviceWorker" in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
+if("serviceWorker" in navigator){const reg=()=>navigator.serviceWorker.register("sw.js").catch(()=>{});document.readyState==="complete"?reg():addEventListener("load",reg)}
 </script>
 </body>
 </html>
