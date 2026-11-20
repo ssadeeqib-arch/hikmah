@@ -23,9 +23,35 @@ function noteChange(k){
 let pushT=null,pushDue=0;
 function schedulePush(ms){const due=Date.now()+ms;if(pushT&&pushDue<=due)return;clearTimeout(pushT);pushDue=due;pushT=setTimeout(()=>{pushT=null;syncNow()},ms)}
 
+/* ---------- validation: only well-formed Hikmah data is ever written to this device ---------- */
+const KEY_RE=/^[A-Za-z0-9_.:-]{1,80}$/, DATE_RE=/^\d{4}-\d{2}-\d{2}$/;
+const isObj=v=>v&&typeof v==="object"&&!Array.isArray(v);
+const str=(v,n)=>typeof v==="string"&&v.length<=n;
+function cleanMap(v,keyOk,valOk,max=20000){if(!isObj(v))return undefined;const o={};let n=0;for(const k of Object.keys(v)){if(n>=max)break;if(keyOk(k)&&valOk(v[k])){o[k]=v[k];n++}}return o}
+const num=v=>typeof v==="number"&&isFinite(v)&&v>=0&&v<1e9;
+const shortStr=v=>str(v,40);
+function cleanStashes(v){if(!Array.isArray(v))return undefined;const out=[];for(const s of v.slice(0,100)){if(!isObj(s)||!str(s.id,40)||!/^[A-Za-z0-9_-]+$/.test(s.id)||!str(s.name,60))continue;
+  out.push({id:s.id,name:s.name.trim()||"Stash",cat:str(s.cat,40)?s.cat:"Character",items:Array.isArray(s.items)?s.items.filter(x=>str(x,80)&&KEY_RE.test(x)).slice(0,5000):[]})}return out}
+const VALID={
+  read:v=>cleanMap(v,k=>KEY_RE.test(k),shortStr), completed:v=>cleanMap(v,k=>KEY_RE.test(k),shortStr), badges:v=>cleanMap(v,k=>KEY_RE.test(k),shortStr),
+  likes:v=>cleanMap(v,k=>KEY_RE.test(k),shortStr), done:v=>cleanMap(v,k=>KEY_RE.test(k),x=>x===1||x===true||num(x)),
+  days:v=>cleanMap(v,k=>DATE_RE.test(k),num), pos:v=>cleanMap(v,k=>KEY_RE.test(k),num), prog:v=>cleanMap(v,k=>KEY_RE.test(k),num),
+  goal:v=>num(v)&&v>=1&&v<=100?v:undefined, interests:v=>Array.isArray(v)?v.filter(x=>str(x,40)).slice(0,40):undefined,
+  last:v=>v===null||(str(v,80)&&KEY_RE.test(v))?v:undefined, lastRead:v=>v===null||(str(v,80)&&KEY_RE.test(v))?v:undefined,
+  stashes:cleanStashes
+};
+function cleanKey(k,v){if(VALID[k])return VALID[k](v);if(/^chk:[A-Za-z0-9_-]{1,60}$/.test(k))return cleanMap(v,x=>/^\d{1,3}$/.test(x),x=>typeof x==="boolean");return undefined}
+function cleanDoc(d){
+  if(!isObj(d))return null;
+  const out={v:1,epoch:num(d.epoch)?d.epoch:0,k:{},mt:{},dev:{}};
+  if(isObj(d.k))for(const k of Object.keys(d.k).slice(0,2000)){const v=cleanKey(k,d.k[k]);if(v!==undefined){out.k[k]=v;out.mt[k]=isObj(d.mt)&&num(d.mt[k])?d.mt[k]:0}}
+  if(isObj(d.dev))for(const id of Object.keys(d.dev).slice(0,20)){const x=d.dev[id];if(!/^[a-z0-9]{1,16}$/.test(id)||!isObj(x))continue;
+    out.dev[id]={ldays:cleanMap(x.ldays,k=>DATE_RE.test(k),num)||{},listened:num(x.listened)?x.listened:0,name:str(x.name,40)?x.name:"Device",ep:num(x.ep)?x.ep:0,at:num(x.at)?x.at:0}}
+  return out;
+}
 function collect(){
   const k={};
-  for(let i=0;i<localStorage.length;i++){const K=localStorage.key(i);if(!K||!K.startsWith("hikmah:"))continue;const n=K.slice(7);if(!syncable(n)||DEV_KEYS.has(n))continue;try{k[n]=JSON.parse(localStorage.getItem(K))}catch(e){}}
+  for(let i=0;i<localStorage.length;i++){const K=localStorage.key(i);if(!K||!K.startsWith("hikmah:"))continue;const n=K.slice(7);if(!syncable(n)||DEV_KEYS.has(n))continue;try{const v=cleanKey(n,JSON.parse(localStorage.getItem(K)));if(v!==undefined)k[n]=v}catch(e){}}
   return {k,mt:raw.get("_mt",{}),epoch:raw.get("_epoch",0)};
 }
 function unionMap(key,A,B){
@@ -81,7 +107,7 @@ let FID=null;
 async function fileId(){if(FID)return FID;const q=encodeURIComponent(`name='${G_FILE}'`);
   const j=await(await gfetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id,modifiedTime)&orderBy=modifiedTime desc`)).json();
   FID=(j.files&&j.files[0]&&j.files[0].id)||null;return FID}
-async function pull(){const id=await fileId();if(!id)return null;const r=await gfetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`);const t=await r.text();return t?JSON.parse(t):null}
+async function pull(){const id=await fileId();if(!id)return null;const r=await gfetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`);const t=await r.text();if(!t||t.length>5e6)return null;try{return cleanDoc(JSON.parse(t))}catch(e){return null}}
 async function push(doc){
   const body=JSON.stringify(doc),id=await fileId();
   if(id){await gfetch(`https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`,{method:"PATCH",headers:{"Content-Type":"application/json"},body});return}

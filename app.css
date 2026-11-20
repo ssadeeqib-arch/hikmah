@@ -418,3 +418,9 @@ h1,h2,h3,h4{margin:0;letter-spacing:-.01em}
 .linkbtn{display:block;margin:14px auto 0;background:none;border:0;color:#B42318;font:700 14px "Plus Jakarta Sans",system-ui;cursor:pointer}
 
 .gnote{background:#F3F0FF;color:#3B2A99;border-radius:14px;padding:12px 14px;margin:12px 0 4px;font-size:13.5px;line-height:1.5}
+
+/* laptop and tablet: keep the reader and player as a focused centred column */
+@media (min-width:760px){
+ .reader,.np{left:50%;right:auto;width:min(600px,100vw);transform:translateX(-50%);box-shadow:0 0 0 100vmax rgba(12,10,24,.94)}
+ .reader .card{border-radius:0}
+}

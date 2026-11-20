@@ -1,12 +1,17 @@
 /* Hikmah 2.0 */
 "use strict";
-const VERSION="2.5.0";
+const VERSION="2.6.0";
 const SITE="https://ssadeeqib-arch.github.io/hikmah/";
 const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const prov=t=>esc(t).replace(/«([^»]*)»/g,'<span class="prov">$1</span>');
 const plainProv=t=>String(t).replace(/[«»]/g,"");
+/* refuse to run inside another site's frame (clickjacking) */
+if(window.top!==window.self){try{window.top.location=window.self.location.href}catch(e){document.documentElement.style.display="none"}}
+/* keep a small local error log and offer a repair if something breaks */
+const ERRS=[];function logErr(m){try{ERRS.push(String(m).slice(0,300));const l=JSON.parse(localStorage.getItem("hikmah:_errs")||"[]");l.push([Date.now(),String(m).slice(0,300)]);localStorage.setItem("hikmah:_errs",JSON.stringify(l.slice(-20)))}catch(e){}}
+addEventListener("error",e=>logErr(e.message||e.type));addEventListener("unhandledrejection",e=>logErr(e.reason&&e.reason.message||e.reason));
 const store={get(k,d){try{const v=localStorage.getItem("hikmah:"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("hikmah:"+k,JSON.stringify(v))}catch(e){}if(typeof noteChange==="function")noteChange(k)}};
 const fmt=s=>{s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
@@ -260,7 +265,7 @@ function renderHome(){
      <a class="iconbtn" href="${ASK_URL}" target="_blank" rel="noopener" aria-label="Ask Hikmah">${icon("ask",20)}</a></div>
    <div class="banner" id="install"></div>
    <div class="hello"><div style="flex:1;position:relative;z-index:1"><h1>${hello}</h1><p>${n>=g?"Goal reached today. Keep going if you like.":n?`${g-n} more idea${g-n>1?"s":""} to reach today's goal.`:`Read ${g} ideas today to keep your streak.`}</p></div>
-     <div class="ring"><svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="32" stroke="rgba(255,255,255,.3)" stroke-width="8" fill="none"/><circle cx="38" cy="38" r="32" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><b>${n}/${g}<small>today</small></b></div></div>
+     <div class="ring"><svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="32" stroke="rgba(255,255,255,.3)" stroke-width="8" fill="none"/><circle cx="38" cy="38" r="32" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}"/></svg><b style="${(n>=g?String(n):n+"/"+g).length>4?"font-size:14px":""}">${n>=g?n:`${n}/${g}`}<small>${n>=g?"done today":"today"}</small></b></div></div>
    ${cont}
    ${iotd?`<button class="iotd" data-k="${iotd.key}"><div class="art">${cover("iotd"+t,byId[iotd.pid].cat,{ratio:"wide"})}<span class="badge">Idea of the day</span></div><div class="txt"><h3>${prov(plainProv(iotd.h))}</h3><p>${esc(plainProv(iotd.body))}</p><div class="from"><span class="dot" style="background:${topicOf(byId[iotd.pid].cat).c1}"></span>${esc(byId[iotd.pid].title)}</div></div></button>`:""}
    <div class="h-sec"><h2>For you today</h2><a href="#you" id="edit-int">Your topics</a></div>
@@ -430,11 +435,14 @@ function renderYou(){
     <button class="row" id="sync-row"><div class="l"><b>Sync with Google</b><small id="sync-sub">Checking…</small></div><span class="pill soft">Open</span></button>
    </div>
    <div class="group">
-    <div class="row" style="display:block"><div style="display:flex;gap:12px;align-items:center"><div class="l"><b>Download for offline</b><small id="dl-info">All packages, about 160 MB</small></div><button class="pill" id="dl-all">Download</button></div><div class="bar"><i id="dl-bar"></i></div></div>
+    <div class="row" style="display:block"><div style="display:flex;gap:12px;align-items:center"><div class="l"><b>Download for offline</b><small id="dl-info">All packages, about 140 MB</small></div><button class="pill" id="dl-all">Download</button></div><div class="bar"><i id="dl-bar"></i></div></div>
     <div class="row"><div class="l"><b>Saved on this device</b><small id="dl-count">Checking…</small></div><button class="pill soft" id="dl-clear">Remove</button></div>
    </div>
    <div class="group">
     <a class="row" href="${ASK_URL}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><div class="l"><b>Ask Hikmah</b><small>Chat about any idea, verse or decision (opens in Claude)</small></div>${icon("ask",20)}</a>
+    <button class="row" id="bk-save"><div class="l"><b>Back up my progress</b><small>Save a copy of your history, stashes and settings as a file</small></div><span class="pill soft">Save</span></button>
+    <button class="row" id="bk-load"><div class="l"><b>Restore from a backup</b><small>Merge a saved backup file into this device</small></div><span class="pill soft">Choose</span></button>
+    <button class="row" id="repair"><div class="l"><b>Repair app</b><small>Refreshes the app files if something looks wrong. Your progress is kept</small></div><span class="pill soft">Repair</span></button>
     <button class="row" id="reset-prog"><div class="l"><b>Reset progress</b><small>Clears reading, streaks and listening history</small></div><span class="pill soft">Reset</span></button>
    </div>
    <p class="srcnote">Hikmah ${VERSION} · ${PK.length} packages · ${ALLIDEAS.length} ideas. Arabic text: Tanzil Uthmani. Translation: Saheeh International. Recitation: Mishary Rashid Alafasy. Book summaries are written in our own words. Narration is a synthetic female voice.</p>`;
@@ -442,10 +450,33 @@ function renderYou(){
   $$("#fs-seg button").forEach(b=>b.onclick=()=>{store.set("fs",+b.dataset.v);applyFs();renderYou()});
   $("#autonext").onchange=e=>store.set("autonext",e.target.checked);
   $("#edit-topics").onclick=()=>openOnboarding(1);
-  $("#sync-row").onclick=openSync;paintSyncRow();$("#dl-all").onclick=downloadAll; $("#dl-clear").onclick=clearDownloads;
+  $("#sync-row").onclick=openSync;$("#bk-save").onclick=saveBackup;$("#bk-load").onclick=loadBackup;$("#repair").onclick=repairApp;paintSyncRow();$("#dl-all").onclick=downloadAll; $("#dl-clear").onclick=clearDownloads;
   $("#reset-prog").onclick=()=>{openSheet(`<h3>Reset all progress?</h3><p class="muted">Your stashes stay. Reading history, streaks, badges and listening progress are cleared.</p><div class="cta"><button class="btn soft" id="rs-no">Cancel</button><button class="btn primary" id="rs-yes">Reset</button></div>`);$("#rs-no").onclick=closeSheet;$("#rs-yes").onclick=()=>{["read","days","badges","prog","done","pos","completed","listened","lastRead","last","ldays"].forEach(k=>store.set(k,k==="last"||k==="lastRead"?null:{}));store.set("listened",0);raw.set("_others",{});raw.set("_epoch",Date.now());READ={};DAYS={};closeSheet();renderYou();toast("Progress reset")}};
   renderCal();
   refreshOffline();
+}
+/* ---------- BACKUP + REPAIR ---------- */
+function saveBackup(){
+  const d=collect();d.dev={};d.dev[devId()]={ldays:raw.get("ldays",{}),listened:raw.get("listened",0),name:devName(),ep:d.epoch||0,at:Date.now()};
+  const blob=new Blob([JSON.stringify({app:"hikmah",version:VERSION,saved:new Date().toISOString(),data:d},null,1)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="hikmah-backup-"+today()+".json";document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);toast("Backup saved");
+}
+function loadBackup(){
+  const inp=document.createElement("input");inp.type="file";inp.accept="application/json,.json";
+  inp.onchange=async()=>{const f=inp.files&&inp.files[0];if(!f)return;if(f.size>5e6){toast("That file is too large to be a Hikmah backup");return}
+    try{const j=JSON.parse(await f.text());if(!j||j.app!=="hikmah")throw new Error("not hikmah");const R=cleanDoc(j.data);if(!R)throw new Error("bad");
+      const M=mergeDocs(collect(),R,true);for(const k in M.k)raw.set(k,M.k[k]);const mt=raw.get("_mt",{});for(const k in M.k)mt[k]=Date.now();raw.set("_mt",mt);
+      afterSyncChange();if(raw.get("_sync",null)===true)syncNow({force:true}).catch(()=>{});toast("Backup restored");}
+    catch(e){toast("That file is not a Hikmah backup")}};
+  inp.click();
+}
+async function repairApp(){
+  toast("Repairing…");
+  try{if(navigator.serviceWorker){const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.unregister()))}}catch(e){}
+  try{const ks=await caches.keys();await Promise.all(ks.filter(k=>k.startsWith("hikmah-shell-")).map(k=>caches.delete(k)))}catch(e){}
+  try{localStorage.removeItem("hikmah:_errs")}catch(e){}
+  location.replace(location.pathname+"?repaired="+Date.now()+"#you");
 }
 /* ---------- CALENDAR ---------- */
 let CAL=null;
@@ -730,4 +761,5 @@ Promise.all([fetch("data/packages.json").then(r=>r.json()),fetch("data/timings.j
   if(last&&byId[last]&&TM[last]){cur=last;showPlayer();paintPlayerStatic();syncPlayer();$("#pl-t small").textContent=`Paused at ${fmt(store.get("prog",{})[last]||0)} · tap ▶`}
   checkBadges();
 }).catch(e=>{$("#home").innerHTML='<p class="empty">The library could not load. Check your connection, then reopen the app.</p>';console.error(e)});
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 if("serviceWorker" in navigator){const reg=()=>navigator.serviceWorker.register("sw.js").catch(()=>{});document.readyState==="complete"?reg():addEventListener("load",reg)}
