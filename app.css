@@ -411,3 +411,8 @@ h1,h2,h3,h4{margin:0;letter-spacing:-.01em}
 .works b{font-weight:700}
 .works small{color:var(--muted);font-weight:700;flex:none}
 .rd-actions button{min-width:52px;padding:0 12px}
+
+.synccode{font:800 19px/1.45 "Plus Jakarta Sans",system-ui;letter-spacing:.06em;text-align:center;background:#F3F0FF;color:#3B2A99;border-radius:16px;padding:16px 10px;margin:14px 0 10px;user-select:all;-webkit-user-select:all;word-break:normal;overflow-wrap:normal}
+.syncin{width:100%;box-sizing:border-box;font:700 16px "Plus Jakarta Sans",system-ui;letter-spacing:.05em;text-transform:uppercase;padding:14px;border-radius:14px;border:2px solid #E4E0F5;background:#fff;color:#1b1830;outline:none}
+.syncin:focus{border-color:#6D4AFF}
+.linkbtn{display:block;margin:14px auto 0;background:none;border:0;color:#B42318;font:700 14px "Plus Jakarta Sans",system-ui;cursor:pointer}

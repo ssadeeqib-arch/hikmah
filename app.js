@@ -1,13 +1,13 @@
 /* Hikmah 2.0 */
 "use strict";
-const VERSION="2.3.0";
+const VERSION="2.4.0";
 const SITE="https://ssadeeqib-arch.github.io/hikmah/";
 const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const prov=t=>esc(t).replace(/«([^»]*)»/g,'<span class="prov">$1</span>');
 const plainProv=t=>String(t).replace(/[«»]/g,"");
-const store={get(k,d){try{const v=localStorage.getItem("hikmah:"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("hikmah:"+k,JSON.stringify(v))}catch(e){}}};
+const store={get(k,d){try{const v=localStorage.getItem("hikmah:"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("hikmah:"+k,JSON.stringify(v))}catch(e){}if(typeof noteChange==="function")noteChange(k)}};
 const fmt=s=>{s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
 const dayKey=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
@@ -404,7 +404,7 @@ function renderStash(id){
 
 /* ---------- YOU ---------- */
 function renderYou(){
-  const st=streak(),best=bestStreak(),got=store.get("badges",{}),mins=Math.round(store.get("listened",0)/60),done=Object.keys(store.get("completed",{})).length;
+  const st=streak(),best=bestStreak(),got=store.get("badges",{}),mins=Math.round(listenedAll()/60),done=Object.keys(store.get("completed",{})).length;
   const now=new Date(),mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));
   const wk=[...Array(7)].map((_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d});
   const names=["M","T","W","T","F","S","S"],tk=today();
@@ -427,8 +427,11 @@ function renderYou(){
     <div class="row"><div class="l"><b>Play the next package automatically</b><small>Within the same topic</small></div><input type="checkbox" class="switch" id="autonext" ${store.get("autonext",true)?"checked":""} aria-label="Autoplay next"></div>
    </div>
    <div class="group">
+    <button class="row" id="sync-row"><div class="l"><b>Sync across devices</b><small id="sync-sub">Checking…</small></div><span class="pill soft">Open</span></button>
+   </div>
+   <div class="group">
     <div class="row" style="display:block"><div style="display:flex;gap:12px;align-items:center"><div class="l"><b>Download for offline</b><small id="dl-info">All packages, about 160 MB</small></div><button class="pill" id="dl-all">Download</button></div><div class="bar"><i id="dl-bar"></i></div></div>
-    <div class="row"><div class="l"><b>Saved on this phone</b><small id="dl-count">Checking…</small></div><button class="pill soft" id="dl-clear">Remove</button></div>
+    <div class="row"><div class="l"><b>Saved on this device</b><small id="dl-count">Checking…</small></div><button class="pill soft" id="dl-clear">Remove</button></div>
    </div>
    <div class="group">
     <a class="row" href="${ASK_URL}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><div class="l"><b>Ask Hikmah</b><small>Chat about any idea, verse or decision (opens in Claude)</small></div>${icon("ask",20)}</a>
@@ -439,15 +442,15 @@ function renderYou(){
   $$("#fs-seg button").forEach(b=>b.onclick=()=>{store.set("fs",+b.dataset.v);applyFs();renderYou()});
   $("#autonext").onchange=e=>store.set("autonext",e.target.checked);
   $("#edit-topics").onclick=()=>openOnboarding(1);
-  $("#dl-all").onclick=downloadAll; $("#dl-clear").onclick=clearDownloads;
-  $("#reset-prog").onclick=()=>{openSheet(`<h3>Reset all progress?</h3><p class="muted">Your stashes stay. Reading history, streaks, badges and listening progress are cleared.</p><div class="cta"><button class="btn soft" id="rs-no">Cancel</button><button class="btn primary" id="rs-yes">Reset</button></div>`);$("#rs-no").onclick=closeSheet;$("#rs-yes").onclick=()=>{["read","days","badges","prog","done","pos","completed","listened","lastRead","last","ldays"].forEach(k=>store.set(k,k==="last"||k==="lastRead"?null:{}));store.set("listened",0);READ={};DAYS={};closeSheet();renderYou();toast("Progress reset")}};
+  $("#sync-row").onclick=openSync;paintSyncRow();$("#dl-all").onclick=downloadAll; $("#dl-clear").onclick=clearDownloads;
+  $("#reset-prog").onclick=()=>{openSheet(`<h3>Reset all progress?</h3><p class="muted">Your stashes stay. Reading history, streaks, badges and listening progress are cleared.</p><div class="cta"><button class="btn soft" id="rs-no">Cancel</button><button class="btn primary" id="rs-yes">Reset</button></div>`);$("#rs-no").onclick=closeSheet;$("#rs-yes").onclick=()=>{["read","days","badges","prog","done","pos","completed","listened","lastRead","last","ldays"].forEach(k=>store.set(k,k==="last"||k==="lastRead"?null:{}));store.set("listened",0);raw.set("_others",{});raw.set("_epoch",Date.now());READ={};DAYS={};closeSheet();renderYou();toast("Progress reset")}};
   renderCal();
   refreshOffline();
 }
 /* ---------- CALENDAR ---------- */
 let CAL=null;
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const LDAYS=()=>store.get("ldays",{});
+const LDAYS=()=>ldaysAll();
 function renderCal(){
   const now=new Date(); if(!CAL)CAL={y:now.getFullYear(),m:now.getMonth()};
   const {y,m}=CAL, first=new Date(y,m,1), daysIn=new Date(y,m+1,0).getDate(), lead=(first.getDay()+6)%7, tk=today(), g=goal(), LD=LDAYS();
@@ -722,6 +725,7 @@ Promise.all([fetch("data/packages.json").then(r=>r.json()),fetch("data/timings.j
   await refreshOffline();
   if(!store.get("onb",false))openOnboarding(0);
   route();
+  if(raw.get("_sync",null))syncNow().catch(()=>{});
   const last=store.get("last",null);
   if(last&&byId[last]&&TM[last]){cur=last;showPlayer();paintPlayerStatic();syncPlayer();$("#pl-t small").textContent=`Paused at ${fmt(store.get("prog",{})[last]||0)} · tap ▶`}
   checkBadges();
