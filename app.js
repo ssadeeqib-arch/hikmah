@@ -1,6 +1,6 @@
 /* Hikmah 2.0 */
 "use strict";
-const VERSION="2.4.0";
+const VERSION="2.5.0";
 const SITE="https://ssadeeqib-arch.github.io/hikmah/";
 const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -427,7 +427,7 @@ function renderYou(){
     <div class="row"><div class="l"><b>Play the next package automatically</b><small>Within the same topic</small></div><input type="checkbox" class="switch" id="autonext" ${store.get("autonext",true)?"checked":""} aria-label="Autoplay next"></div>
    </div>
    <div class="group">
-    <button class="row" id="sync-row"><div class="l"><b>Sync across devices</b><small id="sync-sub">Checking…</small></div><span class="pill soft">Open</span></button>
+    <button class="row" id="sync-row"><div class="l"><b>Sync with Google</b><small id="sync-sub">Checking…</small></div><span class="pill soft">Open</span></button>
    </div>
    <div class="group">
     <div class="row" style="display:block"><div style="display:flex;gap:12px;align-items:center"><div class="l"><b>Download for offline</b><small id="dl-info">All packages, about 160 MB</small></div><button class="pill" id="dl-all">Download</button></div><div class="bar"><i id="dl-bar"></i></div></div>
@@ -725,7 +725,7 @@ Promise.all([fetch("data/packages.json").then(r=>r.json()),fetch("data/timings.j
   await refreshOffline();
   if(!store.get("onb",false))openOnboarding(0);
   route();
-  if(raw.get("_sync",null))syncNow().catch(()=>{});
+  if(raw.get("_sync",null)===true)syncNow().catch(()=>{});
   const last=store.get("last",null);
   if(last&&byId[last]&&TM[last]){cur=last;showPlayer();paintPlayerStatic();syncPlayer();$("#pl-t small").textContent=`Paused at ${fmt(store.get("prog",{})[last]||0)} · tap ▶`}
   checkBadges();

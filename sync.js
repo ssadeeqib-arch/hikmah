@@ -1,8 +1,9 @@
 /* Hikmah sync: keeps progress, likes, stashes and settings the same on every device.
-   Pairing uses a private 24-character sync code. The server only stores a SHA-256 hash of the code
-   and exposes two functions (pull/push); the table itself is closed to the public. */
-const SB_URL="https://ptfwcxdhlzoskzqppwzr.supabase.co", SB_KEY="sb_publishable_7i2aI8mfxApUb2DBoKj_qg_EvX_wE0m";
-const SYNC_ON=()=>!SB_URL.startsWith("__");
+   Data is saved as one private JSON file in the hidden app folder of the user's own Google Drive
+   (scope drive.appdata: the app can see only its own file, nothing else in Drive). */
+const G_CLIENT="294351528769-1b0reabi5qprb1gct5t9b9o8q2q2rl8s.apps.googleusercontent.com";
+const G_SCOPE="https://www.googleapis.com/auth/drive.appdata", G_FILE="hikmah-sync.json";
+const SYNC_ON=()=>true;
 const LOCAL_ONLY=new Set(["fs","autonext","rate","onb"]);
 const DEV_KEYS=new Set(["ldays","listened"]);
 const UNION_KEYS=new Set(["read","completed","done","badges","days"]);
@@ -54,21 +55,50 @@ function mergeDocs(L,R,first){
   }
   return out;
 }
-async function rpc(fn,body){
-  const h={"Content-Type":"application/json",apikey:SB_KEY};if(!SB_KEY.startsWith("sb_"))h.Authorization="Bearer "+SB_KEY;
-  const r=await fetch(SB_URL+"/rest/v1/rpc/"+fn,{method:"POST",headers:h,body:JSON.stringify(body),cache:"no-store"});
-  if(!r.ok)throw new Error("Sync error "+r.status);
-  const t=await r.text();return t?JSON.parse(t):null;
+let gisP=null;
+function loadGis(){if(window.google&&google.accounts&&google.accounts.oauth2)return Promise.resolve();if(gisP)return gisP;
+  gisP=new Promise((res,rej)=>{const e=document.createElement("script");e.src="https://accounts.google.com/gsi/client";e.async=true;e.onload=()=>res();e.onerror=()=>{gisP=null;rej(new Error("Google sign-in could not load"))};document.head.appendChild(e)});return gisP}
+const gisReady=()=>!!(window.google&&google.accounts&&google.accounts.oauth2);
+function tok(){const t=raw.get("_gtok",null);return t&&t.exp>Date.now()+60000?t.token:null}
+/* must be called straight from a tap: Google opens a small window */
+function askToken(consent){return new Promise((res,rej)=>{
+  if(!gisReady()){loadGis().catch(()=>{});rej(new Error("Google sign-in is still loading. Try again."));return}
+  const c=google.accounts.oauth2.initTokenClient({client_id:G_CLIENT,scope:G_SCOPE,
+    callback:r=>{if(r&&r.access_token){raw.set("_gtok",{token:r.access_token,exp:Date.now()+(+r.expires_in||3600)*1000});res(r.access_token)}else rej(new Error((r&&r.error)||"Google access was not granted"))},
+    error_callback:e=>rej(new Error(e&&e.type==="popup_closed"?"The Google window was closed":"Google sign-in was blocked"))});
+  c.requestAccessToken({prompt:consent?"consent":""});
+})}
+const authErr=()=>Object.assign(new Error("Google sign-in needed"),{auth:true});
+async function gfetch(url,opt={}){
+  const t=tok();if(!t)throw authErr();
+  const r=await fetch(url,{...opt,headers:{...(opt.headers||{}),Authorization:"Bearer "+t},cache:"no-store"});
+  if(r.status===401){raw.set("_gtok",null);throw authErr()}
+  if(r.status===404){FID=null}
+  if(!r.ok)throw new Error("Google Drive "+r.status);
+  return r;
+}
+let FID=null;
+async function fileId(){if(FID)return FID;const q=encodeURIComponent(`name='${G_FILE}'`);
+  const j=await(await gfetch(`https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=${q}&fields=files(id,modifiedTime)&orderBy=modifiedTime desc`)).json();
+  FID=(j.files&&j.files[0]&&j.files[0].id)||null;return FID}
+async function pull(){const id=await fileId();if(!id)return null;const r=await gfetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`);const t=await r.text();return t?JSON.parse(t):null}
+async function push(doc){
+  const body=JSON.stringify(doc),id=await fileId();
+  if(id){await gfetch(`https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media`,{method:"PATCH",headers:{"Content-Type":"application/json"},body});return}
+  const b="hikmah"+Math.random().toString(36).slice(2),meta=JSON.stringify({name:G_FILE,parents:["appDataFolder"]});
+  const r=await gfetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id",{method:"POST",headers:{"Content-Type":"multipart/related; boundary="+b},
+    body:`--${b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${meta}\r\n--${b}\r\nContent-Type: application/json\r\n\r\n${body}\r\n--${b}--`});
+  FID=(await r.json()).id;
 }
 let syncing=false,syncAgain=false;
 async function syncNow(opts={}){
-  const code=opts.code||raw.get("_sync",null);
-  if(!SYNC_ON()||!code||!navigator.onLine)return false;
+  if(!(opts.connecting||raw.get("_sync",null)===true)||!navigator.onLine)return false;
+  if(!tok()){paintSyncRow("auth");return false}
   if(syncing){syncAgain=true;return false}
   syncing=true;
   try{
     try{typeof flushListen==="function"&&flushListen()}catch(e){}
-    const R=await rpc("hikmah_pull",{k:code})||{k:{},mt:{},dev:{},epoch:0};
+    const R=await pull()||{k:{},mt:{},dev:{},epoch:0};
     const first=!!opts.first||!raw.get("_synced",false);
     const L=collect(),M=mergeDocs(L,R,first);
     const me=devId();
@@ -85,12 +115,12 @@ async function syncNow(opts={}){
     dev[me]={ldays:raw.get("ldays",{}),listened:raw.get("listened",0),name:devName(),ep:M.epoch,at:Date.now()};
     const out={v:1,epoch:M.epoch,k:M.k,mt:M.mt,dev};
     const strip=d=>JSON.stringify({...d,dev:Object.fromEntries(Object.entries(d.dev||{}).map(([i,x])=>[i,{...x,at:0}]))});
-    if(strip(out)!==strip(R)||opts.force)await rpc("hikmah_push",{k:code,d:out});
+    if(strip(out)!==strip(R)||opts.force)await push(out);
     raw.set("_synced",true);raw.set("_last",Date.now());
     if(changed)afterSyncChange();
     paintSyncRow();
     return true;
-  }catch(e){console.warn(e);paintSyncRow(String(e.message||e));throw e}
+  }catch(e){console.warn(e);paintSyncRow(e.auth?"auth":String(e.message||e));if(e.auth&&!opts.connecting)return false;throw e}
   finally{syncing=false;if(syncAgain){syncAgain=false;setTimeout(()=>syncNow(),500)}}
 }
 function afterSyncChange(){
@@ -101,46 +131,48 @@ function afterSyncChange(){
 function listenedAll(){let s=raw.get("listened",0);for(const d of Object.values(raw.get("_others",{})))s+=d.listened||0;return s}
 function ldaysAll(){const o={...raw.get("ldays",{})};for(const d of Object.values(raw.get("_others",{})))for(const [k,v] of Object.entries(d.ldays||{}))o[k]=(o[k]||0)+v;return o}
 
-/* ---------- code + UI ---------- */
-const ALPH="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-function newCode(){const b=crypto.getRandomValues(new Uint8Array(24));return [...b].map(x=>ALPH[x&31]).join("")}
-const normCode=s=>String(s||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
-const fmtCode=c=>c.match(/.{1,4}/g).join("-");
+/* ---------- UI ---------- */
 function ago(t){if(!t)return"not yet";const s=Math.round((Date.now()-t)/1000);return s<45?"just now":s<3600?Math.round(s/60)+" min ago":s<86400?Math.round(s/3600)+" h ago":new Date(t).toLocaleDateString()}
-function paintSyncRow(err){const e=document.getElementById("sync-sub");if(!e)return;const c=raw.get("_sync",null);
-  e.textContent=!SYNC_ON()?"Not set up yet":!c?"Off. Keep your laptop and phone in step":err&&!navigator.onLine?"On · offline, will sync when connected":err?"On · last try failed, will retry":"On · synced "+ago(raw.get("_last",0))}
+function paintSyncRow(err){const e=document.getElementById("sync-sub");if(!e)return;const on=raw.get("_sync",null)===true;
+  e.textContent=!on?"Off. Connect your Google account":(err==="auth"||!tok())?"Paused · tap to reconnect Google":err&&!navigator.onLine?"On · offline, will sync when connected":err?"On · last try failed, will retry":"On · Google Drive · synced "+ago(raw.get("_last",0))}
+async function connectGoogle(btn,consent){
+  const lbl=btn&&btn.textContent;
+  try{const p=askToken(consent);if(btn)btn.textContent="Waiting for Google…";await p;
+    if(btn)btn.textContent="Syncing…";await syncNow({connecting:true,first:!raw.get("_synced",false),force:true});
+    raw.set("_sync",true);paintSyncRow();return true}
+  catch(e){if(btn)btn.textContent=lbl;toast(navigator.onLine?(e.message||"Could not connect to Google"):"You are offline");return false}
+}
 function openSync(){
-  const c=raw.get("_sync",null);
-  if(!SYNC_ON()){openSheet(`<h3>Sync across devices</h3><p class="muted">Sync is not switched on for this copy of Hikmah yet.</p><div class="cta"><button class="btn primary" id="sy-x">OK</button></div>`);$("#sy-x").onclick=closeSheet;return}
-  if(c){
-    const others=Object.values(raw.get("_others",{})).length;
-    openSheet(`<h3>Sync is on</h3><p class="muted">Your progress, streak, likes, stashes, calendar and settings stay the same on every device that uses this code. ${others?`Linked with ${others} other device${others>1?"s":""}.`:"Add your other device with the code below."}</p>
-      <div class="synccode">${fmtCode(c)}</div>
-      <p class="muted" style="font-size:13px">On your other device, open Hikmah → You → Sync across devices → <b>Join with a code</b>, and enter this code. Keep it private: anyone with it can see and change your Hikmah progress.</p>
-      <div class="cta"><button class="btn soft" id="sy-copy">Copy code</button><button class="btn primary" id="sy-now">Sync now</button></div>
-      <button class="linkbtn" id="sy-off">Turn off sync on this device</button>`);
-    $("#sy-copy").onclick=async()=>{try{await navigator.clipboard.writeText(fmtCode(c));toast("Code copied")}catch(e){toast("Select the code and copy it")}};
-    $("#sy-now").onclick=async()=>{$("#sy-now").textContent="Syncing…";try{await syncNow({force:true});toast("Synced");closeSheet()}catch(e){$("#sy-now").textContent="Try again";toast(navigator.onLine?"Sync failed. Try again shortly.":"You are offline")}};
-    $("#sy-off").onclick=()=>{raw.set("_sync",null);raw.set("_synced",false);closeSheet();paintSyncRow();toast("Sync turned off on this device")};
+  loadGis().catch(()=>{});
+  const on=raw.get("_sync",null)===true;
+  if(on){
+    const others=Object.values(raw.get("_others",{})).length,need=!tok();
+    openSheet(`<h3>Sync is on</h3><p class="muted">Your progress, streak, likes, stashes, calendar and settings are saved in your Google Drive and stay the same on every device where you connect the same Google account.${others?` Linked with ${others} other device${others>1?"s":""}.`:""}</p>
+      <div class="gnote">${need?"Google asks Hikmah to reconnect about once an hour. Tap <b>Reconnect</b> and the small Google window closes by itself.":"Last synced "+ago(raw.get("_last",0))+"."}</div>
+      <div class="cta"><button class="btn soft" id="sy-x">Close</button><button class="btn primary" id="sy-now">${need?"Reconnect":"Sync now"}</button></div>
+      <button class="linkbtn" id="sy-off">Disconnect Google on this device</button>`);
+    $("#sy-x").onclick=closeSheet;
+    $("#sy-now").onclick=async()=>{const b=$("#sy-now");if(!tok()){if(await connectGoogle(b,false)){toast("Synced");closeSheet()}return}
+      b.textContent="Syncing…";try{await syncNow({force:true});toast("Synced");closeSheet()}catch(e){b.textContent="Try again";toast(navigator.onLine?"Sync failed. Try again shortly.":"You are offline")}};
+    $("#sy-off").onclick=()=>{raw.set("_sync",null);raw.set("_gtok",null);raw.set("_synced",false);FID=null;closeSheet();paintSyncRow();toast("Disconnected on this device. Your Drive copy is kept.")};
     return;
   }
-  openSheet(`<h3>Sync across devices</h3><p class="muted">Keep your streak, progress, likes, stashes and calendar the same on your phone and laptop. Changes move across automatically whenever you are online.</p>
-    <div class="group" style="margin:14px 0 10px"><button class="row" id="sy-start"><div class="l"><b>Start sync on this device</b><small>Do this on the device that has your history</small></div><span class="pill">Start</span></button></div>
-    <p class="muted" style="font-size:13px;margin:12px 2px 6px">Already started on another device?</p>
-    <input id="sy-in" class="syncin" placeholder="Enter the 24-character code" autocomplete="off" autocapitalize="characters" spellcheck="false">
-    <div class="cta"><button class="btn soft" id="sy-x">Cancel</button><button class="btn primary" id="sy-join">Join with a code</button></div>`);
+  openSheet(`<h3>Sync with Google</h3><p class="muted">Connect your Google account to keep your streak, progress, likes, stashes and calendar the same on your phone and laptop.</p>
+    <div class="gnote">Hikmah saves one private file in a hidden app folder of your Google Drive. It cannot see or change anything else in your Drive. Google may say the app is unverified: that is expected for a personal app. Choose your account, then <b>Continue</b>.</div>
+    <div class="cta"><button class="btn soft" id="sy-x">Not now</button><button class="btn primary" id="sy-go">Connect Google</button></div>`);
   $("#sy-x").onclick=closeSheet;
-  $("#sy-start").onclick=async()=>{const code=newCode();try{$("#sy-start b").textContent="Starting…";await syncNow({code,first:true,force:true});raw.set("_sync",code);toast("Sync is on");openSync()}catch(e){$("#sy-start b").textContent="Start sync on this device";toast(navigator.onLine?"Could not start sync. Try again.":"You are offline")}};
-  $("#sy-join").onclick=async()=>{const code=normCode($("#sy-in").value);if(code.length!==24){toast("The code has 24 letters and numbers");return}
-    $("#sy-join").textContent="Joining…";
-    try{const R=await rpc("hikmah_pull",{k:code});if(!R){$("#sy-join").textContent="Join with a code";toast("No Hikmah sync found for that code");return}
-      raw.set("_synced",false);await syncNow({code,first:true,force:true});raw.set("_sync",code);toast("Joined. Your devices are in sync.");openSync()}
-    catch(e){$("#sy-join").textContent="Join with a code";toast(navigator.onLine?"Could not join. Check the code.":"You are offline")}};
+  $("#sy-go").onclick=async()=>{if(await connectGoogle($("#sy-go"),true)){toast(Object.keys(raw.get("_others",{})).length?"Connected. Your devices are in sync.":"Connected to Google Drive");openSync()}};
 }
+/* old pairing-code setting from 2.4.0: switch it off; Google takes over */
+if(typeof raw.get("_sync",null)==="string"){raw.set("_sync",null);raw.set("_synced",false)}
 /* automatic triggers */
-if(SYNC_ON()){
-  addEventListener("visibilitychange",()=>{if(raw.get("_sync",null))syncNow().catch(()=>{})});
-  addEventListener("online",()=>{if(raw.get("_sync",null))syncNow().catch(()=>{})});
-  addEventListener("focus",()=>{if(raw.get("_sync",null)&&Date.now()-raw.get("_last",0)>5000)syncNow().catch(()=>{})});
-  setInterval(()=>{if(document.visibilityState==="visible"&&raw.get("_sync",null))syncNow().catch(()=>{})},20000);
-}
+const syncing0=()=>raw.get("_sync",null)===true;
+addEventListener("visibilitychange",()=>{if(syncing0())syncNow().catch(()=>{})});
+addEventListener("online",()=>{if(syncing0())syncNow().catch(()=>{})});
+addEventListener("focus",()=>{if(syncing0()&&Date.now()-raw.get("_last",0)>5000)syncNow().catch(()=>{})});
+setInterval(()=>{if(document.visibilityState==="visible"&&syncing0())syncNow().catch(()=>{})},20000);
+/* when Google access has expired, renew it quietly on the next tap anywhere */
+let renewing=false;
+addEventListener("pointerdown",e=>{if(!syncing0()||tok()||renewing||!navigator.onLine||!gisReady()||(e.target.closest&&e.target.closest("#sheet")))return;renewing=true;
+  askToken(false).then(()=>syncNow()).catch(()=>{}).finally(()=>{renewing=false})},true);
+if(syncing0())loadGis().catch(()=>{});
