@@ -7,6 +7,7 @@ self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.
 self.addEventListener("fetch",e=>{
   const req=e.request, url=new URL(req.url);
   if(req.method!=="GET"||url.origin!==location.origin) return;
+  if(url.pathname.includes("/planner/")) return; /* the Sadiq planner has its own offline cache */
   if(url.pathname.endsWith(".mp3")) return; /* audio is handled by the page */
   if(url.pathname.endsWith(".json")||url.pathname.endsWith(".js")||url.pathname.endsWith(".css")||req.mode==="navigate"){
     /* network first so updates arrive; cache as fallback offline */
