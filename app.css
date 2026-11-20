@@ -424,3 +424,53 @@ h1,h2,h3,h4{margin:0;letter-spacing:-.01em}
  .reader,.np{left:50%;right:auto;width:min(600px,100vw);transform:translateX(-50%);box-shadow:0 0 0 100vmax rgba(12,10,24,.94)}
  .reader .card{border-radius:0}
 }
+
+/* reader action bar: five equal, aligned buttons */
+.rd-actions{gap:8px;padding-left:12px;padding-right:12px}
+.rd-actions button{flex:1 1 0;min-width:0;max-width:84px;height:58px;padding:0 4px;border-radius:18px;flex-direction:column;gap:3px;font-size:11.5px;font-weight:800;line-height:1;white-space:nowrap;overflow:hidden}
+.rd-actions button svg{flex:none}
+.rd-actions button .lb{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+/* final card scrolls fully, and taps go to the notes rather than changing cards */
+.card.final .cin{margin:0 auto;max-height:100%;padding-top:96px;padding-bottom:calc(env(safe-area-inset-bottom) + 40px);-webkit-mask-image:none;mask-image:none}
+.reader.on-final .tapzone{display:none}
+/* practices with notes */
+.pr-list{display:grid;gap:12px;margin-top:12px}
+.pr-item{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.pr-check{display:flex;gap:12px;align-items:flex-start;padding:14px 14px 8px;cursor:pointer}
+.pr-check input{appearance:none;width:24px;height:24px;border-radius:8px;border:2.5px solid #CFCBE0;flex:none;margin-top:1px;display:grid;place-items:center}
+.pr-check input:checked{background:var(--ok);border-color:var(--ok)}
+.pr-check input:checked::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.pr-check input:checked+span{opacity:.75}
+.pr-note{padding:0 14px 12px 50px}
+.pr-add{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:800;color:#6D4AFF;background:none;border:0;padding:6px 0;cursor:pointer}
+.pr-note textarea,.pr-refl textarea{display:none;width:100%;box-sizing:border-box;resize:none;border:2px solid #E4E0F5;border-radius:14px;padding:11px 12px;font:500 15px/1.5 "Plus Jakarta Sans",system-ui;color:var(--ink);background:#fff;outline:none;min-height:76px}
+.pr-note textarea:focus,.pr-refl textarea:focus{border-color:#6D4AFF}
+.pr-note.open textarea{display:block}.pr-note.open .pr-add{display:none}
+.pr-refl{background:var(--surface);border-radius:18px;box-shadow:var(--shadow);padding:14px}
+.pr-refl b{display:flex;align-items:center;gap:8px;font-size:15px;margin-bottom:10px}
+.pr-refl textarea{display:block}
+.pr-st{display:block;font-size:12px;color:var(--muted);margin-top:6px;min-height:14px}
+.card.final .pr-item,.card.final .pr-refl{background:rgba(255,255,255,.15);box-shadow:none;color:#fff}
+.card.final .pr-check input{border-color:rgba(255,255,255,.75)}
+.card.final .pr-add{color:#fff;opacity:.95}
+.card.final .pr-note textarea,.card.final .pr-refl textarea{background:rgba(255,255,255,.95);border-color:transparent}
+.card.final .pr-st{color:rgba(255,255,255,.85)}
+.card.final .pr-refl b{color:#fff}
+/* journal */
+.jn-tile{display:flex;align-items:center;gap:12px;margin:16px 0 4px;padding:14px;border-radius:18px;background:linear-gradient(135deg,#6D4AFF,#B04AFF);color:#fff;text-decoration:none;box-shadow:var(--shadow)}
+.jn-tile .ic{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.2);display:grid;place-items:center;flex:none}
+.jn-tile div{flex:1;min-width:0}.jn-tile b{display:block;font-size:16px}.jn-tile small{display:block;opacity:.9;font-size:12.5px;margin-top:2px}
+.jn-card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:14px}
+.jn-h{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;margin-bottom:6px}
+.jn-h div{flex:1;min-width:0}.jn-h b{display:block;font-size:16px}.jn-h small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.jn-h .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.jn-pr{border-top:1px solid #EEEAF8;padding:10px 0}
+.jn-q{display:flex;gap:8px;align-items:flex-start;font-weight:700;font-size:14px;line-height:1.45}
+.jn-q .tick{width:16px;height:16px;border-radius:5px;border:2px solid #CFCBE0;flex:none;margin-top:2px}
+.jn-q .tick.on{background:var(--ok);border-color:var(--ok)}
+.jn-a{margin:6px 0 0 24px;white-space:pre-wrap;font-size:14.5px;line-height:1.55;color:#3a3550}
+.jn-edit{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:#6D4AFF;text-decoration:none;margin-top:4px}
+.empty-j{text-align:center;padding:40px 20px;color:var(--muted)}.empty-j b{display:block;color:var(--ink);font-size:17px;margin:10px 0 6px}
+
+.card.final .cin{-webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 70px,#000 104px);mask-image:linear-gradient(180deg,transparent 0,transparent 70px,#000 104px)}
+.pr-st:empty{display:none}

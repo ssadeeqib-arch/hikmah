@@ -1,6 +1,6 @@
 /* Hikmah 2.0 */
 "use strict";
-const VERSION="2.6.0";
+const VERSION="2.7.0";
 const SITE="https://ssadeeqib-arch.github.io/hikmah/";
 const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -44,7 +44,10 @@ const IC={
  b15:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><text x="12" y="15.5" font-size="7" text-anchor="middle" fill="currentColor" stroke="none" font-family="sans-serif" font-weight="700">15</text>',
  f30:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/><text x="12" y="15.5" font-size="7" text-anchor="middle" fill="currentColor" stroke="none" font-family="sans-serif" font-weight="700">30</text>',
  follow:'<path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l4 3-4 3z" fill="currentColor"/>',
- trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H4a3 3 0 0 0 4 4M16 6h4a3 3 0 0 1-4 4M12 13v4M8 21h8M9 17h6"/>',
+ pen:'<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+journal:'<path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M4 7h4M4 12h4M4 17h4M11 8h5M11 12h5"/>',
+chev:'<path d="M9 6l6 6-6 6"/>',
+trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H4a3 3 0 0 0 4 4M16 6h4a3 3 0 0 1-4 4M12 13v4M8 21h8M9 17h6"/>',
  book:'<path d="M4 5c3-1 6-1 8 1v14c-2-2-5-2-8-1zM20 5c-3-1-6-1-8 1v14c2-2 5-2 8-1z"/>',
  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
  more:'<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>'
@@ -358,7 +361,7 @@ function renderPkg(id){
     <div class="h-sec"><h2>What you'll learn</h2></div>
     <div class="learn">${C.filter(c=>c.type!=="intro"&&c.type!=="final").map((c,n)=>`<button data-k="${c.key}"><span class="n" style="background:${T.c1}">${n+1}</span><b>${c.type==="verse"?esc(c.eb)+" · "+c.verses.map(v=>v.s+":"+v.v).join(", "):prov(plainProv(c.h))}</b>${READ[c.key]?'<span class="seen">✓</span>':""}</button>`).join("")}</div>
     <div class="h-sec"><h2>Practices for this week</h2></div>
-    <div class="checks">${p.practices.map((x,i)=>`<label for="c-${id}-${i}"><input type="checkbox" id="c-${id}-${i}" data-i="${i}" ${checks[i]?"checked":""}><span>${prov(x)}</span></label>`).join("")}</div>
+    ${practiceHTML(p)}
     <div class="h-sec"><h2>Reflect</h2></div>
     <ol class="reflect">${p.reflect.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
     ${pkgPeople(p).length?`<div class="h-sec"><h2>Scholars & thinkers</h2></div><div class="pchips">${personChips(pkgPeople(p))}</div>`:""}
@@ -376,14 +379,62 @@ function renderPkg(id){
   $("#pk-ask").onclick=()=>claudeSheet(C.filter(c=>c.type==="idea"||c.type==="verse"||c.type==="hadith").slice(0,9),p.title);
   bindPeople($("#pkg"));
   $("#pk-copyrefs").onclick=async()=>{const t=pkgRefs(p).map((r,i)=>`${i+1}. ${r.t}${r.url?" "+r.url:""}`).join("\n");try{await navigator.clipboard.writeText(`References for “${p.title}” (Hikmah, ${SITE}#p-${p.id}):\n${t}`);toast("References copied")}catch(e){toast("Copy is not allowed here")}};
-  $$("#pkg .checks input").forEach(c=>c.onchange=()=>{const k=store.get("chk:"+id,{});k[c.dataset.i]=c.checked;store.set("chk:"+id,k)});
+  bindPractice($("#pkg"),id);
 }
 
 /* ---------- STASHES ---------- */
+/* ---------- PRACTICE NOTES + JOURNAL ---------- */
+const noteGet=id=>{const n=store.get("note:"+id,null);return n&&typeof n==="object"?{p:n.p||{},r:n.r||null,at:n.at||0}:{p:{},r:null,at:0}};
+function noteSave(id,i,text){const n=noteGet(id),t=String(text).slice(0,4000),now=Date.now();
+  if(i==="r"){n.r=t.trim()?{t,at:now}:null}else{if(t.trim())n.p[i]={t,at:now};else delete n.p[i]}
+  n.at=now;if(!n.r&&!Object.keys(n.p).length){try{localStorage.removeItem("hikmah:note:"+id)}catch(e){}store.set("note:"+id,{p:{},r:null,at:now})}else store.set("note:"+id,n)}
+const noteCount=()=>PK.reduce((s,p)=>{const n=noteGet(p.id);return s+Object.keys(n.p).length+(n.r?1:0)},0);
+const fmtWhen=t=>t?new Date(t).toLocaleString(undefined,{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"";
+function practiceHTML(p){
+  const ck=store.get("chk:"+p.id,{}),n=noteGet(p.id);
+  return `<div class="pr-list" data-pid="${p.id}">${p.practices.map((x,i)=>{const v=n.p[i]?n.p[i].t:"";return `<div class="pr-item">
+    <label class="pr-check"><input type="checkbox" data-i="${i}" ${ck[i]?"checked":""}><span>${prov(x)}</span></label>
+    <div class="pr-note${v?" open":""}"><button type="button" class="pr-add" data-i="${i}">${icon("pen",15)} Add your ideas and response</button>
+      <textarea data-i="${i}" maxlength="4000" rows="3" placeholder="What did you notice, decide or do?">${esc(v)}</textarea><small class="pr-st">${v?"Saved "+fmtWhen(n.p[i].at):""}</small></div></div>`}).join("")}
+    <div class="pr-refl"><b>${icon("journal",16)} My reflections on this package</b>
+      <textarea data-i="r" maxlength="4000" rows="4" placeholder="Key insights, how you will apply them, questions to explore…">${esc(n.r?n.r.t:"")}</textarea><small class="pr-st">${n.r?"Saved "+fmtWhen(n.r.at):""}</small></div></div>`;
+}
+function bindPractice(root,pid){
+  root.querySelectorAll(".pr-check input").forEach(c=>c.onchange=()=>{const k=store.get("chk:"+pid,{});k[c.dataset.i]=c.checked;store.set("chk:"+pid,k)});
+  root.querySelectorAll(".pr-add").forEach(b=>b.onclick=()=>{const w=b.parentElement;w.classList.add("open");const t=w.querySelector("textarea");t.focus();t.scrollIntoView({block:"center",behavior:"smooth"})});
+  root.querySelectorAll(".pr-list textarea").forEach(t=>{let tm=null;const st=t.parentElement.querySelector(".pr-st");
+    const save=()=>{clearTimeout(tm);tm=null;noteSave(pid,t.dataset.i==="r"?"r":t.dataset.i,t.value);st.textContent=t.value.trim()?"Saved "+fmtWhen(Date.now()):"";if(!t.value.trim()&&t.dataset.i!=="r")t.parentElement.classList.remove("open")};
+    const grow=()=>{t.style.height="auto";t.style.height=Math.min(t.scrollHeight+2,320)+"px"};grow();
+    t.oninput=()=>{grow();st.textContent="Saving…";clearTimeout(tm);tm=setTimeout(save,600)};
+    t.onblur=()=>{if(tm)save()};
+  });
+}
+function journalEntries(){return PK.map(p=>({p,n:noteGet(p.id),ck:store.get("chk:"+p.id,{})})).filter(e=>e.n.r||Object.keys(e.n.p).length).sort((a,b)=>b.n.at-a.n.at)}
+function journalText(){const cp=store.get("completed",{});
+  return "# My Hikmah practice journal\nExported "+new Date().toLocaleString()+"\n\n"+journalEntries().map(({p,n,ck})=>`## ${p.title}${p.sub?" ("+p.sub+")":""}\n${cp[p.id]?"Completed "+cp[p.id]+"\n":""}\n`+
+    p.practices.map((x,i)=>`- [${ck[i]?"x":" "}] ${x.replace(/\*\*/g,"")}${n.p[i]?"\n  My notes ("+fmtWhen(n.p[i].at)+"): "+n.p[i].t.replace(/\n/g,"\n  "):""}`).join("\n")+
+    (n.r?`\n\nMy reflections (${fmtWhen(n.r.at)}):\n${n.r.t}`:"")).join("\n\n")+"\n";}
+function renderJournal(){
+  const E=journalEntries(),cp=store.get("completed",{});
+  $("#journal").innerHTML=`<div class="topbar"><button class="iconbtn" id="jn-back" aria-label="Back">${icon("back",22)}</button><div style="flex:1"></div>${E.length?`<button class="pill soft" id="jn-copy">Copy</button><button class="pill" id="jn-save" style="margin-left:8px">Export</button>`:""}</div>
+   <h1 style="font-size:28px;font-weight:800;margin:6px 0 4px">Practice journal</h1>
+   <p class="muted" style="margin:0 0 16px">Your ideas and responses to each week's practices, newest first.</p>
+   ${E.length?E.map(({p,n,ck})=>{const T=topicOf(p.cat);return `<article class="jn-card"><a class="jn-h" href="#p-${p.id}"><span class="dot" style="background:${T.c1}"></span><div><b>${esc(p.title)}</b><small>${esc(p.cat)}${cp[p.id]?" · completed "+esc(new Date(cp[p.id]+"T12:00").toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"})):""} · updated ${esc(fmtWhen(n.at))}</small></div>${icon("chev",18)}</a>
+     ${p.practices.map((x,i)=>n.p[i]||ck[i]?`<div class="jn-pr"><div class="jn-q"><span class="tick${ck[i]?" on":""}"></span>${prov(x)}</div>${n.p[i]?`<p class="jn-a">${esc(n.p[i].t)}</p>`:""}</div>`:"").join("")}
+     ${n.r?`<div class="jn-pr"><div class="jn-q">${icon("journal",14)} My reflections</div><p class="jn-a">${esc(n.r.t)}</p></div>`:""}
+     <a class="jn-edit" href="#p-${p.id}">${icon("pen",14)} Edit in package</a></article>`}).join(""):
+   `<div class="empty-j">${icon("journal",34)}<b>No notes yet</b><p class="muted">When you finish a package, write your ideas and responses under each practice. They will be kept here, synced to your other devices.</p></div>`}`;
+  $("#jn-back").onclick=()=>history.length>1?history.back():location.hash="stashes";
+  if(E.length){
+    $("#jn-copy").onclick=async()=>{try{await navigator.clipboard.writeText(journalText());toast("Journal copied")}catch(e){toast("Copy is not allowed here")}};
+    $("#jn-save").onclick=()=>{const b=new Blob([journalText()],{type:"text/markdown"}),l=document.createElement("a");l.href=URL.createObjectURL(b);l.download="hikmah-journal-"+today()+".md";document.body.appendChild(l);l.click();setTimeout(()=>{URL.revokeObjectURL(l.href);l.remove()},2000);toast("Journal exported")};
+  }
+}
 function renderStashes(){
   const liked=Object.keys(LIKES).filter(k=>cardByKey(k));
   $("#stashes").innerHTML=`<div class="topbar"><h1 style="font-size:28px;font-weight:800">Your stashes</h1></div>
    <p class="muted" style="margin:4px 0 0">Ideas you saved, organised your way.</p>
+   <a class="jn-tile" href="#journal"><span class="ic">${icon("journal",22)}</span><div><b>Practice journal</b><small>${(()=>{const c=noteCount();return c?c+" note"+(c===1?"":"s")+" on your weekly practices":"Your ideas and responses to each week's practices"})()}</small></div>${icon("chev",18)}</a>
    <div class="stashes">${STASHES.map(s=>`<button class="stash" data-s="${s.id}"><div class="bg">${cover(s.id,s.cat,{ratio:"square",small:true,motif:"book"})}</div><b>${esc(s.name)}</b><span>${s.items.length} idea${s.items.length===1?"":"s"}</span></button>`).join("")}
     ${liked.length?`<button class="stash" data-s="__liked"><div class="bg">${cover("liked","Family",{ratio:"square",small:true,motif:"heart"})}</div><b>Liked ideas</b><span>${liked.length} ideas</span></button>`:""}
     <button class="stash new" id="new-st">${icon("plus",26)}<b style="font-size:15px">New stash</b></button></div>
@@ -538,7 +589,7 @@ function cardHTML(c){
   if(c.type==="verse") return `<div class="card vcard">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div>${c.verses.map(v=>`<p class="arq" lang="ar">${esc(v.ar)} ﴿${v.v.toLocaleString("ar-EG")}﴾</p><p style="margin-top:4px">${esc(v.en)}</p><div class="vref">Qur'an ${v.s}:${v.v}</div>`).join("")}</div></div>`;
   if(c.type==="hadith") return `<div class="card">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div><h2>${esc(c.h)}</h2><div class="cite">${esc(c.cite)}</div></div></div>`;
   if(c.type==="final"){const checks=store.get("chk:"+p.id,{});const nx=nextPkg(p.id);
-    return `<div class="card final"><div class="cin"><div class="eb">${icon("trophy",16)} Package complete</div><h2>${esc(c.h)}</h2><p>Put it into practice this week:</p><div class="checks" style="margin-top:12px">${p.practices.map((x,i)=>`<label><input type="checkbox" data-i="${i}" ${checks[i]?"checked":""}><span>${prov(x)}</span></label>`).join("")}</div>
+    return `<div class="card final"><div class="cin"><div class="eb">${icon("trophy",16)} Package complete</div><h2>${esc(c.h)}</h2><p>Put it into practice this week, and note your ideas and response under each one:</p>${practiceHTML(p)}
       <div class="final-btns">${TM[p.id]?`<button id="fn-listen">${icon("head",18,'style="vertical-align:-4px"')} Listen to the narration</button>`:""}${nx?`<button class="ghost" id="fn-next">Next: ${esc(byId[nx].title)} →</button>`:""}<button class="ghost" id="fn-close">Back to the package</button></div></div></div>`}
   return `<div class="card">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div><h2>${c.prov?prov(c.h):esc(c.h)}</h2>${c.body?`<p>${prov(c.body)}</p>`:""}${c.deep?`<div class="deep"><span>${icon("spark",14)} Go deeper</span><p>${prov(c.deep)}</p></div>`:""}</div></div>`;
 }
@@ -557,8 +608,9 @@ function showCard(i,dir){
   $$("#rd-bars i").forEach((b,k)=>{b.className=k<i?"done":k===i?"cur":""});
   const pos=store.get("pos",{});pos[RD.pid]=i;store.set("pos",pos);
   markRead(C[i]);
+  $("#reader").classList.toggle("on-final",C[i].type==="final");
   if(C[i].type==="final"){const cp=store.get("completed",{});if(!cp[RD.pid]){cp[RD.pid]=today();store.set("completed",cp)}
-    el.querySelectorAll(".checks input").forEach(c=>c.onchange=()=>{const k=store.get("chk:"+RD.pid,{});k[c.dataset.i]=c.checked;store.set("chk:"+RD.pid,k)});
+    bindPractice(el,RD.pid);
     const L=el.querySelector("#fn-listen");L&&(L.onclick=()=>{play(RD.pid,false,0);RD.follow=true;closeReaderSoft();openNP()});
     const N=el.querySelector("#fn-next");N&&(N.onclick=()=>{const nx=nextPkg(RD.pid);openReaderReplace(nx)});
     el.querySelector("#fn-close").onclick=()=>{history.back()};
@@ -572,11 +624,11 @@ function nextPkg(pid){const o=PK.filter(x=>x.cat===byId[pid].cat);const k=o.find
 function paintReaderActions(){
   if(!RD.pid)return; const c=CARDS[RD.pid][RD.i], k=c.key, show=c.type!=="intro"&&c.type!=="final";
   $("#rd-actions").style.display=c.type==="final"?"none":"flex";
-  $("#ra-like").innerHTML=icon(LIKES[k]?"heartf":"heart",22);$("#ra-like").classList.toggle("liked",!!LIKES[k]);$("#ra-like").style.display=show?"":"none";
-  $("#ra-save").innerHTML=icon(isSaved(k)?"bookmarkf":"bookmark",22)+(isSaved(k)?" Saved":" Save");$("#ra-save").classList.toggle("on",isSaved(k));$("#ra-save").style.display=show?"":"none";
+  $("#ra-like").innerHTML=icon(LIKES[k]?"heartf":"heart",22)+`<span class="lb">${LIKES[k]?"Liked":"Like"}</span>`;$("#ra-like").classList.toggle("liked",!!LIKES[k]);$("#ra-like").style.display=show?"":"none";
+  $("#ra-save").innerHTML=icon(isSaved(k)?"bookmarkf":"bookmark",22)+`<span class="lb">${isSaved(k)?"Saved":"Save"}</span>`;$("#ra-save").classList.toggle("on",isSaved(k));$("#ra-save").style.display=show?"":"none";
   const playingHere=cur===RD.pid&&loadedId===RD.pid&&!A.paused;
-  $("#ra-listen").innerHTML=icon(playingHere?"pause":"head",22);$("#ra-listen").style.display=TM[RD.pid]?"":"none";
-  $("#ra-copy").innerHTML=icon("more",22);$("#ra-copy").setAttribute("aria-label","Sources and sharing");$("#ra-copy").style.display=show?"":"none";$("#ra-ask").innerHTML=icon("spark",20)+" Claude";$("#ra-ask").style.display=show?"":"none";
+  $("#ra-listen").innerHTML=icon(playingHere?"pause":"head",22)+`<span class="lb">${playingHere?"Pause":"Listen"}</span>`;$("#ra-listen").style.display=TM[RD.pid]?"":"none";
+  $("#ra-copy").innerHTML=icon("more",22)+`<span class="lb">More</span>`;$("#ra-copy").setAttribute("aria-label","Sources and sharing");$("#ra-copy").style.display=show?"":"none";$("#ra-ask").innerHTML=icon("spark",22)+`<span class="lb">Claude</span>`;$("#ra-ask").style.display=show?"":"none";
   $("#rd-follow").innerHTML=icon("follow",20);$("#rd-follow").classList.toggle("on",RD.follow);$("#rd-follow").style.display=cur===RD.pid&&loadedId===RD.pid?"":"none";
 }
 $("#ra-like").onclick=()=>{const k=CARDS[RD.pid][RD.i].key;if(LIKES[k])delete LIKES[k];else{LIKES[k]=today();toast("Liked")}store.set("likes",LIKES);paintReaderActions()};
@@ -589,12 +641,12 @@ $("#rd-close").innerHTML=icon("x",20);$("#rd-close").onclick=()=>history.back();
 $("#tz-r").onclick=()=>{RD.follow=false;if(RD.i<CARDS[RD.pid].length-1)showCard(RD.i+1,1)};
 $("#tz-l").onclick=()=>{RD.follow=false;if(RD.i>0)showCard(RD.i-1,-1)};
 (()=>{let x0=null,y0=null,t0=0;const st=$("#rd-stage");
-  $("#reader").addEventListener("touchstart",e=>{if(e.target.closest(".rd-actions,.rd-top,.checks,.final-btns"))return;x0=e.touches[0].clientX;y0=e.touches[0].clientY;t0=Date.now()},{passive:true});
+  $("#reader").addEventListener("touchstart",e=>{if(e.target.closest(".rd-actions,.rd-top,.checks,.final-btns,.pr-list"))return;x0=e.touches[0].clientX;y0=e.touches[0].clientY;t0=Date.now()},{passive:true});
   $("#reader").addEventListener("touchend",e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;x0=null;
     if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.3){RD.follow=false;if(dx<0&&RD.i<CARDS[RD.pid].length-1)showCard(RD.i+1,1);else if(dx>0&&RD.i>0)showCard(RD.i-1,-1)}
     else if(dy>110&&Math.abs(dy)>Math.abs(dx)*1.5&&Date.now()-t0<600)history.back()},{passive:true});
 })();
-addEventListener("keydown",e=>{if(!$("#reader").classList.contains("on"))return;if(e.key==="ArrowRight")$("#tz-r").click();else if(e.key==="ArrowLeft")$("#tz-l").click();else if(e.key==="Escape")history.back()});
+addEventListener("keydown",e=>{if(!$("#reader").classList.contains("on"))return;if(e.target.closest&&e.target.closest("textarea,input,[contenteditable]"))return;if(e.key==="ArrowRight")$("#tz-r").click();else if(e.key==="ArrowLeft")$("#tz-l").click();else if(e.key==="Escape")history.back()});
 
 /* ---------- AUDIO ---------- */
 const A=$("#audio"); let cur=null, loadedId=null, blobURL=null, loadSeq=0, unlocked=false, seeking=false;
@@ -736,11 +788,11 @@ function route(keepScroll){
   if($("#np").classList.contains("on")&&!(history.state&&history.state.np))$("#np").classList.remove("on");
   const h=location.hash.slice(1)||"home";
   let view=h, arg=null;
-  if(h.startsWith("p-")){view="pkg";arg=h.slice(2)} else if(h.startsWith("person-")){view="person";arg=h.slice(7)} else if(h.startsWith("stash-")){view="stash";arg=h.slice(6)} else if(!["home","explore","stashes","you"].includes(h))view="home";
+  if(h.startsWith("p-")){view="pkg";arg=h.slice(2)} else if(h.startsWith("person-")){view="person";arg=h.slice(7)} else if(h.startsWith("stash-")){view="stash";arg=h.slice(6)} else if(!["home","explore","stashes","you","journal"].includes(h))view="home";
   $$(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+view));
-  const tab={pkg:"home",stash:"stashes",person:"explore"}[view]||view;
+  const tab={pkg:"home",stash:"stashes",person:"explore",journal:"stashes"}[view]||view;
   ["home","explore","stashes","you"].forEach(t=>{const a=$("#t-"+t);t===tab?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current")});
-  if(view==="person")renderPerson(arg); if(view==="home")renderHome(); if(view==="explore")renderExplore(); if(view==="pkg")renderPkg(arg); if(view==="stashes")renderStashes(); if(view==="stash")renderStash(arg); if(view==="you")renderYou();
+  if(view==="person")renderPerson(arg); if(view==="home")renderHome(); if(view==="explore")renderExplore(); if(view==="pkg")renderPkg(arg); if(view==="stashes")renderStashes(); if(view==="stash")renderStash(arg); if(view==="you")renderYou(); if(view==="journal")renderJournal();
   if(!keepScroll)$("#main").scrollTop=0;
 }
 addEventListener("hashchange",()=>route());

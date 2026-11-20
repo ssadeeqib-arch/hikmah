@@ -40,7 +40,10 @@ const VALID={
   last:v=>v===null||(str(v,80)&&KEY_RE.test(v))?v:undefined, lastRead:v=>v===null||(str(v,80)&&KEY_RE.test(v))?v:undefined,
   stashes:cleanStashes
 };
-function cleanKey(k,v){if(VALID[k])return VALID[k](v);if(/^chk:[A-Za-z0-9_-]{1,60}$/.test(k))return cleanMap(v,x=>/^\d{1,3}$/.test(x),x=>typeof x==="boolean");return undefined}
+function cleanNote(v){if(!isObj(v))return undefined;const ent=x=>isObj(x)&&str(x.t,4000)&&num(x.at)?{t:x.t,at:x.at}:null;
+  const p={};if(isObj(v.p))for(const i of Object.keys(v.p).slice(0,20))if(/^\d{1,2}$/.test(i)){const e=ent(v.p[i]);if(e)p[i]=e}
+  return {p,r:ent(v.r),at:num(v.at)?v.at:0}}
+function cleanKey(k,v){if(VALID[k])return VALID[k](v);if(/^note:[A-Za-z0-9_-]{1,60}$/.test(k))return cleanNote(v);if(/^chk:[A-Za-z0-9_-]{1,60}$/.test(k))return cleanMap(v,x=>/^\d{1,3}$/.test(x),x=>typeof x==="boolean");return undefined}
 function cleanDoc(d){
   if(!isObj(d))return null;
   const out={v:1,epoch:num(d.epoch)?d.epoch:0,k:{},mt:{},dev:{}};
