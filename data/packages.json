@@ -3027,6 +3027,1355 @@
   ]
  },
  {
+  "id": "kaizen",
+  "cat": "Asia & the Arab World",
+  "title": "Kaizen: The Toyota Way",
+  "author": "Taiichi Ohno · Toyota Production System, 1978",
+  "ar": "改善",
+  "tag": "How a Japanese carmaker, short of money and space after the war, built a system of daily improvement that the whole world now studies.",
+  "ayat": [
+   [
+    13,
+    11,
+    11
+   ]
+  ],
+  "ideas": [
+   [
+    "Ask why five times",
+    "Taiichi Ohno taught his engineers to ask 'why?' again and again until the real cause appeared. In his book's example, a machine stops because a fuse blew; it blew because a bearing was not lubricated; the pump was not pumping; its shaft was worn; there was no strainer, so metal scraps got in. Fit a strainer, and the problem stops for good, instead of replacing the fuse forever."
+   ],
+   [
+    "Go and see for yourself",
+    "Toyota calls it genchi genbutsu: go to the real place and see the real thing. Ohno was known for drawing a chalk circle on the factory floor and asking a young manager to stand in it for hours, simply watching, until he saw the waste no report would ever show. Decisions made only from an office are made half-blind."
+   ],
+   [
+    "Hunt the seven wastes",
+    "Ohno named the enemy muda, waste: making too much, waiting, needless transport, over-processing, excess stock, unnecessary motion and defects. None of these add value for the customer, yet every organisation is full of them. Naming waste precisely makes it visible, and what is visible can be removed."
+   ],
+   [
+    "Stop the line when something is wrong",
+    "The idea began with Sakichi Toyoda's loom, which stopped by itself when a thread broke so that no faulty cloth was woven. Toyota extended it to people: any worker may stop the production line when they find a defect. Problems are fixed at the source, while they are small, rather than passed down the line to the customer."
+   ],
+   [
+    "Just in time",
+    "Ohno took inspiration from American supermarkets, where shelves are refilled only as customers take goods. Toyota makes only what is needed, when it is needed, in the amount needed. Large piles of stock hide problems and tie up money; a lean flow exposes problems quickly so they can be solved."
+   ],
+   [
+    "Small improvements, every day, by everyone",
+    "Kaizen means continuous improvement. It does not wait for a grand plan or a genius; it asks every person to make their own work a little better, every day, starting from a written standard. Ohno held that where there is no standard there can be no improvement, because you cannot improve what you have not defined."
+   ]
+  ],
+  "faith": "Allah does not change the condition of a people until they change what is within themselves. Change begins inside, with honest attention to what is wrong. Kaizen is a disciplined form of this: small, steady changes in how we work. The Prophet, peace be upon him, taught that the deeds most beloved to Allah are the most consistent, even if small, and that Allah loves a person who perfects their work.",
+  "hadith": [
+   [
+    "The most beloved of deeds to Allah are those done most consistently, even if they are small.",
+    "Sahih al-Bukhari 6464; Sahih Muslim 783"
+   ],
+   [
+    "Allah loves that when one of you does a piece of work, he does it with excellence (itqan).",
+    "Al-Bayhaqi, Shu'ab al-Iman; graded hasan by al-Albani"
+   ]
+  ],
+  "practices": [
+   "Take one recurring problem at work and ask 'why?' five times. Write down the root cause.",
+   "Spend thirty minutes simply observing where the real work happens, without interrupting.",
+   "Write a one-page standard for one task you repeat, then improve one step of it."
+  ],
+  "reflect": [
+   "Which problem am I fixing again and again instead of removing its cause?",
+   "Where would I stop the line if I had the courage?"
+  ],
+  "closing": "Excellence is not a leap but a habit: small improvements, made every day, by everyone. That is kaizen, and it is also ihsan.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 13,
+    "v": 11,
+    "ar": "لَهُۥ مُعَقِّبَٰتٌ مِّنۢ بَيْنِ يَدَيْهِ وَمِنْ خَلْفِهِۦ يَحْفَظُونَهُۥ مِنْ أَمْرِ ٱللَّهِ إِنَّ ٱللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّىٰ يُغَيِّرُوا۟ مَا بِأَنفُسِهِمْ وَإِذَآ أَرَادَ ٱللَّهُ بِقَوْمٍ سُوٓءًا فَلَا مَرَدَّ لَهُۥ وَمَا لَهُم مِّن دُونِهِۦ مِن وَالٍ",
+    "en": "For him [i.e., each one] are successive [angels] before and behind him who protect him by the decree of Allāh. Indeed, Allāh will not change the condition of a people until they change what is in themselves. And when Allāh intends for a people ill, there is no repelling it. And there is not for them besides Him any patron."
+   }
+  ],
+  "ref": "Ar-Ra'd 13:11",
+  "deep": [
+   "The five whys work best on the shop floor of any organisation: a delayed payment, a repeated customer complaint, a compliance breach. Stop at the cause you can actually fix, and write it down. If the answer is 'human error', ask why the process allowed the error.",
+   "Reports filter reality. Visiting the branch, the site or the customer's office shows you queues, workarounds and frustrations that never reach a dashboard. Leaders who go and see also signal respect for the people doing the work.",
+   "Try naming the seven wastes in an office: duplicate approvals (over-processing), files waiting for a signature (waiting), reports nobody reads (overproduction), searching for documents (motion), errors that need rework (defects).",
+   "In an office, 'stopping the line' means giving any staff member the right to pause a transaction that looks wrong without fear of blame. Organisations that punish people for raising problems guarantee that problems travel further and grow larger.",
+   "Just in time is not only about stock. Information can also be pushed out too early in large batches, or held back until it is stale. Aim for the right information reaching the right person when they need it.",
+   "Improvement needs a baseline. Document how a task is done now, measure it, change one thing and measure again. Small, written, tested improvements accumulate into excellence, the practical meaning of itqan."
+  ]
+ },
+ {
+  "id": "inamori",
+  "cat": "Asia & the Arab World",
+  "title": "A Compass to Fulfillment",
+  "author": "Kazuo Inamori · Kyocera, KDDI and Japan Airlines",
+  "ar": "稲盛和夫",
+  "tag": "The engineer-founder who built two global companies and, at 78, rescued Japan's national airline without pay, by asking one question: what is the right thing to do as a human being?",
+  "ayat": [
+   [
+    28,
+    77,
+    77
+   ]
+  ],
+  "ideas": [
+   [
+    "Result = Way of thinking × Effort × Ability",
+    "Inamori summed up his philosophy in one equation. Ability and effort each score from zero to a hundred, but way of thinking runs from minus a hundred to plus a hundred. Because the factors multiply, a talented, hard-working person with a negative or selfish outlook produces a negative result. Character is not a soft extra; it decides the sign of everything else."
+   ],
+   [
+    "Ask what is right as a human being",
+    "When Inamori founded Kyocera in 1959 he had no business training. So he chose a simple test for every decision: what is the right thing to do as a human being? Not what is profitable, convenient or customary, but what is fair, honest and kind. He found that this plain question settled many questions that cleverness could not."
+   ],
+   [
+    "Check your motive before a big move",
+    "Before entering Japan's newly opened telecom market in 1984, Inamori asked himself night after night whether his motive was virtuous and free of selfish desire. Only when he was satisfied did he found DDI, which grew into KDDI. A big venture tests intentions; examining them first protects you from ambition dressed as service."
+   ],
+   [
+    "Amoeba management: make everyone an owner",
+    "Inamori divided Kyocera into small units, 'amoebas', each run like a small business with its own simple accounts, tracking value added per hour of work. Ordinary staff could see how their choices affected results. When people understand the numbers and share responsibility, they think and act like owners rather than spectators."
+   ],
+   [
+    "Work as a way to polish the soul",
+    "Inamori taught that throwing yourself fully into your daily work, even dull work, refines character. Diligence teaches patience, humility and gratitude. Work is not only a way to earn money; it is a training ground for the soul, and the quality of our work reflects the quality of our inner life."
+   ],
+   [
+    "Rescuing Japan Airlines",
+    "In 2010 JAL went bankrupt with the largest debt of any Japanese company since the war. At 78, Inamori agreed to lead it, unpaid. He taught managers his philosophy and amoeba accounting, and pushed every unit to own its costs. Alongside deep restructuring and state support, JAL returned to strong profit and was relisted in 2012, about two years and seven months after its collapse."
+   ]
+  ],
+  "faith": "Seek, through what Allah has given you, the home of the Hereafter, but do not forget your share of this world; do good as Allah has done good to you, and do not seek corruption in the land. The verse joins worldly success to moral purpose, which is the heart of Inamori's teaching. The Prophet, peace be upon him, taught that actions are judged by intentions, which echoes Inamori's habit of testing his motives before acting.",
+  "hadith": [
+   [
+    "Actions are only by intentions, and every person will have only what they intended.",
+    "Sahih al-Bukhari 1; Sahih Muslim 1907"
+   ]
+  ],
+  "practices": [
+   "Before one decision this week, ask: what is the right thing to do as a human being?",
+   "Write down your honest motive for a goal you are chasing. Is it free of selfishness?",
+   "Share the key numbers of your team's work with the team, so everyone can act like an owner."
+  ],
+  "reflect": [
+   "Where is my way of thinking turning my effort and ability into a negative result?",
+   "What would change if I treated my work as a way to polish my soul?"
+  ],
+  "closing": "Ability and effort matter, but the way you think decides the direction of both. Keep your motive clean and your work sincere.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 28,
+    "v": 77,
+    "ar": "وَٱبْتَغِ فِيمَآ ءَاتَىٰكَ ٱللَّهُ ٱلدَّارَ ٱلْـَٔاخِرَةَ وَلَا تَنسَ نَصِيبَكَ مِنَ ٱلدُّنْيَا وَأَحْسِن كَمَآ أَحْسَنَ ٱللَّهُ إِلَيْكَ وَلَا تَبْغِ ٱلْفَسَادَ فِى ٱلْأَرْضِ إِنَّ ٱللَّهَ لَا يُحِبُّ ٱلْمُفْسِدِينَ",
+    "en": "But seek, through that which Allāh has given you, the home of the Hereafter; and [yet], do not forget your share of the world. And do good as Allāh has done good to you. And desire not corruption in the land. Indeed, Allāh does not like corrupters.\""
+   }
+  ],
+  "ref": "Al-Qasas 28:77",
+  "deep": [
+   "The equation explains why some brilliant people fail and some average people succeed. A positive, honest, grateful way of thinking multiplies modest talent; arrogance, cynicism or greed can cancel great talent entirely.",
+   "This question cuts through complexity in compliance and leadership. When rules are silent or interests conflict, asking what is fair and honest as a human being, and as a Muslim before Allah, often gives a clearer answer than any policy manual.",
+   "Inamori reportedly asked himself 'Is my motive good, without selfish intent?' for months. Muslims will recognise this as muhasabah of the intention. Big decisions deserve examined intentions, because ambition easily disguises itself as service.",
+   "Amoeba units work because the numbers are simple, frequent and owned by the people who produce them. Even in a small firm, showing each team its own costs and contribution can change behaviour faster than any lecture.",
+   "This idea is close to the Islamic view of work as worship when done with sincerity and excellence. Patience with a difficult client or a tedious task becomes a means of refining character, not just a burden to endure.",
+   "The JAL story shows philosophy and numbers working together. Inamori taught values, but he also made every unit measure its costs daily. Culture without accounting drifts; accounting without culture becomes cold. Both were needed."
+  ]
+ },
+ {
+  "id": "musashi",
+  "cat": "Asia & the Arab World",
+  "title": "The Book of Five Rings",
+  "author": "Miyamoto Musashi · Go Rin no Sho, 1645",
+  "ar": "五輪書",
+  "tag": "Japan's most famous swordsman wrote his book of strategy near the end of his life, in a cave, and ended it with nine principles for mastery that apply far beyond the sword.",
+  "ayat": [
+   [
+    29,
+    69,
+    69
+   ]
+  ],
+  "ideas": [
+   [
+    "The way is in training",
+    "Musashi said mastery comes from training, not talk. He described forging over a thousand days and polishing over ten thousand. Skill that will not fail you under pressure is built through long, patient repetition, long after the novelty has gone."
+   ],
+   [
+    "Do nothing which is of no use",
+    "The last of Musashi's nine principles is the simplest and the hardest. Every useless movement in a fight is an opening for the opponent. In life, every useless activity steals time and focus from what matters. A master is defined as much by what he does not do."
+   ],
+   [
+    "Pay attention even to small things",
+    "Musashi warned that battles are lost through details others ignore: footing, distance, timing, the light. A strategist notices small things early, before they become large. In work, small errors in records, words or promises often grow into big failures."
+   ],
+   [
+    "Perceive what cannot be seen",
+    "He distinguished two kinds of looking: a narrow 'seeing' of surface details, and a broad 'perceiving' of the whole situation, including what is not obvious. Look past the opponent's sword to his intention. In leadership, look past the presented report to the real situation behind it."
+   ],
+   [
+    "Know the ways of all professions",
+    "Musashi urged warriors to study other crafts: the carpenter's, the merchant's, the scholar's. Each teaches principles that apply elsewhere. Wide learning protects against narrow thinking, and the best ideas often come from outside your own field."
+   ],
+   [
+    "Have no fixed stance",
+    "He taught 'attitude, no attitude': guards and stances exist, but you must not cling to any of them. Rigid habits make you predictable and slow. Hold your methods lightly, and adapt to the situation in front of you rather than the one you prepared for."
+   ]
+  ],
+  "faith": "As for those who strive in Our cause, We will surely guide them to Our ways, and Allah is with those who do good. Striving, mujahadah, is the Qur'anic word for the patient, daily effort that brings guidance and mastery. Musashi's 'nothing which is of no use' closely mirrors a famous hadith: part of the excellence of a person's Islam is leaving what does not concern him.",
+  "hadith": [
+   [
+    "Part of the excellence of a person's Islam is that he leaves what does not concern him.",
+    "Jami' al-Tirmidhi 2317 (hasan); Forty Hadith of al-Nawawi, 12"
+   ]
+  ],
+  "practices": [
+   "Choose one skill and train it daily for fifteen minutes this week, without skipping.",
+   "List three things you did this week that were of no use. Drop one.",
+   "Learn one principle from a profession different from yours and apply it."
+  ],
+  "reflect": [
+   "Which habit of mine is a 'fixed stance' I should let go of?",
+   "What small detail have I been ignoring that could cost me later?"
+  ],
+  "closing": "Train patiently, notice the small, drop the useless and stay flexible. Mastery is the reward of steady striving.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 29,
+    "v": 69,
+    "ar": "وَٱلَّذِينَ جَٰهَدُوا۟ فِينَا لَنَهْدِيَنَّهُمْ سُبُلَنَا وَإِنَّ ٱللَّهَ لَمَعَ ٱلْمُحْسِنِينَ",
+    "en": "And those who strive for Us - We will surely guide them to Our ways. And indeed, Allāh is with the doers of good."
+   }
+  ],
+  "ref": "Al-Ankaboot 29:69",
+  "deep": [
+   "Mastery in any field, recitation of the Qur'an, writing, negotiation, analysis, follows the same law: deliberate practice over long periods. Talent opens the door; daily training carries you through it.",
+   "Busyness can feel like productivity. Ask of each meeting, message and habit: does this serve a real purpose? The Sunnah teaches the same economy, leaving what does not concern us to make room for what does.",
+   "Compliance work is largely the discipline of small things: a missing signature, an expired document, an unreconciled figure. Musashi's warriors would have made excellent auditors.",
+   "Perceiving the whole means asking what is not being said: who benefits, what pressure lies behind a request, what pattern links several small incidents. It is the difference between reading a report and understanding a situation.",
+   "Cross-training builds judgement. A compliance officer who understands sales, or an engineer who understands finance, sees risks and opportunities that specialists miss.",
+   "Flexibility is not the absence of principle. Hold your values firmly and your methods lightly. The goal stays fixed; the route adapts to the terrain."
+  ]
+ },
+ {
+  "id": "suntzu",
+  "cat": "Asia & the Arab World",
+  "title": "The Art of War",
+  "author": "Sun Tzu · c. 5th century BCE",
+  "ar": "孫子兵法",
+  "tag": "The world's oldest surviving book on strategy is less about fighting than about avoiding needless battles, preparing thoroughly and winning wisely.",
+  "ayat": [
+   [
+    8,
+    61,
+    61
+   ]
+  ],
+  "ideas": [
+   [
+    "Weigh the five factors before you act",
+    "Sun Tzu opens with calculation. Before any campaign, compare five things: the moral unity between leader and people, the season and conditions, the ground, the commander's qualities, and organisation and discipline. Many plans fail not in execution but because nobody honestly weighed these first."
+   ],
+   [
+    "Know the other side and know yourself",
+    "His most quoted line: if you know the enemy and know yourself, you need not fear the result of a hundred battles. If you know yourself but not the enemy, for every victory you will also suffer a defeat. Know neither, and you will lose every time. Self-knowledge without understanding the other party is only half of wisdom."
+   ],
+   [
+    "The best victory needs no battle",
+    "Sun Tzu held that supreme excellence is to break the enemy's resistance without fighting. Fighting is costly even when you win. In negotiations, competition and family disputes, the wisest outcome is often reached through preparation, alliances and persuasion, without open conflict."
+   ],
+   [
+    "Win first, then fight",
+    "Victorious warriors win first and then go to war, he wrote, while defeated warriors go to war first and then seek to win. Success is decided largely by preparation: by securing your position, your resources and your information before the decisive moment arrives."
+   ],
+   [
+    "Be like water",
+    "Water has no constant shape; it takes its course from the ground it flows over. So an army should shape its plan to the situation, avoiding strength and striking at weakness. A strategy that cannot adapt to changing conditions is a strategy waiting to fail."
+   ],
+   [
+    "Long conflicts drain everyone",
+    "Sun Tzu warned that no country has ever benefited from prolonged warfare. Long campaigns exhaust money, morale and people. In business and in life, a quarrel or project that drags on without end often costs more than any victory could repay."
+   ]
+  ],
+  "faith": "And if they incline to peace, then incline to it also, and rely upon Allah. Islam does not glorify conflict: strength and preparation exist to protect, and peace is preferred whenever it is genuinely available. The Prophet, peace be upon him, told his companions not to wish to meet the enemy but to ask Allah for well-being, and to stand firm if battle came.",
+  "hadith": [
+   [
+    "Do not wish to meet the enemy, and ask Allah for well-being; but when you meet them, be patient and stand firm.",
+    "Sahih al-Bukhari 3024; Sahih Muslim 1742"
+   ]
+  ],
+  "practices": [
+   "Before your next negotiation, write what you know about the other side's interests and your own weaknesses.",
+   "Identify one conflict you could resolve without a fight, and take a first step.",
+   "Ask of one long-running dispute: what is it really costing us?"
+  ],
+  "reflect": [
+   "Do I know the other side as well as I know myself?",
+   "Which battle am I fighting that wise preparation would make unnecessary?"
+  ],
+  "closing": "Prepare thoroughly, understand deeply, prefer peace and adapt like water. The wisest strategist wins before the battle begins.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 8,
+    "v": 61,
+    "ar": "وَإِن جَنَحُوا۟ لِلسَّلْمِ فَٱجْنَحْ لَهَا وَتَوَكَّلْ عَلَى ٱللَّهِ إِنَّهُۥ هُوَ ٱلسَّمِيعُ ٱلْعَلِيمُ",
+    "en": "And if they incline to peace, then incline to it [also] and rely upon Allāh. Indeed, it is He who is the Hearing, the Knowing."
+   }
+  ],
+  "ref": "Al-Anfaal 8:61",
+  "deep": [
+   "These five factors can frame any major decision: Do our people believe in this? Is the timing right? Do we understand the terrain? Do we have the right leader? Are we organised and disciplined enough?",
+   "In a negotiation, know your own limits, needs and weaknesses as honestly as you study the other party's. Many deals fail because one side overestimated its own position.",
+   "The Prophet's treaty of Hudaybiyyah is a profound example: an agreement that seemed like a concession opened the way to peaceful growth and, within two years, the opening of Makkah with little bloodshed.",
+   "Preparation is a form of tawakkul when combined with trust in Allah. Gather information, secure resources and plan thoroughly, then rely on Allah for the outcome.",
+   "Adapting like water means watching the situation continuously: markets, regulators, competitors and your own team. Rigid plans break; adaptable plans bend and continue.",
+   "Count the full cost of a dispute: money, time, relationships, reputation and peace of mind. Often an early fair settlement is worth more than a late victory."
+  ]
+ },
+ {
+  "id": "confucius",
+  "cat": "Asia & the Arab World",
+  "title": "The Analects",
+  "author": "Confucius · 5th century BCE",
+  "ar": "論語",
+  "tag": "The sayings of China's great teacher, gathered by his students, shaped East Asian ideas of character, learning and good government for over two thousand years.",
+  "ayat": [
+   [
+    61,
+    2,
+    3
+   ]
+  ],
+  "ideas": [
+   [
+    "The noble person and the petty person",
+    "Confucius contrasted the junzi, the person of noble character, with the petty person. The noble person thinks first of what is right; the petty person thinks first of what profits him. The difference is not wealth or rank but what you reach for when no one is checking."
+   ],
+   [
+    "Do not do to others what you would not want done to you",
+    "Asked for one word to guide a whole life, Confucius answered: reciprocity. What you do not want for yourself, do not impose on others. It is a simple rule that, honestly applied, would transform workplaces, markets and homes."
+   ],
+   [
+    "Learn from everyone",
+    "When you meet a worthy person, think of becoming their equal; when you meet an unworthy one, look within and examine yourself. Every encounter teaches something: good examples show us what to become, and bad ones show us what to correct in ourselves."
+   ],
+   [
+    "Examine yourself daily",
+    "His disciple Zengzi said he examined himself three times a day: Was I loyal in working for others? Was I trustworthy with friends? Did I practise what I was taught? A short daily review is one of the oldest and most effective tools of self-improvement."
+   ],
+   [
+    "Learning and thinking need each other",
+    "Confucius said that learning without thinking leads to confusion, and thinking without learning is dangerous. Reading alone does not produce wisdom; neither does clever opinion without study. Real understanding comes when we take in knowledge and then reflect on it seriously."
+   ],
+   [
+    "Call things by their right names",
+    "Asked what he would do first in government, Confucius said he would rectify names: if words do not match reality, speech loses its truth, and nothing can be done well. A loss called a 'temporary adjustment', or a bribe called a 'facilitation fee', corrupts thinking before it corrupts action."
+   ]
+  ],
+  "faith": "O you who believe, why do you say what you do not do? Most hateful it is to Allah that you say what you do not do. Confucius's teaching that words must match reality, and that the noble person acts as he speaks, meets this verse directly. The Prophet, peace be upon him, also gave the believer's version of reciprocity: none of you truly believes until he loves for his brother what he loves for himself.",
+  "hadith": [
+   [
+    "None of you truly believes until he loves for his brother what he loves for himself.",
+    "Sahih al-Bukhari 13; Sahih Muslim 45"
+   ]
+  ],
+  "practices": [
+   "End each day this week with Zengzi's three questions about loyalty, trust and practice.",
+   "Find one place where words at work hide reality. Name it honestly.",
+   "Before one decision, ask: would I want this done to me?"
+  ],
+  "reflect": [
+   "When no one is checking, do I reach first for what is right or what profits me?",
+   "Which of my words do not match my deeds?"
+  ],
+  "closing": "Character, reciprocity, daily self-examination and honest names: simple teachings that still build good people and good institutions.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 61,
+    "v": 2,
+    "ar": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ لِمَ تَقُولُونَ مَا لَا تَفْعَلُونَ",
+    "en": "O you who have believed, why do you say what you do not do?"
+   },
+   {
+    "s": 61,
+    "v": 3,
+    "ar": "كَبُرَ مَقْتًا عِندَ ٱللَّهِ أَن تَقُولُوا۟ مَا لَا تَفْعَلُونَ",
+    "en": "Greatly hateful in the sight of Allāh is that you say what you do not do."
+   }
+  ],
+  "ref": "As-Saff 61:2–3",
+  "deep": [
+   "This distinction is close to the Qur'anic contrast between those who seek the face of Allah and those who seek only worldly gain. Character shows in what we choose when profit and right point in different directions.",
+   "The Prophet gave this principle a deeper root: love for your brother what you love for yourself. It moves from merely avoiding harm to actively wishing good for others.",
+   "This habit turns every colleague, neighbour and stranger into a teacher. It also guards against arrogance, because others' faults become reminders to check ourselves rather than occasions to judge.",
+   "Muslim scholars called this muhasabah, holding yourself to account. Umar ibn al-Khattab is reported to have said: take account of yourselves before you are taken to account.",
+   "Study without reflection fills the memory without forming the mind. Reflection without study produces confident opinions on weak foundations. Pair every reading with a question: what does this mean for how I live and work?",
+   "Precise words protect integrity. In compliance and finance especially, honest labels for risks, losses and conflicts of interest are the first defence against deception, including self-deception."
+  ]
+ },
+ {
+  "id": "leekuanyew",
+  "cat": "Asia & the Arab World",
+  "title": "From Third World to First",
+  "author": "Lee Kuan Yew · Singapore, 2000",
+  "ar": "李光耀",
+  "tag": "How a small island with no natural resources, expelled from Malaysia in 1965, became one of the world's richest and least corrupt nations within a generation.",
+  "ayat": [
+   [
+    4,
+    58,
+    58
+   ]
+  ],
+  "ideas": [
+   [
+    "Clean government is the foundation",
+    "Lee made the fight against corruption central from the start. Singapore strengthened its anti-corruption agency and law, so that officials living beyond their means could be required to explain their wealth. Senior officials were paid competitive salaries, so that honesty would not mean poverty. Investors and citizens could trust that rules applied to everyone."
+   ],
+   [
+    "Choose by merit, not connection",
+    "Singapore selected and promoted people by ability and performance, offering scholarships to its brightest students in return for years of public service. Lee believed a small country could not afford to waste talent or reward connections. Meritocracy, applied consistently, became a source of both competence and legitimacy."
+   ],
+   [
+    "Make yourself useful to the world",
+    "With no hinterland and no resources, Singapore decided to plug into the global economy. When many newly independent countries distrusted foreign companies, Singapore invited multinationals, offering stability, skills and good infrastructure. Lee's lesson: a small player must make itself valuable to bigger players."
+   ],
+   [
+    "A home for every family",
+    "Lee believed people with a stake in the country would defend it. The Housing and Development Board built flats on a vast scale and helped families to buy them. Today most Singaporeans live in public housing, and most of those homes are owned by the families in them. Ownership created stability and pride."
+   ],
+   [
+    "Build harmony deliberately",
+    "Singapore's Chinese, Malay and Indian communities had seen deadly riots in the 1960s. The government made English the common working language while keeping mother tongues in schools, and later used housing quotas to keep estates mixed rather than separated by race. Unity was treated as something to engineer and protect, not to assume."
+   ],
+   [
+    "Think in decades",
+    "Lee planned for the long term: water supply, green spaces, education, defence. In 1967 he launched a tree-planting campaign to make Singapore a 'garden city', believing a clean, green city signalled discipline and attracted investors. Many of his choices paid off only twenty or thirty years later."
+   ]
+  ],
+  "faith": "Allah commands you to render trusts to those to whom they are due, and when you judge between people, to judge with justice. Public office is an amanah, a trust, and corruption is a betrayal of it. The Prophet, peace be upon him, cursed both the one who gives a bribe and the one who takes it. Singapore's experience shows how much a nation gains when that trust is honoured.",
+  "hadith": [
+   [
+    "The curse of Allah is on the one who gives a bribe and the one who takes it.",
+    "Sunan Abi Dawud 3580; Jami' al-Tirmidhi 1337 (sahih)"
+   ]
+  ],
+  "practices": [
+   "Identify one place in your organisation where connection beats merit. Propose one fix.",
+   "Write down one decision you are making that will only pay off in ten years.",
+   "Review one process for a temptation to corruption, and add a simple check."
+  ],
+  "reflect": [
+   "Nigeria and Singapore both gained independence in the 1960s. What can I do, in my own sphere, to close the gap?",
+   "Where am I treating a trust as a privilege?"
+  ],
+  "closing": "Clean leadership, merit, long-term thinking and deliberate unity can transform a nation. They can also transform a company, a team or a family.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 4,
+    "v": 58,
+    "ar": "إِنَّ ٱللَّهَ يَأْمُرُكُمْ أَن تُؤَدُّوا۟ ٱلْأَمَٰنَٰتِ إِلَىٰٓ أَهْلِهَا وَإِذَا حَكَمْتُم بَيْنَ ٱلنَّاسِ أَن تَحْكُمُوا۟ بِٱلْعَدْلِ إِنَّ ٱللَّهَ نِعِمَّا يَعِظُكُم بِهِۦٓ إِنَّ ٱللَّهَ كَانَ سَمِيعًۢا بَصِيرًا",
+    "en": "Indeed, Allāh commands you to render trusts to whom they are due and when you judge between people to judge with justice. Excellent is that which Allāh instructs you. Indeed, Allāh is ever Hearing and Seeing."
+   }
+  ],
+  "ref": "An-Nisaa 4:58",
+  "deep": [
+   "Singapore's approach combined strong laws, an independent investigating agency, fair pay and leaders who were seen to obey the same rules. Corruption falls when it becomes both difficult and shameful.",
+   "Meritocracy has its critics, who say it can harden into elitism, but its core lesson holds: institutions decay when positions go to the connected rather than the capable.",
+   "Making yourself useful applies to individuals as much as nations. A professional who solves important problems for others will always find opportunity.",
+   "Home ownership gave citizens a tangible stake in national success. Leaders anywhere can ask: what would give the people I serve a real, personal stake in the outcome?",
+   "Deliberate integration recognised that diversity can be a strength or a fault line. Nigeria's diversity, too, needs institutions and habits that build trust across communities.",
+   "Long-term thinking requires patience and consistency across many years. Many Nigerian institutions suffer from policy reversals; a culture of continuity can be built in a company or ministry, one decision at a time."
+  ]
+ },
+ {
+  "id": "haytham",
+  "cat": "Asia & the Arab World",
+  "title": "The Seeker After Truth",
+  "author": "Ibn al-Haytham · Book of Optics, c. 1011–1021",
+  "ar": "ابن الهيثم",
+  "tag": "The Basra-born scholar who worked in Cairo and is often called the father of the scientific method: he refused to trust any claim, even from the greatest authorities, without evidence.",
+  "ayat": [
+   [
+    17,
+    36,
+    36
+   ]
+  ],
+  "ideas": [
+   [
+    "The seeker after truth does not simply trust the ancients",
+    "In his Doubts Concerning Ptolemy, Ibn al-Haytham wrote that the seeker after truth is not the one who studies the writings of the ancients and puts his trust in them, but the one who suspects his faith in them and follows argument and demonstration. Respect for great names must never replace evidence."
+   ],
+   [
+    "Make yourself an enemy of what you read",
+    "He advised the reader of scientific works to attack them from every side, looking for errors and gaps, as if he were their opponent. This is not disrespect; it is how knowledge improves. Ideas that survive honest challenge become stronger."
+   ],
+   [
+    "Suspect yourself too",
+    "Ibn al-Haytham added that the investigator must also suspect himself, so that he does not fall into prejudice or leniency. We are quick to see errors in others and slow to see our own biases. Honest inquiry turns its critical eye inward as well as outward."
+   ],
+   [
+    "Test it: experiment and observe",
+    "He relied on i'tibar, controlled testing. He showed with dark rooms, small holes and straight tubes that light travels in straight lines, and he studied how images form in what we now call the camera obscura. Claims were to be checked against careful observation, not settled by argument alone."
+   ],
+   [
+    "Overturning an old belief about sight",
+    "Many ancient thinkers believed the eye sends out rays to see. Ibn al-Haytham argued, from evidence such as the pain of looking at the sun and afterimages, that light enters the eye from objects. His Book of Optics was translated into Latin and studied by European scientists for centuries."
+   ],
+   [
+    "Use difficult seasons productively",
+    "According to the traditional account, Ibn al-Haytham spent years confined in Cairo under the ruler al-Hakim, and used that time to write. Whatever the exact details, his major work on optics came from that period. Restricted circumstances need not mean a wasted life."
+   ]
+  ],
+  "faith": "Do not pursue that of which you have no knowledge; indeed hearing, sight and the heart will all be questioned. The Qur'an commands us to verify before we believe or repeat a claim, and it repeatedly invites reflection on the signs in creation. Ibn al-Haytham's method is this verse turned into a discipline. The Prophet, peace be upon him, warned that it is enough of a lie for a person to pass on everything he hears.",
+  "hadith": [
+   [
+    "It is enough of a lie for a person to relate everything he hears.",
+    "Sahih Muslim, Introduction (5)"
+   ]
+  ],
+  "practices": [
+   "Before forwarding any news or claim this week, check its source.",
+   "Choose one belief you hold strongly at work and look for the best evidence against it.",
+   "Test one assumption with a small, real experiment rather than a debate."
+  ],
+  "reflect": [
+   "Which authority do I trust without ever checking?",
+   "Where might my own bias be making me lenient?"
+  ],
+  "closing": "Respect knowledge, but test it. Suspect your sources, suspect yourself, and let evidence decide.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 17,
+    "v": 36,
+    "ar": "وَلَا تَقْفُ مَا لَيْسَ لَكَ بِهِۦ عِلْمٌ إِنَّ ٱلسَّمْعَ وَٱلْبَصَرَ وَٱلْفُؤَادَ كُلُّ أُو۟لَٰٓئِكَ كَانَ عَنْهُ مَسْـُٔولًا",
+    "en": "And do not pursue that of which you have no knowledge. Indeed, the hearing, the sight and the heart - about all those [one] will be questioned."
+   }
+  ],
+  "ref": "Al-Israa 17:36",
+  "deep": [
+   "This principle does not reject tradition; it asks that every claim be weighed by its evidence. Muslim hadith scholars applied a similar rigour, examining chains and narrators rather than trusting a report because it was famous.",
+   "Reviewing a policy or report as if you were its strongest critic is excellent practice for compliance officers and leaders. Find the weaknesses before regulators, competitors or events do.",
+   "Self-suspicion is the hardest step. Ask: what would I conclude if the evidence pointed against my interest? Do I check my friends' claims as carefully as my opponents'?",
+   "Small experiments often settle questions that long debates cannot. Before rolling out a change across an organisation, test it on a small scale and observe the result honestly.",
+   "His work shows that a Muslim scholar, motivated in part by the Qur'anic call to reflect, laid foundations for modern optics. Faith and rigorous inquiry are allies, not enemies.",
+   "Confinement, illness, a stalled career or a quiet season can become time for deep work, learning or writing, if we choose to use it."
+  ]
+ },
+ {
+  "id": "bennabi",
+  "cat": "Asia & the Arab World",
+  "title": "The Conditions of Renaissance",
+  "author": "Malek Bennabi · Algeria, 1949",
+  "ar": "شروط النهضة",
+  "tag": "An Algerian engineer-thinker asked why the Muslim world had declined and how it could rise again. His answer begins inside people, not with imported products.",
+  "ayat": [
+   [
+    8,
+    53,
+    53
+   ]
+  ],
+  "ideas": [
+   [
+    "Civilisation = person + soil + time",
+    "Bennabi offered a formula: civilisation is produced when people, land and time are combined, with faith acting as the catalyst that binds them together. Every society already has these raw materials. What is missing is the spirit and organisation that turns them into progress."
+   ],
+   [
+    "Colonisability comes before colonisation",
+    "His most famous idea: a people is colonised because it has first become colonisable, weakened by inner decay, passivity and disunity. Foreign domination exploits this weakness but did not create it. Real liberation therefore starts with changing ourselves, not only with blaming others."
+   ],
+   [
+    "You cannot import a civilisation",
+    "Bennabi criticised the habit of piling up the products of other civilisations, machines, buildings and gadgets, and calling it development. Things can be bought; the culture of work, order and ideas that produced them cannot. Accumulation is not construction."
+   ],
+   [
+    "Dead ideas and deadly ideas",
+    "He described 'dead ideas', inherited ones that have lost their life and power, and 'deadly ideas', borrowed ones taken out of their original context that harm the society that adopts them. A healthy society revives its own living principles and borrows wisely."
+   ],
+   [
+    "A world of ideas, not only of things and persons",
+    "Bennabi observed that societies can be organised around things, around personalities, or around ideas. A society that worships possessions or heroes is fragile; one driven by shared ideas and principles can outlast any leader and rebuild after loss."
+   ],
+   [
+    "Time is capital",
+    "For Bennabi, time was a raw material that the Muslim world was wasting. A little disciplined, useful work every day, multiplied across millions of people, could change a nation. Development is not a gift; it is the sum of ordinary hours used well."
+   ]
+  ],
+  "faith": "That is because Allah would never change a favour He had bestowed upon a people until they change what is within themselves. Bennabi built his whole project on this principle: outward decline follows inward change, and recovery must begin within. The Prophet, peace be upon him, warned that health and free time are two blessings in which many people are cheated.",
+  "hadith": [
+   [
+    "There are two blessings in which many people are cheated: health and free time.",
+    "Sahih al-Bukhari 6412"
+   ]
+  ],
+  "practices": [
+   "Track how you use your evenings for three days. Reclaim one hour for useful work.",
+   "Identify one 'dead idea' in your workplace or family that no longer serves its purpose.",
+   "Before buying a tool or system, ask whether the habits to use it well exist yet."
+  ],
+  "reflect": [
+   "Where in my life have I become 'colonisable' through my own weaknesses?",
+   "Is my organisation driven by ideas, by personalities or by things?"
+  ],
+  "closing": "Renaissance is not imported; it is built from people, land and time, joined by faith and disciplined work, starting within ourselves.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 8,
+    "v": 53,
+    "ar": "ذَٰلِكَ بِأَنَّ ٱللَّهَ لَمْ يَكُ مُغَيِّرًا نِّعْمَةً أَنْعَمَهَا عَلَىٰ قَوْمٍ حَتَّىٰ يُغَيِّرُوا۟ مَا بِأَنفُسِهِمْ وَأَنَّ ٱللَّهَ سَمِيعٌ عَلِيمٌ",
+    "en": "That is because Allāh would not change a favor which He had bestowed upon a people until they change what is within themselves. And indeed, Allāh is Hearing and Knowing."
+   }
+  ],
+  "ref": "Al-Anfaal 8:53",
+  "deep": [
+   "The formula reminds us that resources are rarely the real constraint. Nigeria has people, land and time in abundance; what decides the outcome is the faith, values and organisation that bind them.",
+   "This is not blaming the victim; Bennabi opposed colonialism fiercely. It is a call to responsibility: the part of the problem within our control is the part we must change first.",
+   "Organisations make the same mistake: buying software, buildings and consultants without building the habits of discipline, accuracy and accountability needed to use them.",
+   "Ask which inherited practices in your community or company have lost their purpose, and which imported ideas fit poorly with your values and context.",
+   "A team built around one strong personality often collapses when that person leaves. A team built around clear principles and shared ideas can survive and grow.",
+   "Time is the one resource distributed equally. Bennabi's point is practical: development is the sum of ordinary hours used well, by many people, consistently."
+  ]
+ },
+ {
+  "id": "arthashastra",
+  "cat": "Asia & the Arab World",
+  "title": "The Arthashastra",
+  "author": "Kautilya (Chanakya) · ancient India",
+  "ar": "अर्थशास्त्र",
+  "tag": "An ancient Indian manual of statecraft that treats government as a serious craft: welfare, finance, intelligence and, strikingly, the many ways officials steal.",
+  "ayat": [
+   [
+    2,
+    188,
+    188
+   ]
+  ],
+  "ideas": [
+   [
+    "The ruler's happiness lies in the people's happiness",
+    "Kautilya wrote that in the happiness of his subjects lies the king's happiness, and in their welfare his welfare. What pleases the ruler personally is not good; what pleases his people is. Leadership is measured by the wellbeing of those you lead."
+   ],
+   [
+    "Stay accessible",
+    "He warned that a ruler who makes himself hard to reach, and leaves petitioners waiting at the door, causes confusion and loses the affection of the people. He even proposed a disciplined daily timetable, dividing day and night into parts for hearing people, reviewing finances, consulting and rest."
+   ],
+   [
+    "Officials will be tempted, so design controls",
+    "Kautilya observed that just as it is impossible not to taste honey or poison placed on the tongue, it is hard for an official handling revenue not to taste some of it; and just as one cannot tell when a fish swimming in water drinks, it is hard to detect an official's theft. So he designed checks: audits, rotation and supervision."
+   ],
+   [
+    "Know the ways money disappears",
+    "The text lists some forty ways of embezzlement, from delaying collections and misrecording dates to inflating costs and substituting goods. Naming the methods precisely is the first step to preventing them. Every good compliance function begins with a clear map of how things go wrong."
+   ],
+   [
+    "Test integrity before you trust",
+    "Kautilya described testing ministers' character before appointing them to sensitive posts: their honesty with money, their loyalty and their steadiness under fear or temptation. Positions of trust should be filled by people whose integrity has been observed, not merely assumed."
+   ],
+   [
+    "All undertakings depend on the treasury",
+    "He insisted that every undertaking of the state depends first on its finances, so the treasury must be guarded carefully and revenue collected fairly. A leader who ignores the numbers will soon find that nothing else can be done."
+   ]
+  ],
+  "faith": "Do not consume one another's wealth unjustly, nor offer it to authorities to devour a portion of people's wealth sinfully while you know. The Qur'an condemns the corruption Kautilya mapped so carefully. The Prophet, peace be upon him, held his own appointed collector to account when he kept 'gifts' received in office, asking why he did not sit in his parents' house to see whether gifts would come to him there.",
+  "hadith": [
+   [
+    "Why does he not sit in the house of his father or mother and see whether gifts are given to him or not?",
+    "Sahih al-Bukhari 6979; Sahih Muslim 1832"
+   ]
+  ],
+  "practices": [
+   "List five ways money could leak from a process you oversee, and one control for each.",
+   "Review your gifts and hospitality rules against the Prophet's test: would this gift come if I did not hold this post?",
+   "Block time this week to be accessible to people who need your decisions."
+  ],
+  "reflect": [
+   "Which honey sits on my tongue in my role?",
+   "Do the people I lead feel their welfare is my measure of success?"
+  ],
+  "closing": "Serve the people's welfare, stay accessible, guard the treasury and design for human weakness. Good governance is a craft.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 2,
+    "v": 188,
+    "ar": "وَلَا تَأْكُلُوٓا۟ أَمْوَٰلَكُم بَيْنَكُم بِٱلْبَٰطِلِ وَتُدْلُوا۟ بِهَآ إِلَى ٱلْحُكَّامِ لِتَأْكُلُوا۟ فَرِيقًا مِّنْ أَمْوَٰلِ ٱلنَّاسِ بِٱلْإِثْمِ وَأَنتُمْ تَعْلَمُونَ",
+    "en": "And do not consume one another's wealth unjustly or send it [in bribery] to the rulers in order that [they might aid] you [to] consume a portion of the wealth of the people in sin, while you know [it is unlawful]."
+   }
+  ],
+  "ref": "Al-Baqara 2:188",
+  "deep": [
+   "Islamic political thought makes the same point: the ruler is a servant of the people's welfare. Umar ibn al-Khattab is reported to have feared being asked about a mule stumbling on a road in Iraq.",
+   "Accessibility is a form of accountability. Leaders who cannot be reached do not hear bad news until it is too late.",
+   "Modern controls such as segregation of duties, job rotation, mandatory leave and surprise audits apply exactly this insight: assume temptation exists, and design so that wrongdoing is hard and quickly detected.",
+   "A compliance officer can build a 'ways money disappears' register for each process, with a control and an owner for each risk. Naming the method is half of prevention.",
+   "Today this is called due diligence and fit-and-proper testing. Regulators require it for key roles because character, not only competence, determines how power is used.",
+   "Financial discipline is a moral duty for anyone entrusted with others' money, including fund managers, treasurers and heads of households."
+  ]
+ },
+ {
+  "id": "kalam",
+  "cat": "Asia & the Arab World",
+  "title": "Wings of Fire",
+  "author": "A. P. J. Abdul Kalam · 1999",
+  "ar": "अग्नि की उड़ान",
+  "tag": "The boat owner's son from Rameswaram who sold newspapers as a boy, led India's space and missile programmes, and became the 'People's President', told his story to inspire the young.",
+  "ayat": [
+   [
+    94,
+    5,
+    6
+   ]
+  ],
+  "ideas": [
+   [
+    "A teacher on the seashore",
+    "Kalam recalled a schoolteacher, Sivasubramania Iyer, who explained how birds fly and then took the class to the seashore to watch them. That lesson set the direction of his life towards flight and aeronautics. One good teacher, explaining one thing well, can change a life."
+   ],
+   [
+    "Ninth, when there were eight places",
+    "After studying aeronautical engineering, Kalam's dearest dream was to be a fighter pilot. At the Air Force selection in Dehradun he finished ninth when only eight officers were chosen. Deeply disappointed, he accepted it and took the other path open to him, which led to rockets. Failure redirected rather than ended his story."
+   ],
+   [
+    "A leader who takes the blame and gives the credit",
+    "In 1979 India's first satellite launch vehicle, SLV-3, which Kalam led, failed. His chief, Professor Satish Dhawan, faced the press and took responsibility himself. When the launch succeeded in 1980, Dhawan sent Kalam to announce it. Kalam said he learned there what leadership means."
+   ],
+   [
+    "Dream, then act",
+    "Kalam often told students that dreams become thoughts and thoughts become action. He did not mean daydreams; he meant clear goals that keep you awake and working. A dream is the beginning of a plan, and a plan becomes real only through disciplined effort."
+   ],
+   [
+    "Build teams that build themselves",
+    "Kalam's projects relied on large teams of young engineers. He gave them responsibility early, trusted them to solve problems and defended them when things went wrong. Many of his colleagues later led programmes of their own. A leader's legacy is measured by the leaders he leaves behind."
+   ],
+   [
+    "Serve to the last",
+    "As President from 2002 to 2007, Kalam kept his simple habits and spoke to millions of students. He died in 2015 doing what he loved, collapsing while giving a lecture at a management institute. A life spent serving and teaching does not retire."
+   ]
+  ],
+  "faith": "For indeed, with hardship comes ease; indeed, with hardship comes ease. Kalam's life is a long illustration of this promise: poverty, a lost dream and a public failure each opened a door. The Prophet, peace be upon him, taught the strong believer to strive for what benefits him, seek Allah's help and not give up, and not to dwell on 'if only' when something goes wrong.",
+  "hadith": [
+   [
+    "Strive for what benefits you, seek help from Allah and do not feel helpless. If something befalls you, do not say 'if only I had done such and such', but say: Allah decreed and did as He willed.",
+    "Sahih Muslim 2664"
+   ]
+  ],
+  "practices": [
+   "Write down one 'ninth place' disappointment and what it redirected you towards.",
+   "The next time your team fails, take the blame publicly; when it succeeds, let them present it.",
+   "Turn one dream into a written plan with a first step for this week."
+  ],
+  "reflect": [
+   "Who was the teacher who changed my direction, and have I thanked them?",
+   "Which young person could I give real responsibility to now?"
+  ],
+  "closing": "Dream clearly, accept setbacks, take the blame and share the credit. With every hardship comes ease.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 94,
+    "v": 5,
+    "ar": "فَإِنَّ مَعَ ٱلْعُسْرِ يُسْرًا",
+    "en": "For indeed, with hardship [will be] ease [i.e., relief]."
+   },
+   {
+    "s": 94,
+    "v": 6,
+    "ar": "إِنَّ مَعَ ٱلْعُسْرِ يُسْرًا",
+    "en": "Indeed, with hardship [will be] ease."
+   }
+  ],
+  "ref": "Ash-Sharh 94:5–6",
+  "deep": [
+   "Every leader can be that teacher: explain one thing clearly, show it rather than only tell it, and spark curiosity in a young person.",
+   "Disappointment is information, not a verdict. The door that closes often protects us from a path that was not ours, and points to one that is.",
+   "This is perhaps the most quoted leadership lesson from Kalam's life. Taking responsibility for failure protects the team's courage; giving away credit builds its confidence.",
+   "Kalam's dreams were tied to hard work and service to his country. Write the dream down, break it into steps and begin the first step today.",
+   "Delegating real responsibility, with support, is how organisations grow future leaders. Hoarding responsibility keeps a leader busy and a team small.",
+   "Kalam's simplicity in high office, and his devotion to students, show that position is a means of service, not a reward to be enjoyed."
+  ]
+ },
+ {
+  "id": "sen",
+  "cat": "Asia & the Arab World",
+  "title": "Development as Freedom",
+  "author": "Amartya Sen · 1999",
+  "ar": "অমর্ত্য সেন",
+  "tag": "The Nobel economist who saw a famine as a boy argued that development means expanding what people are truly able to do and be, not only raising incomes.",
+  "ayat": [
+   [
+    16,
+    90,
+    90
+   ]
+  ],
+  "ideas": [
+   [
+    "Development means expanding freedoms",
+    "Sen argued that the purpose of development is to enlarge the real freedoms people enjoy: to be healthy, educated, safe, able to work and to take part in community life. Growth in income matters because of what it allows people to do, not as an end in itself."
+   ],
+   [
+    "Look at what people can do and be",
+    "He called these 'capabilities'. Two people with the same income may have very different lives if one is disabled, sick or excluded. Good policy asks what people are actually able to achieve, not only what they own."
+   ],
+   [
+    "Income can mislead",
+    "Sen pointed out that African Americans in the United States, though far richer on average, had lower chances of surviving to old age than people in some poorer places such as the Indian state of Kerala, where health care and education were widely shared. Money alone does not guarantee wellbeing."
+   ],
+   [
+    "Famines are failures of entitlement",
+    "Sen witnessed the Bengal famine of 1943 as a child. His research showed that famines often happen without a large fall in total food supply; people starve because they lose the means to buy or grow food, through falling wages or rising prices. Hunger is a problem of access as well as quantity."
+   ],
+   [
+    "Free press and democracy prevent famine",
+    "One of his best-known findings is that no major famine has occurred in a functioning democracy with a relatively free press. When governments must answer to voters and journalists, they cannot ignore mass starvation. Accountability is a matter of life and death."
+   ],
+   [
+    "Women's agency changes everything",
+    "Sen highlighted evidence that women's education, employment and voice in household decisions reduce child mortality and improve family welfare. Empowering women is not only a matter of fairness; it is one of the most powerful levers of development."
+   ]
+  ],
+  "faith": "Indeed, Allah commands justice, excellence and giving to relatives, and forbids immorality, wrongdoing and oppression. The Qur'an measures a society by justice and care for the vulnerable, not by wealth alone. The Prophet, peace be upon him, commanded: feed the hungry, visit the sick and free the captive, practical acts that expand the real freedoms of others.",
+  "hadith": [
+   [
+    "Feed the hungry, visit the sick and set free the captive.",
+    "Sahih al-Bukhari 5649"
+   ]
+  ],
+  "practices": [
+   "Ask of one programme or policy you are involved in: what does it actually allow people to do?",
+   "Support the education or work of one woman or girl in your family or community.",
+   "Check one source of news this week against a second, independent one."
+  ],
+  "reflect": [
+   "Am I measuring success in my family or work by income alone?",
+   "Whose real freedom could I expand this month?"
+  ],
+  "closing": "True development is measured by what people are free to be and do. Justice, accountability and care make that freedom real.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 16,
+    "v": 90,
+    "ar": "إِنَّ ٱللَّهَ يَأْمُرُ بِٱلْعَدْلِ وَٱلْإِحْسَٰنِ وَإِيتَآئِ ذِى ٱلْقُرْبَىٰ وَيَنْهَىٰ عَنِ ٱلْفَحْشَآءِ وَٱلْمُنكَرِ وَٱلْبَغْىِ يَعِظُكُمْ لَعَلَّكُمْ تَذَكَّرُونَ",
+    "en": "Indeed, Allāh orders justice and good conduct and giving [help] to relatives and forbids immorality and bad conduct and oppression. He admonishes you that perhaps you will be reminded."
+   }
+  ],
+  "ref": "An-Nahl 16:90",
+  "deep": [
+   "Applied to a company or family, this asks: are the people in my care growing in health, knowledge, skill and dignity, or only producing income?",
+   "The capability view is especially useful for policy and philanthropy, because it shows who is being left behind even when averages look good.",
+   "Wealth without health care, education and social trust leaves people vulnerable. Nigeria's development debates often focus on GDP; Sen's work asks what life is actually like for ordinary people.",
+   "Sen's analysis changed how famine relief works: protecting purchasing power through employment schemes and cash support can save lives as effectively as shipping food.",
+   "A free press and open debate are early-warning systems. Organisations, too, need channels where bad news can travel up without fear.",
+   "Islam honoured women's education and economic rights from its beginning; Sen's research gives modern evidence for the benefits."
+  ]
+ },
+ {
+  "id": "sejong",
+  "cat": "Asia & the Arab World",
+  "title": "Sejong the Great",
+  "author": "King Sejong · Joseon Korea, reigned 1418–1450",
+  "ar": "세종대왕",
+  "tag": "The king who gave Koreans their alphabet, consulted his people on taxes and promoted talent regardless of birth is remembered as a model of learned, caring leadership.",
+  "ayat": [
+   [
+    42,
+    38,
+    38
+   ]
+  ],
+  "ideas": [
+   [
+    "An alphabet so ordinary people could read",
+    "Literary Chinese was hard to learn, so most Koreans could not read or write. Sejong led the creation of a new script, promulgated in 1446 as Hunminjeongeum, 'the correct sounds for instructing the people'. Its preface says he pitied the many who could not express their thoughts, and made letters easy to learn and use daily. That script, Hangul, is still used today."
+   ],
+   [
+    "Ask the people before deciding",
+    "Tax assessments were often unfair and open to bribery. In 1430 Sejong had his officials survey opinion on a proposed land tax across the country over about five months, gathering the views of some 170,000 people, from officials to farmers. Because opinions divided, he kept refining the reform for years before settling it in 1444."
+   ],
+   [
+    "Gather the best minds",
+    "Sejong expanded the Hall of Worthies, Jiphyeonjeon, a royal institute where talented scholars researched language, history, agriculture, medicine and law. He protected their time for study. Leaders who surround themselves with capable, well-supported thinkers make better decisions."
+   ],
+   [
+    "Promote talent, not only birth",
+    "Sejong's chief inventor, Jang Yeong-sil, came from humble origins in a strictly hierarchical society, yet Sejong promoted him for his skill. Jang built water clocks, sundials and instruments; Sejong's reign also produced a standardised rain gauge in 1441 to record rainfall across the provinces. Talent was found and used where it was."
+   ],
+   [
+    "Mercy in the rules",
+    "Female slaves working in government offices once received only seven days' leave after giving birth. In 1426 Sejong extended this to 100 days, in 1430 added a month before birth, and in 1434 gave their husbands 30 days to care for them. Even at the bottom of society, rules could be made humane."
+   ],
+   [
+    "Learn from those who do the work",
+    "In 1429 Sejong had farming knowledge collected from experienced farmers in the southern provinces and compiled into Nongsa jikseol, 'Straight Talk on Farming', adapted to Korean conditions. Practical wisdom often lies with practitioners, not only with scholars at court."
+   ]
+  ],
+  "faith": "And those who respond to their Lord and establish prayer, and whose affairs are decided by consultation among themselves. Shura, consultation, is a Qur'anic quality of the believing community. Sejong's polling of his people and support for scholars is a striking example of it. The Prophet, peace be upon him, said that each of us is a shepherd responsible for his flock.",
+  "hadith": [
+   [
+    "Each of you is a shepherd, and each of you is responsible for his flock.",
+    "Sahih al-Bukhari 893; Sahih Muslim 1829"
+   ]
+  ],
+  "practices": [
+   "Before one decision this week, ask the people it affects for their view.",
+   "Find one capable person in a junior role and give them a real opportunity.",
+   "Review one policy you control for mercy towards the weakest person it affects."
+  ],
+  "reflect": [
+   "Whose voice am I not hearing before I decide?",
+   "What could I make easier for ordinary people to understand or use?"
+  ],
+  "closing": "Consult your people, gather the best minds, promote talent and make rules humane. That is leadership as service.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 42,
+    "v": 38,
+    "ar": "وَٱلَّذِينَ ٱسْتَجَابُوا۟ لِرَبِّهِمْ وَأَقَامُوا۟ ٱلصَّلَوٰةَ وَأَمْرُهُمْ شُورَىٰ بَيْنَهُمْ وَمِمَّا رَزَقْنَٰهُمْ يُنفِقُونَ",
+    "en": "And those who have responded to their Lord and established prayer and whose affair is [determined by] consultation among themselves, and from what We have provided them, they spend,"
+   }
+  ],
+  "ref": "Ash-Shura 42:38",
+  "deep": [
+   "Leaders can apply this by making their own communications, policies and forms simple enough for everyone affected to understand.",
+   "The tax reform took years because Sejong took objections seriously. Consultation slows decisions down at first but makes them stronger and more legitimate.",
+   "Strong leaders are not threatened by capable advisers. Sejong's investment in scholars reflects the Qur'anic command to consult and the Prophet's habit of seeking counsel.",
+   "Islam's message of human equality before Allah gives Muslim leaders every reason to look for talent beyond tribe, family and class.",
+   "Compassion can be built into policy. Ask who is most vulnerable under a rule and whether a small change could ease their burden.",
+   "Experienced staff, farmers, traders and artisans often hold knowledge that leaders lack. Collecting and sharing it is a mark of humble, effective leadership."
+  ]
+ },
+ {
+  "id": "saemaul",
+  "cat": "Asia & the Arab World",
+  "title": "Saemaul Undong: The New Village Movement",
+  "author": "South Korea · from 1970",
+  "ar": "새마을운동",
+  "tag": "A rural development drive built on three words, diligence, self-help and cooperation, that helped transform Korean villages and is now studied across Africa.",
+  "ayat": [
+   [
+    5,
+    2,
+    2
+   ]
+  ],
+  "ideas": [
+   [
+    "Three words: diligence, self-help, cooperation",
+    "The movement, launched in 1970 under President Park Chung-hee, rested on three values: geunmyeon (diligence), jajo (self-help) and hyeopdong (cooperation). Villagers were asked not to wait for government to do everything, but to work together to improve their own communities."
+   ],
+   [
+    "Give a little, and let people decide",
+    "In the first year the government gave each of more than 33,000 villages about 335 bags of cement, free, to use on any shared project the villagers chose: roads, bridges, wells, roofs or laundries. People decided their own priorities and supplied the labour. Ownership of the choice created ownership of the result."
+   ],
+   [
+    "Reward results, not promises",
+    "The next year, support went to the villages that had used the cement well. Roughly half, about 16,600 villages, received more cement and steel; villages that had done nothing got no further help. Performance-based support encouraged effort and healthy competition between communities."
+   ],
+   [
+    "Local leaders make the difference",
+    "Each village chose a Saemaul leader, often a respected volunteer, and many were trained in leadership and practical skills. The movement found that the quality of local leadership mattered more than the size of the grant."
+   ],
+   [
+    "From roofs to incomes",
+    "Early projects improved living conditions: replacing thatched roofs, widening roads, building bridges and bringing water and electricity. Later phases focused on raising incomes through better farming, cooperatives and small rural industries. Visible early wins built confidence for harder work."
+   ],
+   [
+    "A lesson with honest limits",
+    "The movement was government-driven, used heavily for political mobilisation and later criticised for top-down control and some misuse of funds, and it did not stop young people leaving for the cities. Its lasting lessons, studied by countries in Africa and Asia, are self-help, local ownership and rewarding performance, applied with accountability."
+   ]
+  ],
+  "faith": "Cooperate in righteousness and piety, and do not cooperate in sin and aggression. The Qur'an makes cooperation for the common good an act of worship. The Prophet, peace be upon him, described believers as a building whose parts support one another. Communities that work together on shared needs live out this teaching.",
+  "hadith": [
+   [
+    "The believer to the believer is like a building, each part strengthening the other.",
+    "Sahih al-Bukhari 481; Sahih Muslim 2585"
+   ]
+  ],
+  "practices": [
+   "Identify one shared problem in your street, estate or community that neighbours could fix together.",
+   "When you support a project, give a little first and add more only when it is used well.",
+   "Train or mentor one local volunteer leader."
+  ],
+  "reflect": [
+   "What am I waiting for government or others to do that my community could start?",
+   "Do I reward results or promises?"
+  ],
+  "closing": "Diligence, self-help and cooperation, with honest accountability, can lift a village. They can lift a team or a community too.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 5,
+    "v": 2,
+    "ar": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ لَا تُحِلُّوا۟ شَعَٰٓئِرَ ٱللَّهِ وَلَا ٱلشَّهْرَ ٱلْحَرَامَ وَلَا ٱلْهَدْىَ وَلَا ٱلْقَلَٰٓئِدَ وَلَآ ءَآمِّينَ ٱلْبَيْتَ ٱلْحَرَامَ يَبْتَغُونَ فَضْلًا مِّن رَّبِّهِمْ وَرِضْوَٰنًا وَإِذَا حَلَلْتُمْ فَٱصْطَادُوا۟ وَلَا يَجْرِمَنَّكُمْ شَنَـَٔانُ قَوْمٍ أَن صَدُّوكُمْ عَنِ ٱلْمَسْجِدِ ٱلْحَرَامِ أَن تَعْتَدُوا۟ وَتَعَاوَنُوا۟ عَلَى ٱلْبِرِّ وَٱلتَّقْوَىٰ وَلَا تَعَاوَنُوا۟ عَلَى ٱلْإِثْمِ وَٱلْعُدْوَٰنِ وَٱتَّقُوا۟ ٱللَّهَ إِنَّ ٱللَّهَ شَدِيدُ ٱلْعِقَابِ",
+    "en": "O you who have believed, do not violate the rites of Allāh or [the sanctity of] the sacred month or [neglect the marking of] the sacrificial animals and garlanding [them] or [violate the safety of] those coming to the Sacred House seeking bounty from their Lord and [His] approval. But when you come out of iḥrām, then [you may] hunt. And do not let the hatred of a people for having obstructed you from al-Masjid al-Ḥarām lead you to transgress. And cooperate in righteousness and piety, but do not cooperate in sin and aggression. And fear Allāh; indeed, Allāh is severe in penalty."
+   }
+  ],
+  "ref": "Al-Maaida 5:2",
+  "deep": [
+   "Each value guards against a failure: diligence against laziness, self-help against dependency and cooperation against division. Together they describe the culture any community needs to develop.",
+   "When people choose the project, they protect and maintain it. Many development projects fail because outsiders chose them.",
+   "This conditional approach is used today in results-based financing. It requires honest monitoring, or it simply rewards the best storytellers.",
+   "Development partners in Africa, including Nigeria, have studied Saemaul training for community leaders. Investing in local leadership is often the highest-return investment.",
+   "Visible improvements build belief. Leaders should look for an early, shared, tangible win before asking people for harder, longer-term sacrifices.",
+   "Learning honestly from any model means taking its strengths and noting its failures. Self-help and local ownership travel well; top-down pressure and political control do not."
+  ]
+ },
+ {
+  "id": "nursi",
+  "cat": "Asia & the Arab World",
+  "title": "The Damascus Sermon",
+  "author": "Bediuzzaman Said Nursi · 1911",
+  "ar": "الخطبة الشامية",
+  "tag": "In a sermon at the Umayyad Mosque in Damascus, the Turkish scholar diagnosed the illnesses of the Muslim world and prescribed cures that still speak to us.",
+  "ayat": [
+   [
+    39,
+    53,
+    53
+   ]
+  ],
+  "ideas": [
+   [
+    "Three enemies: ignorance, poverty and disunity",
+    "Nursi taught that the greatest enemies of the Muslim world were ignorance, poverty and disunity, and that they must be fought with knowledge, skilled work and unity. Not slogans, not blame, but learning, productive effort and solidarity."
+   ],
+   [
+    "Despair is a deadly disease",
+    "Among the illnesses he named, the first was despair, which had entered the hearts of Muslims and killed their energy. He insisted on hope, arguing that the future belonged to truth. Hopelessness, he warned, makes people give up before they begin."
+   ],
+   [
+    "Truthfulness is the foundation",
+    "He named the death of truthfulness in social and political life as another illness, and declared truthfulness the foundation of Islam and the bond of society. Lies may seem useful for a time, but a community that tolerates them loses the trust everything else depends on."
+   ],
+   [
+    "Love is most worthy of love",
+    "Nursi observed that love of enmity had spread among believers. He taught that the thing most worthy of love is love itself, and the thing most deserving of enmity is enmity itself. Our energy should go into building bonds, not feeding quarrels."
+   ],
+   [
+    "Consultation is the key",
+    "He described shura, consultation, as the key to the progress and happiness of the community. Individuals working alone, however gifted, cannot match the combined understanding of many minds working together honestly."
+   ],
+   [
+    "Positive action, even in hardship",
+    "Nursi spent decades in exile and prison, yet he kept writing his Risale-i Nur, a commentary on the Qur'an's teachings, which students copied by hand and spread across Turkey. He taught 'positive action': serving faith constructively, without violence or revenge, whatever the circumstances."
+   ]
+  ],
+  "faith": "Say: O My servants who have transgressed against themselves, do not despair of the mercy of Allah; indeed Allah forgives all sins. Nursi's cure for despair rests on this verse: hope is not naivety but faith in Allah's mercy and promise. The Prophet, peace be upon him, taught that truthfulness leads to righteousness and righteousness leads to Paradise, which Nursi made a pillar of renewal.",
+  "hadith": [
+   [
+    "Truthfulness leads to righteousness, and righteousness leads to Paradise.",
+    "Sahih al-Bukhari 6094; Sahih Muslim 2607"
+   ]
+  ],
+  "practices": [
+   "Pick one of the three enemies, ignorance, poverty or disunity, and take one action against it this week.",
+   "Replace one complaint with one constructive step.",
+   "Bring one decision to honest consultation with your family or team."
+  ],
+  "reflect": [
+   "Where has despair quietly reduced my effort?",
+   "Am I spending more energy on enmity than on building bonds?"
+  ],
+  "closing": "Fight ignorance with knowledge, poverty with work and disunity with love and consultation. Never despair.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 39,
+    "v": 53,
+    "ar": "قُلْ يَٰعِبَادِىَ ٱلَّذِينَ أَسْرَفُوا۟ عَلَىٰٓ أَنفُسِهِمْ لَا تَقْنَطُوا۟ مِن رَّحْمَةِ ٱللَّهِ إِنَّ ٱللَّهَ يَغْفِرُ ٱلذُّنُوبَ جَمِيعًا إِنَّهُۥ هُوَ ٱلْغَفُورُ ٱلرَّحِيمُ",
+    "en": "Say, \"O My servants who have transgressed against themselves [by sinning], do not despair of the mercy of Allāh. Indeed, Allāh forgives all sins. Indeed, it is He who is the Forgiving, the Merciful.\""
+   }
+  ],
+  "ref": "Az-Zumar 39:53",
+  "deep": [
+   "This diagnosis remains striking for Nigeria and much of the Muslim world. Each of us can contribute to the cure in our own field: teaching, building businesses and bridging divides.",
+   "Hope is not wishful thinking; it is the conviction that effort guided by truth will bear fruit, in this life or the next. Despair is a defeat accepted before the contest.",
+   "Organisations, too, depend on truthfulness. Once staff believe that reports are dressed up, every number becomes suspect and good decisions become impossible.",
+   "This principle is a practical guide in family and workplace disputes: direct your opposition at the behaviour or the enmity itself, not at the person.",
+   "Nursi's emphasis on shura echoes the Qur'an's description of believers whose affairs are by consultation. It applies to families, companies and communities alike.",
+   "His decades of perseverance show that constructive work can continue under the hardest restrictions. Positive action refuses both despair and violence."
+  ]
+ },
+ {
+  "id": "ahilik",
+  "cat": "Asia & the Arab World",
+  "title": "The Ahi Brotherhood",
+  "author": "Ahi Evran and the craft guilds of Anatolia · from the 13th century",
+  "ar": "آخى",
+  "tag": "Medieval Turkish craftsmen joined faith, skill and business ethics in brotherhoods that trained apprentices, guarded quality and looked after strangers.",
+  "ayat": [
+   [
+    83,
+    1,
+    3
+   ]
+  ],
+  "ideas": [
+   [
+    "Faith, craft and ethics together",
+    "The Ahi brotherhoods grew in thirteenth-century Anatolia, traditionally linked to Ahi Evran, a tanner and scholar of Kırşehir. They organised craftsmen and traders around shared rules of skill and morality, so that a man's work and his faith were judged together."
+   ],
+   [
+    "Master your hand, your tongue and your desires",
+    "A well-known Turkish saying associated with this tradition tells a person to be master of his hand, his tongue and his waist: do not take what is not yours, do not speak what harms, and guard your chastity. In business this means honest dealing, careful speech and self-control."
+   ],
+   [
+    "Learn the craft step by step",
+    "Young people entered as apprentices, rose to journeymen and only became masters after years of training and proof of skill and character. Advancement was earned. This patient system protected quality and passed on not only techniques but manners."
+   ],
+   [
+    "Quality is a matter of honour",
+    "Guilds inspected work and disciplined members who cheated customers or sold faulty goods. Turkish still uses the phrase 'his shoes were thrown on the roof', traditionally explained as the shame of a cheating craftsman expelled from the guild. A trader's reputation was the community's business."
+   ],
+   [
+    "Hospitality to the stranger",
+    "The Moroccan traveller Ibn Battuta, crossing Anatolia in the 1330s, described young Ahi brotherhoods who competed to host travellers, giving them food and lodging generously. Commerce and generosity were not opposites; the same people did both."
+   ],
+   [
+    "Share the market",
+    "An old Ottoman marketplace custom, often linked to Ahi ethics, holds that a shopkeeper who has already made his first sale of the day may send a customer to a neighbour who has not. Competition existed, but within a sense of brotherhood that left room for everyone to earn."
+   ]
+  ],
+  "faith": "Woe to those who give less than due, who, when they take a measure from people, take in full, but when they give by measure or weight, give less. The Qur'an treats honesty in trade as a matter of faith, and the Ahi guilds built that principle into daily commerce. The Prophet, peace be upon him, said that whoever cheats is not of us.",
+  "hadith": [
+   [
+    "Whoever cheats us is not of us.",
+    "Sahih Muslim 102"
+   ]
+  ],
+  "practices": [
+   "Check one product or service you deliver for any hidden 'short measure'.",
+   "Pass on one skill to a younger person properly, step by step.",
+   "Do one generous act for a stranger or a competitor this week."
+  ],
+  "reflect": [
+   "Am I master of my hand, my tongue and my desires at work?",
+   "Would my trade survive the Ahi inspection?"
+  ],
+  "closing": "Skill with ethics, quality as honour, generosity alongside profit: the Ahi way is still a model for Muslim business.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 83,
+    "v": 1,
+    "ar": "وَيْلٌ لِّلْمُطَفِّفِينَ",
+    "en": "Woe to those who give less [than due],"
+   },
+   {
+    "s": 83,
+    "v": 2,
+    "ar": "ٱلَّذِينَ إِذَا ٱكْتَالُوا۟ عَلَى ٱلنَّاسِ يَسْتَوْفُونَ",
+    "en": "Who, when they take a measure from people, take in full."
+   },
+   {
+    "s": 83,
+    "v": 3,
+    "ar": "وَإِذَا كَالُوهُمْ أَو وَّزَنُوهُمْ يُخْسِرُونَ",
+    "en": "But if they give by measure or by weight to them, they cause loss."
+   }
+  ],
+  "ref": "Al-Mutaffifin 83:1–3",
+  "deep": [
+   "The model shows that business ethics need institutions as well as individual piety: shared rules, training, inspection and consequences.",
+   "This saying is a compact code of conduct for any professional: integrity with money, discipline in speech and control of desires.",
+   "Structured apprenticeship builds both skill and character. Modern firms can recreate it through mentoring, clear stages of progression and assessment of conduct as well as output.",
+   "A shared reputation encourages everyone to police quality. Professional bodies and industry associations can play this role today.",
+   "Generosity to travellers and strangers was part of the brotherhood's identity. Hospitality builds trust, and trust is the foundation of trade.",
+   "This custom reflects a view of the market as a community, not a battlefield. Healthy competition and brotherly fairness can coexist."
+  ]
+ },
+ {
+  "id": "iqbal",
+  "cat": "Asia & the Arab World",
+  "title": "The Reconstruction of Religious Thought in Islam",
+  "author": "Muhammad Iqbal · 1930",
+  "ar": "محمد اقبال",
+  "tag": "The poet-philosopher of South Asia called Muslims to rediscover the strength of the self, the dynamism of their faith and the courage to think afresh.",
+  "ayat": [
+   [
+    53,
+    39,
+    41
+   ]
+  ],
+  "ideas": [
+   [
+    "Khudi: develop your self",
+    "Iqbal's central idea is khudi, selfhood: a strong, active, responsible self that grows through love, effort and obedience to Allah. He criticised teachings that asked Muslims to dissolve the self into passivity. The believer is meant to be a vigorous agent in the world, not a spectator."
+   ],
+   [
+    "Raise yourself so high",
+    "In one of his best-known couplets, Iqbal urged: raise your selfhood so high that before every decree, Allah Himself asks His servant what he wishes. It is poetry, not theology to be taken literally, but its message is clear: through effort and nearness to Allah, a person can shape his destiny rather than merely endure it."
+   ],
+   [
+    "Ijtihad is the principle of movement",
+    "In his lectures, Iqbal called ijtihad, independent scholarly reasoning, the principle of movement in Islam. Without it, he argued, Muslim thought freezes while life moves on. Faithful renewal means applying unchanging principles wisely to changing conditions."
+   ],
+   [
+    "The falcon, not the vulture",
+    "Iqbal's favourite symbol was the shaheen, the falcon: it flies high, hunts for itself, does not feed on carrion and builds no comfortable nest. He held it up to the young as a picture of dignity, self-reliance and lofty aims."
+   ],
+   [
+    "Learn from the West without losing yourself",
+    "Iqbal studied at Cambridge and earned a doctorate in Germany, engaging deeply with Western philosophy. He admired its energy and inquiry but rejected its materialism. His model is critical engagement: take what is true and useful, and remain rooted in your own faith."
+   ],
+   [
+    "Action and hope over lament",
+    "Iqbal's poems such as Shikwa and Jawab-e-Shikwa, the Complaint and the Answer, moved from lamenting Muslim decline to answering it: the fault lies with Muslims' own neglect, and the remedy is renewed faith and action. Complaint is not a strategy."
+   ]
+  ],
+  "faith": "And that there is not for man except that for which he strives, and that his striving is going to be seen, then he will be recompensed with the fullest reward. Iqbal built his philosophy of the self on verses like these: human effort matters and is noticed. The Prophet, peace be upon him, taught a man to tie his camel and then rely on Allah, joining action to trust.",
+  "hadith": [
+   [
+    "Tie it, and rely upon Allah.",
+    "Jami' al-Tirmidhi 2517 (hasan)"
+   ]
+  ],
+  "practices": [
+   "Write down one area of life where you have been passive, and one action to take charge of it.",
+   "Replace one complaint about the state of things with one thing you will do.",
+   "Read one serious idea from outside your tradition and evaluate it in the light of your faith."
+  ],
+  "reflect": [
+   "Am I living as a falcon or waiting like a vulture?",
+   "Where does my faith call me to think afresh rather than repeat?"
+  ],
+  "closing": "Strengthen the self through faith and striving, think with courage, and act with hope. Then rely on Allah.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 53,
+    "v": 39,
+    "ar": "وَأَن لَّيْسَ لِلْإِنسَٰنِ إِلَّا مَا سَعَىٰ",
+    "en": "And that there is not for man except that [good] for which he strives"
+   },
+   {
+    "s": 53,
+    "v": 40,
+    "ar": "وَأَنَّ سَعْيَهُۥ سَوْفَ يُرَىٰ",
+    "en": "And that his effort is going to be seen -"
+   },
+   {
+    "s": 53,
+    "v": 41,
+    "ar": "ثُمَّ يُجْزَىٰهُ ٱلْجَزَآءَ ٱلْأَوْفَىٰ",
+    "en": "Then he will be recompensed for it with the fullest recompense -"
+   }
+  ],
+  "ref": "An-Najm 53:39–41",
+  "deep": [
+   "Khudi is not selfishness. It is a strong, purposeful self in the service of Allah and others, the opposite of both arrogance and passivity.",
+   "The couplet is often quoted to inspire young people to aim high and work hard, while remembering that every decree remains with Allah. It is a call to effort, not a claim to control.",
+   "For Iqbal, renewal means returning to the Qur'an and Sunnah with fresh questions, through qualified scholarship, so that Muslims can respond to modern challenges with confidence.",
+   "The falcon also teaches restraint: it refuses easy, dishonourable gains. Dignity sometimes means saying no to comfortable shortcuts.",
+   "This balanced approach suits Muslim professionals trained in Western systems: learn deeply, keep what is true and useful, and filter it through Islamic values.",
+   "Iqbal's movement from complaint to answer is a model for personal reflection: honestly name the problem, then ask what part of it is mine to fix."
+  ]
+ },
+ {
+  "id": "attas",
+  "cat": "Asia & the Arab World",
+  "title": "Islam and Secularism",
+  "author": "Syed Muhammad Naquib al-Attas · Malaysia, 1978",
+  "ar": "الإسلام والعلمانية",
+  "tag": "The Malaysian philosopher argued that the deepest crisis of Muslims is not poverty or politics but the loss of adab, the right ordering of knowledge, people and things.",
+  "ayat": [
+   [
+    20,
+    114,
+    114
+   ]
+  ],
+  "ideas": [
+   [
+    "The root problem is the loss of adab",
+    "Al-Attas diagnosed the Muslim crisis as a confusion and error in knowledge, which leads to the loss of adab, and in turn to leaders who are not qualified to lead. Fix knowledge and adab, he argued, and much else follows."
+   ],
+   [
+    "What adab really means",
+    "For al-Attas, adab is not mere etiquette. It is recognising and acknowledging the proper place of everything: of Allah, of the Prophet, of scholars, of people, of knowledge and of oneself. A person of adab puts things where they belong, which is the essence of justice."
+   ],
+   [
+    "The purpose of education is a good human being",
+    "He argued that Islamic education aims to produce a good human being, not merely a good citizen or a skilled worker. Skills matter, but a skilled person without moral and spiritual formation can do great harm."
+   ],
+   [
+    "Ta'dib: education as cultivation",
+    "Al-Attas preferred the term ta'dib, instilling adab, to describe Islamic education, because it unites knowledge, character and action. Learning is complete only when it shapes how we behave and how we order our priorities."
+   ],
+   [
+    "The levelling of leaders",
+    "He warned against a 'levelling' attitude that refuses to recognise real scholarly and moral authority, treating every opinion as equal. When people cannot tell the learned from the merely loud, unqualified leaders rise."
+   ],
+   [
+    "Not all knowledge is equal",
+    "Al-Attas distinguished knowledge that is obligatory for every person, knowledge of faith, worship and character, from specialised knowledge needed by the community. Both are valuable, but neglecting the first while pursuing only the second produces clever people who have lost their way."
+   ]
+  ],
+  "faith": "And say: My Lord, increase me in knowledge. The Prophet, peace be upon him, was commanded to ask for more knowledge, and al-Attas reminds us that knowledge must lead to adab, right conduct and right ordering. The Prophet also said that seeking knowledge is an obligation upon every Muslim.",
+  "hadith": [
+   [
+    "Seeking knowledge is an obligation upon every Muslim.",
+    "Sunan Ibn Majah 224; graded sahih by al-Albani"
+   ]
+  ],
+  "practices": [
+   "List what you are learning this month. Is any of it the knowledge obligatory for you as a Muslim?",
+   "Practise adab in one relationship: give a teacher, parent or elder their due respect.",
+   "Before following a voice online, ask whether it has real knowledge and character."
+  ],
+  "reflect": [
+   "Have I put knowledge, people and things in their proper place?",
+   "Is my learning making me a better human being, or only a more skilled one?"
+  ],
+  "closing": "Seek knowledge that leads to adab, and adab that leads to justice. That is the education of a good human being.",
+  "kind": "book",
+  "new": true,
+  "verses": [
+   {
+    "s": 20,
+    "v": 114,
+    "ar": "فَتَعَٰلَى ٱللَّهُ ٱلْمَلِكُ ٱلْحَقُّ وَلَا تَعْجَلْ بِٱلْقُرْءَانِ مِن قَبْلِ أَن يُقْضَىٰٓ إِلَيْكَ وَحْيُهُۥ وَقُل رَّبِّ زِدْنِى عِلْمًا",
+    "en": "So high [above all] is Allāh, the Sovereign, the Truth. And, [O Muḥammad], do not hasten with [recitation of] the Qur’ān before its revelation is completed to you, and say, \"My Lord, increase me in knowledge.\""
+   }
+  ],
+  "ref": "Taa-Haa 20:114",
+  "deep": [
+   "His diagnosis suggests that many visible problems, weak institutions, poor leadership, social division, have a root in confused knowledge and misplaced priorities.",
+   "In this sense adab is close to justice, 'adl: giving everything its rightful place. Respecting a teacher, honouring a parent and valuing time are all acts of adab.",
+   "Employers notice this too: skills can be taught quickly, but integrity, humility and responsibility are much harder to instil later.",
+   "Ta'dib describes the classical Islamic ideal of learning, where scholars were known for their conduct as much as their knowledge.",
+   "In the age of social media, the levelling problem is everywhere. Al-Attas's warning encourages us to seek knowledge from people of proven learning and character.",
+   "A balanced life of learning includes both: personal religious knowledge for one's own soul, and professional knowledge for serving the community."
+  ]
+ },
+ {
   "id": "atomic",
   "cat": "Habits & Productivity",
   "title": "Atomic Habits",

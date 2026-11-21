@@ -1,6 +1,6 @@
 /* Hikmah 2.0 */
 "use strict";
-const VERSION="2.7.1";
+const VERSION="2.8.0";
 const SITE="https://ssadeeqib-arch.github.io/hikmah/";
 const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -57,7 +57,7 @@ $$(".ti").forEach(e=>e.innerHTML=icon(e.dataset.i,20));
 
 /* ---------- data ---------- */
 let PK=[],TM={},byId={},CARDS={},ALLIDEAS=[];
-const CAT_ORDER=["Tafsir","Islamic Classics","Character","Heart","Family","Work & Leadership","Leading People","Thinking & Decisions","Strategy & Execution","Influence & Negotiation","The Good Life","Habits & Productivity","Mind & Meaning","Money & Wealth","Communication & People","African Wisdom"];
+const CAT_ORDER=["Tafsir","Islamic Classics","Character","Heart","Family","Work & Leadership","Leading People","Thinking & Decisions","Strategy & Execution","Influence & Negotiation","The Good Life","Habits & Productivity","Mind & Meaning","Money & Wealth","Communication & People","African Wisdom","Asia & the Arab World"];
 const LABEL={opening:"Opening",verses:"From the Qur'an",verse:"Understanding the verses",hadith:"From the Sunnah",scholars:"The classical scholars",modern:"Modern thought",nigerian:"Nigerian wisdom",idea:"The big idea",mechanics:"Going deeper",practice:"In the real world",faith:"In the light of the Qur'an",practices:"Practices",closing:"Closing",intro:"Introduction"};
 function splitHead(text){
   const t=String(text).trim(); const m=t.match(/^(.{20,130}?[.!?])\s+(.+)$/s);
@@ -323,8 +323,8 @@ function results(){
   bindCommon($("#xres"));
 }
 
-const PGROUPS=["Companions & early generations","Hadith masters","Classical scholars","African voices","Modern thinkers","Ancient philosophers"];
-function personAvatar(x,size){return `<span class="avatar2" style="width:${size}px;height:${size}px">${cover(x.id,x.group==="Modern thinkers"?"Thinking & Decisions":x.group==="African voices"?"African Wisdom":x.group==="Ancient philosophers"?"Mind & Meaning":x.group==="Hadith masters"?"Islamic Classics":"Tafsir",{ratio:"square",small:true,motif:x.group==="Modern thinkers"?"bulb":x.group==="African voices"?"baobab":x.group==="Ancient philosophers"?"eye":x.group==="Hadith masters"?"quill":"book"})}<b>${initials(x.name)}</b></span>`}
+const PGROUPS=["Companions & early generations","Hadith masters","Classical scholars","African voices","Asian & Arab voices","Modern thinkers","Ancient philosophers"];
+function personAvatar(x,size){return `<span class="avatar2" style="width:${size}px;height:${size}px">${cover(x.id,x.group==="Modern thinkers"?"Thinking & Decisions":x.group==="African voices"?"African Wisdom":x.group==="Asian & Arab voices"?"Asia & the Arab World":x.group==="Ancient philosophers"?"Mind & Meaning":x.group==="Hadith masters"?"Islamic Classics":"Tafsir",{ratio:"square",small:true,motif:x.group==="Modern thinkers"?"bulb":x.group==="African voices"?"baobab":x.group==="Asian & Arab voices"?"mountain":x.group==="Ancient philosophers"?"eye":x.group==="Hadith masters"?"quill":"book"})}<b>${initials(x.name)}</b></span>`}
 function renderPeopleList(words){
   const L=PEOPLE.filter(x=>!words.length||words.every(w=>(x.name+" "+x.role+" "+x.bio+" "+(x.works||[]).flat().join(" ")).toLowerCase().includes(w)));
   $("#xres").innerHTML=PGROUPS.map(g=>{const xs=L.filter(x=>x.group===g);return xs.length?`<div class="h-sec"><h2>${esc(g)}</h2><span class="muted" style="font-weight:700;font-size:14px">${xs.length}</span></div><div class="plist">${xs.map(x=>`<button class="prow" data-person="${x.id}">${personAvatar(x,52)}<span><b>${esc(x.name)}</b><small>${esc(x.role)}${x.years?" · "+esc(x.years):""}</small></span></button>`).join("")}</div>`:""}).join("")||`<div class="empty"><p>No one matches “${esc(words.join(" "))}”.</p></div>`;
@@ -493,7 +493,7 @@ function renderYou(){
     <button class="row" id="sync-row"><div class="l"><b>Sync with Google</b><small id="sync-sub">Checking…</small></div><span class="pill soft">Open</span></button>
    </div>
    <div class="group">
-    <div class="row" style="display:block"><div style="display:flex;gap:12px;align-items:center"><div class="l"><b>Download for offline</b><small id="dl-info">All packages, about 140 MB</small></div><button class="pill" id="dl-all">Download</button></div><div class="bar"><i id="dl-bar"></i></div></div>
+    <div class="row" style="display:block"><div style="display:flex;gap:12px;align-items:center"><div class="l"><b>Download for offline</b><small id="dl-info">All packages, about 170 MB</small></div><button class="pill" id="dl-all">Download</button></div><div class="bar"><i id="dl-bar"></i></div></div>
     <div class="row"><div class="l"><b>Saved on this device</b><small id="dl-count">Checking…</small></div><button class="pill soft" id="dl-clear">Remove</button></div>
    </div>
    <div class="group">

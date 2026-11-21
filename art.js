@@ -15,7 +15,8 @@ const TOPICS = {
   "Money & Wealth":          {c1:"#CA8A04", c2:"#FDE047", ink:"#422006", motifs:["coins","key","scales","seedling"]},
   "Communication & People":  {c1:"#DB2777", c2:"#F9A8D4", ink:"#500724", motifs:["chat","people","bridge","heart"]},
   "Islamic Classics":        {c1:"#166534", c2:"#4ADE80", ink:"#052E16", motifs:["quill","book","lantern","arch"], islamic:true},
-  "African Wisdom":          {c1:"#C2410C", c2:"#FB923C", ink:"#431407", motifs:["baobab","drum","sun","people"]}
+  "African Wisdom":          {c1:"#C2410C", c2:"#FB923C", ink:"#431407", motifs:["baobab","drum","sun","people"]},
+  "Asia & the Arab World":   {c1:"#A31621", c2:"#F2C14E", ink:"#3B0A0F", motifs:["mountain","bridge","quill","compass"]}
 };
 const W = "#FFFFFF";
 const MOTIFS = {
