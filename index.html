@@ -1,97 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; img-src 'self' data: blob:; media-src 'self' blob: data:; font-src 'self'; connect-src 'self' https://www.googleapis.com https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Hikmah</title>
-<meta name="description" content="Bite-sized wisdom from the Qur'an, classical scholars, great thinkers and great books, with narration.">
-<meta name="theme-color" content="#F6F4FB">
-<meta name="color-scheme" content="light">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Hikmah">
-<meta name="format-detection" content="telephone=no">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="fonts.css">
-<link rel="stylesheet" href="app.css">
-</head>
-<body>
-<div class="app">
-<main id="main">
-  <section class="view" id="v-home" aria-label="Home"><div class="wrap" id="home"></div></section>
-  <section class="view" id="v-explore" aria-label="Explore"><div class="wrap" id="explore"></div></section>
-  <section class="view" id="v-stashes" aria-label="Stashes"><div class="wrap" id="stashes"></div></section>
-  <section class="view" id="v-you" aria-label="You"><div class="wrap" id="you"></div></section>
-  <section class="view" id="v-pkg" aria-label="Package"><div class="wrap" id="pkg"></div></section>
-  <section class="view" id="v-stash" aria-label="Stash"><div class="wrap" id="stash"></div></section>
-  <section class="view" id="v-person" aria-label="Profile"><div class="wrap" id="person"></div></section>
-  <section class="view" id="v-journal" aria-label="Practice journal"><div class="wrap" id="journal"></div></section>
-</main>
-
-<div class="player" id="player">
-  <div class="in">
-    <div class="art" id="pl-art"></div>
-    <div class="t" id="pl-t" role="button" tabindex="0" aria-label="Open player"><b></b><small></small></div>
-    <button class="pbtn" id="pl-b15" aria-label="Back 15 seconds"></button>
-    <button class="pbtn main" id="pl-play" aria-label="Play"></button>
-    <div class="pg" id="pl-pg"></div>
-  </div>
-</div>
-
-<nav class="tabs" aria-label="Main">
-  <a href="#home" id="t-home"><span class="ti" data-i="home"></span>Home</a>
-  <a href="#explore" id="t-explore"><span class="ti" data-i="explore"></span>Explore</a>
-  <a href="#stashes" id="t-stashes"><span class="ti" data-i="bookmark"></span>Stashes</a>
-  <a href="#you" id="t-you"><span class="ti" data-i="user"></span>You</a>
-</nav>
-
-<div class="reader" id="reader" role="dialog" aria-label="Idea cards">
-  <div class="rd-top"><div class="bars" id="rd-bars"></div>
-    <div class="rd-head"><span class="t" id="rd-title"></span><button id="rd-follow" aria-label="Follow the narration"></button><button id="rd-close" aria-label="Close"></button></div></div>
-  <div class="rd-stage" id="rd-stage"></div>
-  <button class="tapzone l" id="tz-l" aria-label="Previous card"></button><button class="tapzone r" id="tz-r" aria-label="Next card"></button>
-  <div class="rd-actions" id="rd-actions">
-    <button id="ra-like" aria-label="Like"></button>
-    <button id="ra-save" aria-label="Save to stash"></button>
-    <button id="ra-listen" aria-label="Listen"></button>
-    <button id="ra-ask" aria-label="Discuss with Claude"></button>
-    <button id="ra-copy" aria-label="Copy idea"></button>
-  </div>
-</div>
-
-<div class="np" id="np" role="dialog" aria-label="Now playing">
-  <div class="npbg" id="np-bg"></div>
-  <div class="top"><button id="np-close">Close</button><button id="np-read">Read along</button></div>
-  <div class="np-art" id="np-art"></div>
-  <div class="np-t"><small id="np-cat"></small><h3 id="np-title"></h3><p id="np-sub"></p></div>
-  <p class="np-sec" id="np-sec"></p>
-  <input type="range" id="np-seek" min="0" max="1000" value="0" aria-label="Seek">
-  <div class="np-times"><span id="np-cur">0:00</span><span id="np-dur">0:00</span></div>
-  <div class="np-ctl">
-    <button class="sm" id="np-prev" aria-label="Previous package"></button>
-    <button class="sm" id="np-b15" aria-label="Back 15 seconds"></button>
-    <button class="big" id="np-play" aria-label="Play"></button>
-    <button class="sm" id="np-f30" aria-label="Forward 30 seconds"></button>
-    <button class="sm" id="np-next" aria-label="Next package"></button>
-  </div>
-  <div class="np-opts"><button id="np-rate">1× speed</button><button id="np-sleep">Sleep timer: off</button></div>
-  <div class="np-chap" id="np-chap"></div>
-</div>
-
-<div class="sheet-bg" id="sheet-bg"></div>
-<div class="sheet" id="sheet" role="dialog" aria-label="Options"><div class="grab"></div><div id="sheet-in"></div></div>
-<div class="onb" id="onb" role="dialog" aria-label="Welcome"></div>
-<div class="toast" id="toast" role="status"></div>
-<div class="netpill" id="netpill">Offline · saved packages still play</div>
-<audio id="audio" preload="none"></audio>
-</div>
-<script src="art.js"></script>
-<script src="sync.js"></script>
-<script src="app.js"></script>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hikmah has moved</title><meta name="robots" content="noindex"><meta name="theme-color" content="#F6F4FB">
+<style>body{font:16px/1.5 system-ui,sans-serif;background:#F6F4FB;color:#1b1830;display:grid;place-items:center;min-height:100vh;margin:0;padding:24px;text-align:center}a{color:#6D4AFF;font-weight:700}</style>
+<script>
+/* Hikmah now has its own address. Bring this device's progress along once, then forward. */
+(function(){
+  var NEW="https://hikmah-sadiq.github.io/";
+  var dest=(location.hash&&location.hash.length>1&&location.hash.indexOf("#import=")!==0)?location.hash.slice(1):"home";
+  var keys={},n=0;
+  try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);
+    if(k&&k.indexOf("hikmah:")===0&&k!=="hikmah:_gtok"&&k!=="hikmah:_errs"&&k!=="hikmah:_others"){keys[k.slice(7)]=localStorage.getItem(k);n++}}}catch(e){}
+  var url=NEW+"#"+dest;
+  if(n){try{var b=btoa(unescape(encodeURIComponent(JSON.stringify({v:1,keys:keys})))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+    if(b.length<1500000)url=NEW+"#import="+b+"&then="+encodeURIComponent(dest);}catch(e){}}
+  var go=function(){location.replace(url)};
+  var tasks=[];
+  try{if(navigator.serviceWorker)tasks.push(navigator.serviceWorker.getRegistrations().then(function(rs){return Promise.all(rs.filter(function(r){return /\/hikmah\/$/.test(r.scope)}).map(function(r){return r.unregister()}))}))}catch(e){}
+  try{if(window.caches)tasks.push(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k.indexOf("hikmah-")===0}).map(function(k){return caches.delete(k)}))}))}catch(e){}
+  Promise.race([Promise.all(tasks),new Promise(function(r){setTimeout(r,1500)})]).then(go,go);
+})();
+</script></head>
+<body><div><h1 style="font-size:22px">Hikmah has a new home</h1><p>Taking you there with your progress…</p>
+<p><a href="https://hikmah-sadiq.github.io/">Open Hikmah</a></p></div></body></html>
