@@ -28,7 +28,8 @@ const KEY_RE=/^[A-Za-z0-9_.:-]{1,80}$/, DATE_RE=/^\d{4}-\d{2}-\d{2}$/;
 const isObj=v=>v&&typeof v==="object"&&!Array.isArray(v);
 const str=(v,n)=>typeof v==="string"&&v.length<=n;
 function cleanMap(v,keyOk,valOk,max=20000){if(!isObj(v))return undefined;const o={};let n=0;for(const k of Object.keys(v)){if(n>=max)break;if(keyOk(k)&&valOk(v[k])){o[k]=v[k];n++}}return o}
-const num=v=>typeof v==="number"&&isFinite(v)&&v>=0&&v<1e9;
+/* numbers include millisecond timestamps (about 1.8e12), so allow up to 1e14 */
+const num=v=>typeof v==="number"&&isFinite(v)&&v>=0&&v<1e14;
 const shortStr=v=>str(v,40);
 function cleanStashes(v){if(!Array.isArray(v))return undefined;const out=[];for(const s of v.slice(0,100)){if(!isObj(s)||!str(s.id,40)||!/^[A-Za-z0-9_-]+$/.test(s.id)||!str(s.name,60))continue;
   out.push({id:s.id,name:s.name.trim()||"Stash",cat:str(s.cat,40)?s.cat:"Character",items:Array.isArray(s.items)?s.items.filter(x=>str(x,80)&&KEY_RE.test(x)).slice(0,5000):[]})}return out}

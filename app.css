@@ -474,3 +474,5 @@ h1,h2,h3,h4{margin:0;letter-spacing:-.01em}
 
 .card.final .cin{-webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 70px,#000 104px);mask-image:linear-gradient(180deg,transparent 0,transparent 70px,#000 104px)}
 .pr-st:empty{display:none}
+
+.jn-link{display:flex;align-items:center;gap:8px;justify-content:center;margin:14px 0 0;color:#fff;font-weight:800;font-size:14px;text-decoration:none;opacity:.95}

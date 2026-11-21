@@ -1,6 +1,6 @@
 /* Hikmah 2.0 */
 "use strict";
-const VERSION="2.7.0";
+const VERSION="2.7.1";
 const SITE="https://ssadeeqib-arch.github.io/hikmah/";
 const ASK_URL="https://claude.ai/artifact/HnMjVLK1wRDvbunz2gB6Qs#ask";
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -152,14 +152,19 @@ const MODES={
  critique:["Critique it","Critique this rigorously: the strongest objections, the evidence for and against, where it may not apply (including in an Islamic or Nigerian context), and how a thoughtful Muslim professional should weigh it."],
  apply:["Apply it to my situation","Help me apply this to my own work and life. Before advising, ask me two or three short questions about my situation, then suggest concrete steps."],
  connect:["Connect the ideas","Find the common threads, tensions and gaps between these ideas, and turn them into a short set of principles I can live by."],
+ reflect:["Reflect on its lessons","Draw out the wisdom and lessons of this with the explanations of the classical scholars (for the Qur'an: Ibn Kathir, al-Tabari, al-Qurtubi; for hadith: al-Nawawi, Ibn Hajar): its context, what it teaches, and how I can live by it today."],
  teach:["Teach it to others","Help me teach this to my team or family: a five-minute explanation, one memorable example, and two discussion questions."],
 };
 function itemText(c,i){const p=byId[c.pid];const head=c.type==="verse"?verseGroups(p).map(vlabel).join("; ")+": "+c.verses.map(v=>v.en).join(" "):plainProv(c.h)+(c.body?"\n"+plainProv(c.body):"")+(c.deep?"\n"+c.deep:"");
   const ps=primarySource(p);return `${i!=null?(i+1)+". ":""}${head}\n(From “${p.title}”${ps&&p.kind==="book"?` — ${ps.who}`:""}${c.cite?`; ${c.cite}`:""})`}
+const isSacred=cards=>cards.some(c=>c.type==="verse"||c.type==="hadith");
+const CL_SACRED="Treat the Qur'an as the word of Allah and authentic hadith with due reverence: explain and reflect on them, do not critique them.";
+const CL_SAFE="Please answer in this conversation only. Do not use connected apps or take any action in my files, email, calendar or other accounts; a web search to check sources is fine.";
 function buildPrompt(mode,cards,label){
+  const sacred=isSacred(cards);if(sacred&&mode==="critique")mode="reflect";
   const [,ask]=MODES[mode]||["",""];
   const body=cards.length===1?itemText(cards[0]):cards.map((c,i)=>itemText(c,i)).join("\n\n");
-  return `${CL_CONTEXT}\n\n${cards.length===1?"Here is an idea":`Here are ${cards.length} ideas from my stash “${label}”`}:\n\n${body}\n\n${mode==="custom"?"My question: ":ask}\n\n${CL_RULES}`;
+  return `${CL_CONTEXT}\n\n${cards.length===1?"Here is an idea":`Here are ${cards.length} ideas from my stash “${label}”`}:\n\n${body}\n\n${mode==="custom"?"My question: ":ask}\n\n${CL_RULES}${sacred?" "+CL_SACRED:""}\n\n${CL_SAFE}`;
 }
 async function openClaude(prompt){
   let copied=false;try{await navigator.clipboard.writeText(prompt);copied=true}catch(e){}
@@ -170,7 +175,8 @@ async function openClaude(prompt){
 }
 function claudeSheet(cards,label){
   const many=cards.length>1;
-  const modes=many?["connect","deepen","critique","apply","teach"]:["deepen","critique","apply","teach"];
+  const crit=isSacred(cards)?"reflect":"critique";
+  const modes=many?["connect","deepen",crit,"apply","teach"]:["deepen",crit,"apply","teach"];
   openSheet(`<h3>${icon("spark",20,'style="color:#6D4AFF;vertical-align:-3px"')} Discuss with Claude</h3>
    <p class="muted" style="margin:-6px 0 12px;font-size:14px">${many?`${cards.length} ideas from “${esc(label)}”`:esc(plainProv(cards[0].h||"This verse"))} will be sent as context. Claude opens in a new chat.</p>
    <div class="modes">${modes.map(m=>`<button data-m="${m}"><b>${MODES[m][0]}</b><small>${MODES[m][1].split(":")[0].split(".")[0]}</small></button>`).join("")}
@@ -360,7 +366,7 @@ function renderPkg(id){
     <div class="small-row"><button id="pk-off" ${d?"":"disabled"}></button><button id="pk-ask">${icon("spark",18)} Discuss with Claude</button></div>
     <div class="h-sec"><h2>What you'll learn</h2></div>
     <div class="learn">${C.filter(c=>c.type!=="intro"&&c.type!=="final").map((c,n)=>`<button data-k="${c.key}"><span class="n" style="background:${T.c1}">${n+1}</span><b>${c.type==="verse"?esc(c.eb)+" · "+c.verses.map(v=>v.s+":"+v.v).join(", "):prov(plainProv(c.h))}</b>${READ[c.key]?'<span class="seen">✓</span>':""}</button>`).join("")}</div>
-    <div class="h-sec"><h2>Practices for this week</h2></div>
+    <div class="h-sec"><h2>Practices for this week</h2><a class="more" href="#journal">Journal</a></div>
     ${practiceHTML(p)}
     <div class="h-sec"><h2>Reflect</h2></div>
     <ol class="reflect">${p.reflect.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>
@@ -483,6 +489,7 @@ function renderYou(){
     <div class="row"><div class="l"><b>Play the next package automatically</b><small>Within the same topic</small></div><input type="checkbox" class="switch" id="autonext" ${store.get("autonext",true)?"checked":""} aria-label="Autoplay next"></div>
    </div>
    <div class="group">
+    <a class="row" href="#journal" style="text-decoration:none;color:inherit"><div class="l"><b>Practice journal</b><small>${(()=>{const c=noteCount();return c?c+" note"+(c===1?"":"s")+" on your weekly practices":"Your ideas and responses to each week's practices"})()}</small></div><span class="pill soft">Open</span></a>
     <button class="row" id="sync-row"><div class="l"><b>Sync with Google</b><small id="sync-sub">Checking…</small></div><span class="pill soft">Open</span></button>
    </div>
    <div class="group">
@@ -589,7 +596,7 @@ function cardHTML(c){
   if(c.type==="verse") return `<div class="card vcard">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div>${c.verses.map(v=>`<p class="arq" lang="ar">${esc(v.ar)} ﴿${v.v.toLocaleString("ar-EG")}﴾</p><p style="margin-top:4px">${esc(v.en)}</p><div class="vref">Qur'an ${v.s}:${v.v}</div>`).join("")}</div></div>`;
   if(c.type==="hadith") return `<div class="card">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div><h2>${esc(c.h)}</h2><div class="cite">${esc(c.cite)}</div></div></div>`;
   if(c.type==="final"){const checks=store.get("chk:"+p.id,{});const nx=nextPkg(p.id);
-    return `<div class="card final"><div class="cin"><div class="eb">${icon("trophy",16)} Package complete</div><h2>${esc(c.h)}</h2><p>Put it into practice this week, and note your ideas and response under each one:</p>${practiceHTML(p)}
+    return `<div class="card final"><div class="cin"><div class="eb">${icon("trophy",16)} Package complete</div><h2>${esc(c.h)}</h2><p>Put it into practice this week, and note your ideas and response under each one:</p>${practiceHTML(p)}<a class="jn-link" href="#journal">${icon("journal",16)} All your notes are kept in the Practice journal</a>
       <div class="final-btns">${TM[p.id]?`<button id="fn-listen">${icon("head",18,'style="vertical-align:-4px"')} Listen to the narration</button>`:""}${nx?`<button class="ghost" id="fn-next">Next: ${esc(byId[nx].title)} →</button>`:""}<button class="ghost" id="fn-close">Back to the package</button></div></div></div>`}
   return `<div class="card">${bg}<div class="cin"><div class="eb">${esc(c.eb)}</div><h2>${c.prov?prov(c.h):esc(c.h)}</h2>${c.body?`<p>${prov(c.body)}</p>`:""}${c.deep?`<div class="deep"><span>${icon("spark",14)} Go deeper</span><p>${prov(c.deep)}</p></div>`:""}</div></div>`;
 }
